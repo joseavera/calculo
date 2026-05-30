@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funciones Logarítmicas — Cálculo Diferencial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #1a1a18;
+    --ink-muted: #6b6b60;
+    --ink-faint: #a8a89a;
+    --paper:     #fafaf7;
+    --surface:   #f2f2ed;
+    --border:    #deded4;
+    --accent:    #2d4a22;
+    --accent-lt: #e8f0e4;
+    --ok:        #2a5c2a;
+    --ok-bg:     #e8f5e8;
+    --err:       #7a2020;
+    --err-bg:    #fdf0f0;
+    --mono:      'JetBrains Mono', monospace;
+    --serif:     'Crimson Pro', Georgia, serif;
+    --sans:      'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .site-header h1 {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: .75rem;
+  }
+  .site-header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-meta {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-family: var(--mono);
+  }
+
+  /* ── Progress ── */
+  .progress-wrap {
+    height: 2px;
+    background: var(--border);
+    margin: 2.5rem 0;
+    border-radius: 1px;
+  }
+  .progress-fill {
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width .5s ease;
+    width: 0%;
+  }
+
+  /* ── Section titles ── */
+  h2 {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    margin: 3rem 0 1rem;
+    color: var(--ink);
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-muted);
+    margin: 2rem 0 .75rem;
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  /* ── Timeline ── */
+  .timeline { margin: 1.5rem 0 2rem; border-left: 1px solid var(--border); padding-left: 1.5rem; }
+  .tl-item { position: relative; margin-bottom: 1.75rem; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem;
+    top: .45rem;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .tl-year {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: .2rem;
+    display: block;
+  }
+  .tl-item p { margin-bottom: 0; font-size: 15px; }
+
+  /* ── Callout ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    background: var(--accent-lt);
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout p { margin: 0; font-size: 15px; }
+
+  /* ── Formula ── */
+  .formula-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  code.formula {
+    display: block;
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--ink);
+    margin: .4rem 0;
+    padding: .45rem .75rem;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+  .formula-note {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: .5rem;
+    font-style: italic;
+  }
+
+  /* ── Rule grid ── */
+  .rule-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin: 1rem 0 1.5rem;
+  }
+  @media (max-width: 540px) { .rule-grid { grid-template-columns: 1fr; } }
+  .rule-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+  }
+  .rule-box-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-muted);
+    margin-bottom: .5rem;
+    display: block;
+  }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* ── Exercises ── */
+  .ex-block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: var(--paper);
+    transition: border-color .2s;
+  }
+  .ex-block:focus-within { border-color: var(--accent); }
+  .ex-header {
+    display: flex;
+    align-items: baseline;
+    gap: .75rem;
+    margin-bottom: .6rem;
+  }
+  .ex-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+  .ex-title {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .ex-context {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: .9rem;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .ex-statement {
+    background: var(--surface);
+    border-radius: 6px;
+    padding: .85rem 1rem;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+  }
+  .step-list { list-style: none; margin-bottom: 1rem; }
+  .step-list li {
+    display: flex;
+    gap: .6rem;
+    margin-bottom: .5rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 20px;
+    height: 20px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .step-text { font-size: 14px; line-height: 1.6; color: var(--ink); }
+  .answer-row {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .answer-row input[type="text"] {
+    flex: 1;
+    min-width: 140px;
+    padding: .5rem .75rem;
+    font-size: 15px;
+    font-family: var(--mono);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .answer-row input[type="text"]:focus { border-color: var(--accent); }
+  .btn {
+    padding: .45rem 1rem;
+    font-size: 13px;
+    font-family: var(--sans);
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface); border-color: var(--ink-muted); }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { opacity: .88; background: var(--accent); }
+  .feedback {
+    margin-top: .65rem;
+    font-size: 14px;
+    padding: .6rem .85rem;
+    border-radius: 6px;
+    display: none;
+    line-height: 1.55;
+  }
+  .feedback.ok  { display: block; background: var(--ok-bg);  color: var(--ok);  border: 1px solid #c2e0c2; }
+  .feedback.err { display: block; background: var(--err-bg); color: var(--err); border: 1px solid #f0c8c8; }
+  .hint-box {
+    display: none;
+    margin-top: .55rem;
+    font-size: 13px;
+    color: var(--ink-muted);
+    padding: .5rem .75rem;
+    background: var(--surface);
+    border-radius: 5px;
+    font-style: italic;
+  }
+
+  /* ── Finish button ── */
+  .finish-wrap { margin-top: 2rem; text-align: center; }
+  .btn-finish {
+    padding: .75rem 2rem;
+    font-size: 15px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-weight: 500;
+    letter-spacing: .01em;
+    transition: opacity .15s;
+  }
+  .btn-finish:hover { opacity: .85; }
+
+  /* ── Results ── */
+  .results-section { display: none; margin-top: 3rem; }
+  .score-card {
+    text-align: center;
+    padding: 2.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+  .score-big {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    display: block;
+  }
+  .score-sub { font-size: 14px; color: var(--ink-muted); margin-top: .5rem; display: block; }
+  .result-row {
+    display: flex;
+    gap: .85rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-icon {
+    font-size: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .ri-ok  { color: var(--ok); }
+  .ri-err { color: var(--err); }
+  .result-title { font-size: 14px; font-weight: 500; margin-bottom: .25rem; }
+  .result-meta  { font-size: 13px; color: var(--ink-muted); margin-bottom: .2rem; }
+  .result-expl  { font-size: 13px; color: var(--ink); line-height: 1.5; }
+
+  /* ── Markdown output ── */
+  .md-section { margin-top: 2.5rem; }
+  .md-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-muted);
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .md-output {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 440px;
+    overflow-y: auto;
+    color: var(--ink);
+  }
+  .md-actions { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
+
+  /* ── Scrollbar ── */
+  .md-output::-webkit-scrollbar { width: 5px; }
+  .md-output::-webkit-scrollbar-track { background: transparent; }
+  .md-output::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <span class="header-label">Cálculo Diferencial · Unidad 1 · Clase 3 · 30 mayo 2026</span>
+    <h1>Funciones <em>Logarítmicas</em></h1>
+    <span class="header-meta">Historia · Conceptos · Analogías · Ejercicios interactivos</span>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-fill" id="pbar"></div>
+  </div>
+
+  <!-- HISTORIA -->
+  <h2>Una herramienta inventada por necesidad</h2>
+
+  <p>En el siglo XVII, los astrónomos y navegantes tenían un problema muy concreto: multiplicar números de seis o más cifras a mano tomaba horas y producía errores constantemente. Tycho Brahe, el astrónomo danés más preciso de su época, llegó a emplear a veinte calculistas humanos solo para procesar sus observaciones del movimiento de los planetas.</p>
+
+  <p>La solución vino de Escocia. Un matemático llamado John Napier pasó veinte años buscando una forma de convertir multiplicaciones en sumas, que son mucho más simples de ejecutar. El resultado fue el logaritmo.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <span class="tl-year">1614</span>
+      <p><strong>John Napier</strong> publica <em>Mirifici Logarithmorum Canonis Descriptio</em>. El libro contiene tablas de logaritmos que permiten multiplicar números grandes sumando en cambio sus logaritmos. La palabra "logaritmo" viene del griego <em>logos</em> (razón) y <em>arithmos</em> (número).</p>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-year">1617</span>
+      <p><strong>Henry Briggs</strong>, matemático inglés, visita a Napier y propone cambiar la base al número 10 para que los cálculos sean más naturales. Juntos construyen las primeras tablas de logaritmos decimales. Estas tablas se usarán en navegación y astronomía durante más de 300 años.</p>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-year">1683</span>
+      <p><strong>Jacob Bernoulli</strong> estudia el interés compuesto y se pregunta qué pasa si los periodos de capitalización se vuelven infinitamente pequeños. Al resolver el límite de (1 + 1/n)ⁿ cuando n crece sin límite, obtiene el número <strong>e ≈ 2.71828</strong>. Sin saberlo todavía, está encontrando la base del logaritmo natural.</p>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-year">1748</span>
+      <p><strong>Leonhard Euler</strong> publica <em>Introductio in analysin infinitorum</em>. Allí define formalmente el número <em>e</em>, establece que ln(x) es el logaritmo de base <em>e</em>, y demuestra algo que cambia todo el cálculo: la derivada de ln(x) es exactamente 1/x. Esta propiedad convierte al logaritmo natural en la función fundamental del análisis matemático.</p>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <p><strong>Conexión directa con cálculo diferencial:</strong> cuando en las próximas unidades aprendas a calcular derivadas, descubrirás que d/dx[ln(x)] = 1/x. Eso significa que el logaritmo natural es la única función cuya tasa de cambio instantánea tiene esa forma tan limpia. Por eso aparece en casi toda integral que involucra funciones de crecimiento, decaimiento o acumulación.</p>
+  </div>
+
+  <hr>
+
+  <!-- CONCEPTO -->
+  <h2>¿Qué es un logaritmo?</h2>
+
+  <h3>La analogía del ascensor</h3>
+
+  <p>Imagina un edificio donde cada piso duplica el espacio del anterior. Planta baja = 1 m², piso 1 = 2 m², piso 2 = 4 m², piso 3 = 8 m², piso 10 = 1024 m². La función exponencial 2<sup>x</sup> responde a la pregunta: <em>¿cuánto espacio hay si subo x pisos?</em></p>
+
+  <p>El logaritmo hace la pregunta inversa: <em>si el espacio disponible es 32 m², ¿en qué piso estoy?</em> Respuesta: log₂(32) = 5, porque 2⁵ = 32. El logaritmo no calcula el espacio, calcula el número de pisos necesarios para llegar a ese espacio.</p>
+
+  <div class="formula-block">
+    <p style="font-size:14px;font-weight:500;margin-bottom:.75rem">La regla fundamental — dos formas de escribir lo mismo</p>
+    <code class="formula">log_a(x) = y    &lt;—&gt;    a^y = x</code>
+    <p class="formula-note">Son la misma información en distinto orden. El logaritmo siempre pregunta: ¿a qué potencia hay que elevar <em>a</em> para obtener <em>x</em>?</p>
+  </div>
+
+  <h3>Los tres logaritmos que más usarás</h3>
+
+  <div class="rule-grid">
+    <div class="rule-box">
+      <span class="rule-box-title">Logaritmo común</span>
+      <code class="formula">log(x) = log₁₀(x)</code>
+      <p style="font-size:13px;color:var(--ink-muted);margin-top:.5rem;margin-bottom:0">Base 10. Aparece en la escala Richter de terremotos, en los decibeles de sonido y en el pH de soluciones químicas.</p>
+    </div>
+    <div class="rule-box">
+      <span class="rule-box-title">Logaritmo natural</span>
+      <code class="formula">ln(x) = log_e(x)</code>
+      <p style="font-size:13px;color:var(--ink-muted);margin-top:.5rem;margin-bottom:0">Base e ≈ 2.71828. Es el central en cálculo diferencial porque su derivada es 1/x, la expresión más simple posible.</p>
+    </div>
+    <div class="rule-box">
+      <span class="rule-box-title">Logaritmo binario</span>
+      <code class="formula">log₂(x)</code>
+      <p style="font-size:13px;color:var(--ink-muted);margin-top:.5rem;margin-bottom:0">Base 2. Mide la complejidad de algoritmos. Una búsqueda binaria en <em>n</em> elementos necesita log₂(n) comparaciones en el peor caso.</p>
+    </div>
+    <div class="rule-box">
+      <span class="rule-box-title">Dominio y rango</span>
+      <code class="formula">x &gt; 0  →  f(x) ∈ ℝ</code>
+      <p style="font-size:13px;color:var(--ink-muted);margin-top:.5rem;margin-bottom:0">Solo existe para x positivos. En x = 0 la función tiende a −∞ (asíntota vertical). El rango cubre todos los reales.</p>
+    </div>
+  </div>
+
+  <h3>Las tres propiedades algebraicas</h3>
+
+  <p>Napier inventó los logaritmos exactamente para estas propiedades. Convierten operaciones costosas en operaciones simples:</p>
+
+  <div class="formula-block">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+      <div>
+        <p style="font-size:12px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Producto</p>
+        <code class="formula">log(a·b) = log(a) + log(b)</code>
+        <p class="formula-note">Multiplicar adentro = sumar afuera</p>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Cociente</p>
+        <code class="formula">log(a/b) = log(a) − log(b)</code>
+        <p class="formula-note">Dividir adentro = restar afuera</p>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Potencia</p>
+        <code class="formula">log(aⁿ) = n · log(a)</code>
+        <p class="formula-note">El exponente baja como factor</p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- EJERCICIOS -->
+  <h2>Ejercicios</h2>
+  <p style="color:var(--ink-muted);font-size:15px">Escribe tu respuesta numérica en cada campo y presiona <strong>Verificar</strong>. Cuando completes todos, se generan los resultados y el archivo Markdown.</p>
+
+  <div id="exercises-container"></div>
+
+  <div class="finish-wrap">
+    <button class="btn-finish" onclick="finishAll()">Ver resultados y generar Markdown →</button>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="results-section" id="results-section">
+
+    <hr>
+    <h2>Resultados</h2>
+
+    <div class="score-card">
+      <span class="score-big" id="score-num">0 / 0</span>
+      <span class="score-sub" id="score-sub">ejercicios correctos</span>
+    </div>
+
+    <div id="results-detail"></div>
+
+    <div class="md-section">
+      <hr>
+      <h2>Exportar a Markdown</h2>
+      <p style="font-size:15px;color:var(--ink-muted);margin-bottom:1rem">Copia este bloque y pégalo en un archivo <code style="font-family:var(--mono);font-size:13px;background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border)">.md</code> dentro de tu repositorio de GitHub.</p>
+      <span class="md-label">Markdown generado</span>
+      <div class="md-output" id="md-output"></div>
+      <div class="md-actions">
+        <button class="btn btn-primary" onclick="copyMd()" id="copy-btn">Copiar</button>
+        <button class="btn" onclick="downloadMd()">Descargar .md</button>
+      </div>
+    </div>
+
+  </div><!-- /results-section -->
+
+</div><!-- /page -->
+
+<script>
+const exercises = [
+  {
+    id: 1,
+    type: "conversion",
+    title: "Conversión exponencial a logarítmica",
+    context: "La misma información se puede escribir de dos formas. Napier demostró que esta equivalencia permite transformar multiplicaciones en sumas.",
+    statement: "Convierte a forma logarítmica: 2⁵ = 32. ¿Cuánto vale log₂(32)?",
+    steps: [
+      "Identifica la base (2), el exponente (5) y el resultado (32).",
+      "La forma logarítmica pregunta: ¿a qué potencia hay que elevar 2 para obtener 32?",
+      "Escribe log₂(32) = ? Ese valor es el exponente que ya conoces."
+    ],
+    answer: "5",
+    hint: "El exponente en 2⁵ = 32 ES el valor del logaritmo.",
+    explanation: "log₂(32) = 5 porque 2⁵ = 2×2×2×2×2 = 32. El logaritmo devuelve el exponente."
+  },
+  {
+    id: 2,
+    type: "evaluation",
+    title: "Evaluación con base 10",
+    context: "El logaritmo común (base 10) mide la escala Richter. Un terremoto de magnitud 6 libera 10 veces más energía que uno de magnitud 5.",
+    statement: "Calcula: log₁₀(1000) = ?",
+    steps: [
+      "Pregúntate: ¿10 elevado a qué número da 1000?",
+      "10¹ = 10 · 10² = 100 · 10³ = 1000.",
+      "Por lo tanto log₁₀(1000) = ese exponente."
+    ],
+    answer: "3",
+    hint: "10 elevado a 3 es 10×10×10 = 1000.",
+    explanation: "log₁₀(1000) = 3 porque 10³ = 1000. Un terremoto de magnitud 3 es 1000 veces más intenso que uno de magnitud 0."
+  },
+  {
+    id: 3,
+    type: "property",
+    title: "Propiedad del producto",
+    context: "Esta propiedad era exactamente lo que Napier buscaba: convertir una multiplicación en una suma para simplificar cálculos astronómicos.",
+    statement: "Simplifica log₂(8 × 4) usando la propiedad del producto. ¿Cuál es el valor numérico final?",
+    steps: [
+      "Aplica la propiedad de producto: log₂(8 × 4) = log₂(8) + log₂(4).",
+      "Calcula log₂(8): ¿2 elevado a qué da 8? → 2³ = 8, entonces log₂(8) = 3.",
+      "Calcula log₂(4): ¿2 elevado a qué da 4? → 2² = 4, entonces log₂(4) = 2.",
+      "Suma: 3 + 2 = ?"
+    ],
+    answer: "5",
+    hint: "log₂(8) = 3 y log₂(4) = 2. Súmalos.",
+    explanation: "log₂(32) = 5. Verificación directa: 2⁵ = 32, y 8 × 4 = 32. La propiedad funciona."
+  },
+  {
+    id: 4,
+    type: "property",
+    title: "Propiedad de la potencia",
+    context: "Esta propiedad es indispensable para despejar variables que están en el exponente, algo que aparece constantemente en modelos de crecimiento y decaimiento.",
+    statement: "Simplifica log₃(9²) usando la propiedad de la potencia. ¿Cuál es el valor numérico?",
+    steps: [
+      "Aplica la propiedad de potencia: log₃(9²) = 2 · log₃(9).",
+      "Calcula log₃(9): ¿3 elevado a qué da 9? → 3² = 9, entonces log₃(9) = 2.",
+      "Multiplica: 2 · 2 = ?"
+    ],
+    answer: "4",
+    hint: "log₃(9) = 2, luego multiplicas por el exponente exterior: 2 × 2.",
+    explanation: "log₃(81) = 4 porque 3⁴ = 81, y 9² = 81. La propiedad baja el exponente 2 como factor y luego evalúas el logaritmo restante."
+  },
+  {
+    id: 5,
+    type: "inverse",
+    title: "La inversa: ln y e son opuestas",
+    context: "Euler demostró que ln(x) y eˣ son funciones inversas entre sí. Esta propiedad es el motor para despejar t en cualquier modelo exponencial de cálculo diferencial.",
+    statement: "Calcula: ln(e⁴) = ?",
+    steps: [
+      "Recuerda que ln y eˣ se cancelan mutuamente: son funciones inversas.",
+      "La regla es: ln(eˣ) = x para cualquier valor de x.",
+      "Aplícala directamente: ln(e⁴) = ?"
+    ],
+    answer: "4",
+    hint: "ln(eˣ) = x siempre. El exponente pasa directo al resultado.",
+    explanation: "ln(e⁴) = 4. Esta propiedad permite despejar t en ecuaciones como e^(0.3t) = 5: aplicas ln a ambos lados y obtienes 0.3t = ln(5) ≈ 1.609, entonces t ≈ 5.36."
+  },
+  {
+    id: 6,
+    type: "application",
+    title: "Aplicación real: búsqueda binaria",
+    context: "En algoritmos, la complejidad O(log₂ n) significa que el número de pasos crece logarítmicamente con el tamaño de la entrada. Es el motivo por el que la búsqueda binaria es tan eficiente.",
+    statement: "Una búsqueda binaria sobre una lista de 1024 elementos necesita log₂(1024) comparaciones en el peor caso. ¿Cuántas son?",
+    steps: [
+      "Pregúntate: ¿2 elevado a qué número da 1024?",
+      "Verifica: 2¹=2, 2²=4, 2³=8, 2⁴=16, 2⁵=32, 2⁶=64, 2⁷=128, 2⁸=256, 2⁹=512, 2¹⁰=1024.",
+      "Por lo tanto log₂(1024) = ?"
+    ],
+    answer: "10",
+    hint: "Cuenta cuántas veces divides 1024 entre 2 hasta llegar a 1.",
+    explanation: "log₂(1024) = 10. Con solo 10 comparaciones se encuentra cualquier elemento en una lista de 1024. Si la lista tuviera 1 048 576 elementos (2²⁰), solo necesitarías 20 comparaciones. Eso es la potencia de O(log n)."
+  }
+];
+
+const userAnswers = {};
+
+function renderExercises() {
+  const container = document.getElementById("exercises-container");
+  exercises.forEach((ex, i) => {
+    const div = document.createElement("div");
+    div.className = "ex-block";
+    div.id = "exblock-" + ex.id;
+    div.innerHTML = `
+      <div class="ex-header">
+        <span class="ex-num">${i + 1} / ${exercises.length}</span>
+        <span class="ex-title">${ex.title}</span>
+      </div>
+      <p class="ex-context">${ex.context}</p>
+      <div class="ex-statement">${ex.statement}</div>
+      <ul class="step-list">
+        ${ex.steps.map((s, j) => `
+          <li>
+            <span class="step-num">${j + 1}</span>
+            <span class="step-text">${s}</span>
+          </li>`).join("")}
+      </ul>
+      <div class="answer-row">
+        <input type="text" id="inp-${ex.id}" placeholder="Tu respuesta…"
+               onkeydown="if(event.key==='Enter')checkSingle(${ex.id})" />
+        <button class="btn btn-primary" onclick="checkSingle(${ex.id})">Verificar</button>
+        <button class="btn" onclick="showHint(${ex.id})">Ver pista</button>
+      </div>
+      <div class="feedback" id="fb-${ex.id}"></div>
+      <div class="hint-box" id="hint-${ex.id}">Pista: ${ex.hint}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function normalize(s) {
+  return String(s).trim().toLowerCase().replace(/\s+/g, "").replace(",", ".");
+}
+
+function checkSingle(id) {
+  const ex = exercises.find(e => e.id === id);
+  const inp = document.getElementById("inp-" + id);
+  const fb  = document.getElementById("fb-" + id);
+  const val = inp.value;
+  const correct = normalize(val) === normalize(ex.answer);
+  userAnswers[id] = { val, correct, ex };
+  fb.className = "feedback " + (correct ? "ok" : "err");
+  fb.textContent = correct
+    ? "✓ Correcto. " + ex.explanation
+    : "✗ Revisa tu respuesta. " + ex.hint;
+  updateProgress();
+}
+
+function showHint(id) {
+  const h = document.getElementById("hint-" + id);
+  h.style.display = h.style.display === "block" ? "none" : "block";
+}
+
+function updateProgress() {
+  const done = Object.keys(userAnswers).length;
+  const pct  = Math.round(done / exercises.length * 100);
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+function finishAll() {
+  exercises.forEach(ex => {
+    if (!userAnswers[ex.id]) {
+      const val = document.getElementById("inp-" + ex.id).value || "(sin respuesta)";
+      userAnswers[ex.id] = { val, correct: false, ex };
+    }
+  });
+  updateProgress();
+
+  const correct = Object.values(userAnswers).filter(a => a.correct).length;
+  const total   = exercises.length;
+  const pct     = Math.round(correct / total * 100);
+
+  document.getElementById("score-num").textContent = correct + " / " + total;
+  document.getElementById("score-sub").textContent =
+    pct >= 80 ? "ejercicios correctos — excelente dominio" :
+    pct >= 50 ? "ejercicios correctos — buen avance, sigue repasando" :
+                "ejercicios correctos — revisa los conceptos y vuelve a intentarlo";
+
+  const detail = document.getElementById("results-detail");
+  detail.innerHTML = exercises.map(ex => {
+    const a = userAnswers[ex.id];
+    const ok = a.correct;
+    return `<div class="result-row">
+      <span class="result-icon ${ok ? "ri-ok" : "ri-err"}">${ok ? "✓" : "✗"}</span>
+      <div>
+        <p class="result-title">${ex.title}</p>
+        <p class="result-meta">Tu respuesta: <strong>${a.val}</strong> &nbsp;·&nbsp; Respuesta correcta: <strong>${ex.answer}</strong></p>
+        <p class="result-expl">${ex.explanation}</p>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("md-output").textContent = buildMarkdown(correct, total);
+
+  const rs = document.getElementById("results-section");
+  rs.style.display = "block";
+  rs.scrollIntoView({ behavior: "smooth" });
+}
+
+function buildMarkdown(correct, total) {
+  const date = new Date().toISOString().split("T")[0];
+  const pct  = Math.round(correct / total * 100);
+  const lines = [];
+
+  lines.push("# Resultados — Funciones Logarítmicas");
+  lines.push("");
+  lines.push("| Campo | Valor |");
+  lines.push("|-------|-------|");
+  lines.push("| **Asignatura** | Cálculo Diferencial |");
+  lines.push("| **Unidad** | 1 — Funciones y Modelado |");
+  lines.push("| **Tema** | Funciones Logarítmicas |");
+  lines.push(`| **Fecha** | ${date} |`);
+  lines.push(`| **Puntaje** | ${correct} / ${total} (${pct}%) |`);
+  lines.push("");
+  lines.push("---");
+  lines.push("");
+  lines.push("## Resumen de ejercicios");
+  lines.push("");
+  lines.push("| # | Ejercicio | Tu respuesta | Correcta | Estado |");
+  lines.push("|---|-----------|-------------|----------|--------|");
+  exercises.forEach((ex, i) => {
+    const a      = userAnswers[ex.id];
+    const estado = a.correct ? "✅ Correcto" : "❌ Incorrecto";
+    lines.push(`| ${i + 1} | ${ex.title} | \`${a.val}\` | \`${ex.answer}\` | ${estado} |`);
+  });
+  lines.push("");
+  lines.push("---");
+  lines.push("");
+  lines.push("## Detalle por ejercicio");
+  lines.push("");
+  exercises.forEach((ex, i) => {
+    const a = userAnswers[ex.id];
+    lines.push(`### Ejercicio ${i + 1}: ${ex.title}`);
+    lines.push("");
+    lines.push(`> ${ex.statement}`);
+    lines.push("");
+    lines.push(`**Tu respuesta:** \`${a.val}\`  `);
+    lines.push(`**Respuesta correcta:** \`${ex.answer}\`  `);
+    lines.push(`**Estado:** ${a.correct ? "Correcto" : "Incorrecto"}  `);
+    lines.push("");
+    lines.push("**Explicación:**");
+    lines.push("");
+    lines.push(ex.explanation);
+    lines.push("");
+    lines.push("**Pasos de solución:**");
+    lines.push("");
+    ex.steps.forEach((s, j) => {
+      lines.push(`${j + 1}. ${s}`);
+    });
+    lines.push("");
+    lines.push("---");
+    lines.push("");
+  });
+
+  lines.push("## Conceptos clave");
+  lines.push("");
+  lines.push("### Definición fundamental");
+  lines.push("");
+  lines.push("```");
+  lines.push("log_a(x) = y   <-->   a^y = x");
+  lines.push("```");
+  lines.push("");
+  lines.push("### Los tres logaritmos esenciales");
+  lines.push("");
+  lines.push("| Nombre | Notación | Base | Aplicación principal |");
+  lines.push("|--------|----------|------|----------------------|");
+  lines.push("| Logaritmo común | `log(x)` | 10 | Escala Richter, pH, decibeles |");
+  lines.push("| Logaritmo natural | `ln(x)` | e ≈ 2.71828 | Cálculo diferencial: d/dx[ln(x)] = 1/x |");
+  lines.push("| Logaritmo binario | `log₂(x)` | 2 | Complejidad algorítmica O(log n) |");
+  lines.push("");
+  lines.push("### Propiedades algebraicas");
+  lines.push("");
+  lines.push("| Propiedad | Regla | En palabras |");
+  lines.push("|-----------|-------|-------------|");
+  lines.push("| Producto | `log(a·b) = log(a) + log(b)` | Multiplicar adentro = sumar afuera |");
+  lines.push("| Cociente | `log(a/b) = log(a) − log(b)` | Dividir adentro = restar afuera |");
+  lines.push("| Potencia | `log(aⁿ) = n · log(a)` | El exponente baja como factor |");
+  lines.push("| Inversa | `ln(eˣ) = x` y `e^(ln x) = x` | ln y exp se cancelan mutuamente |");
+  lines.push("");
+  lines.push("---");
+  lines.push("");
+  lines.push("## Referencias bibliográficas");
+  lines.push("");
+  lines.push("- Napier, J. (1614). *Mirifici Logarithmorum Canonis Descriptio*. Edimburgo.");
+  lines.push("- Euler, L. (1748). *Introductio in analysin infinitorum*. Lausana.");
+  lines.push("- Stewart, J. (2016). *Cálculo: Trascendentes tempranas* (8.ª ed.). Cengage Learning.");
+  lines.push("- Larson, R. y Edwards, B. (2017). *Cálculo* (10.ª ed.). McGraw-Hill Education.");
+
+  return lines.join("\n");
+}
+
+function copyMd() {
+  const text = document.getElementById("md-output").textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copy-btn");
+    btn.textContent = "Copiado ✓";
+    setTimeout(() => { btn.textContent = "Copiar"; }, 2500);
+  });
+}
+
+function downloadMd() {
+  const text = document.getElementById("md-output").textContent;
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = "logaritmos_calculo_diferencial.md";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+renderExercises();
+</script>
+</body>
+</html>
