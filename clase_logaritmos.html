@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funciones Logarítmicas — Cálculo Diferencial | IEDEP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="base.css">
+
+  <style>
+    /* Ajustes específicos de este documento */
+    .agenda-grid {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: .25rem 1rem;
+      font-family: var(--font-ui);
+      font-size: .92rem;
+      margin: 1rem 0;
+    }
+    .agenda-time {
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      color: var(--guinda);
+      padding-top: .1rem;
+    }
+    .agenda-desc { color: var(--ink); line-height: 1.5; padding-bottom: .5rem; border-bottom: 1px solid var(--border); }
+    .agenda-grid div:last-child, .agenda-grid div:nth-last-child(2) { border-bottom: none; }
+
+    .log-table td:first-child,
+    .log-table th:first-child { width: 140px; }
+    .log-table td:nth-child(2),
+    .log-table th:nth-child(2) { width: 140px; }
+
+    .prop-row { display: flex; gap: .6rem; align-items: flex-start; margin-bottom: 1rem; }
+    .prop-tag {
+      background: var(--guinda);
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: .2rem .65rem;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .prop-body { font-size: .97rem; line-height: 1.6; }
+    .prop-body code {
+      font-family: var(--font-mono);
+      font-size: .88rem;
+      background: var(--surface);
+      padding: .05rem .35rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li {
+      font-size: .95rem;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.55;
+    }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-year {
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      color: var(--guinda);
+      font-weight: 500;
+      margin-right: .35rem;
+    }
+
+    .conclusion-list { list-style: none; padding: 0; }
+    .conclusion-list li {
+      padding: .75rem 0 .75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .98rem;
+      position: relative;
+      line-height: 1.65;
+    }
+    .conclusion-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 1.05rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--guinda);
+    }
+    .conclusion-list li:last-child { border-bottom: none; }
+
+    @media print {
+      .site-footer { position: fixed; bottom: 0; width: 100%; }
+      .page-wrapper { padding-bottom: 2rem; }
+    }
+
+    /* ── Enlace Desmos ── */
+    .desmos-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--guinda);
+      text-decoration: none;
+      padding: .28rem .75rem;
+      border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm);
+      background: var(--guinda-light);
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+      letter-spacing: .02em;
+    }
+    .desmos-link:hover {
+      background: var(--guinda);
+      color: var(--white);
+      text-decoration: none;
+    }
+    .desmos-link::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .desmos-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-top: .6rem;
+      flex-wrap: wrap;
+    }
+    .desmos-label {
+      font-family: var(--font-ui);
+      font-size: .75rem;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     CABECERA INSTITUCIONAL
+     ══════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP — Instituto de Educación Digital del Estado de Puebla" style="height:88px; width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Material de clase</span>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO DE LA CLASE
+     ══════════════════════════════════════════════════════════ -->
+<div class="class-hero">
+  <div style="max-width:900px; margin:0 auto; padding:0 2rem;">
+    <span class="class-label">Unidad 1 &nbsp;·&nbsp; Clase 4 &nbsp;·&nbsp; Funciones y Modelado</span>
+    <h1>Funciones Logarítmicas</h1>
+    <span class="class-subtitle">
+      Definición, propiedades, ejemplos resueltos y aplicaciones en sistemas computacionales
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">
+        Fecha
+        <span>6 de junio de 2026</span>
+      </div>
+      <div class="meta-item">
+        Duración
+        <span>60 minutos</span>
+      </div>
+      <div class="meta-item">
+        Asesor
+        <span>Mtro. José Armando Vera Rodríguez</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTENIDO PRINCIPAL
+     ══════════════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+
+  <!-- ── 1. Agenda ──────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Organización de la sesión</span>
+    <h2 class="section-title">Agenda de la clase</h2>
+
+    <div class="agenda-grid">
+      <div class="agenda-time">00 – 05 min</div>
+      <div class="agenda-desc">Recapitulación de las clases anteriores: funciones trigonométricas y exponenciales</div>
+
+      <div class="agenda-time">05 – 18 min</div>
+      <div class="agenda-desc">Definición del logaritmo. Relación con la función exponencial. Dominio y rango</div>
+
+      <div class="agenda-time">18 – 30 min</div>
+      <div class="agenda-desc">Los tres logaritmos esenciales: log, ln y log&#8322;. Tabla de valores notables</div>
+
+      <div class="agenda-time">30 – 43 min</div>
+      <div class="agenda-desc">Las tres propiedades algebraicas con ejemplos resueltos paso a paso</div>
+
+      <div class="agenda-time">43 – 55 min</div>
+      <div class="agenda-desc">Aplicaciones: despejar variables exponenciales, modelos reales y algoritmos</div>
+
+      <div class="agenda-time">55 – 60 min</div>
+      <div class="agenda-desc">Conclusión, tarea y cierre</div>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 2. Competencias ────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Propósito de la sesión</span>
+    <h2 class="section-title">Competencias a desarrollar</h2>
+
+    <div class="competency-card">
+      <span class="comp-num">01</span>
+      <span class="comp-text">
+        <strong>Identificar y evaluar funciones logarítmicas:</strong> reconocer la forma log&#8336;(x), determinar
+        su dominio (x &gt; 0), su rango (todos los reales) y calcular valores concretos sin necesidad de calculadora
+        en los casos más comunes.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">02</span>
+      <span class="comp-text">
+        <strong>Aplicar las tres propiedades algebraicas:</strong> utilizar las propiedades del producto, del
+        cociente y de la potencia para simplificar expresiones logarítmicas complejas en expresiones más manejables.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">03</span>
+      <span class="comp-text">
+        <strong>Despejar variables exponenciales mediante logaritmos:</strong> resolver ecuaciones del tipo
+        a&#739; = b aplicando logaritmos a ambos lados, usando la relación inversa entre exponencial y logaritmo.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">04</span>
+      <span class="comp-text">
+        <strong>Vincular el logaritmo con el cálculo diferencial:</strong> comprender que d/dx[ln(x)] = 1/x
+        es la razón por la que el logaritmo natural es la función central del cálculo, y reconocerlo en
+        contextos de modelado de sistemas.
+      </span>
+    </div>
+
+
+    <div class="callout mt-1">
+      <p>
+        Estas competencias corresponden al fin de aprendizaje de la Unidad 1: <em>"Categorizar distintos tipos
+        de funciones a partir de sus propiedades algebraicas y gráficas, con el fin de representar
+        matemáticamente problemas de la vida real y técnica."</em>
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 3. Contexto ────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Antes de comenzar</span>
+    <h2 class="section-title">¿Por qué existe el logaritmo?</h2>
+
+    <p>
+      En el siglo XVII, astrónomos y navegantes debían multiplicar números de seis o más cifras a mano,
+      una operación que tomaba horas y producía errores frecuentes. El matemático escocés
+      <strong>John Napier</strong> pasó veinte años buscando una forma de convertir multiplicaciones en
+      sumas, mucho más simples de ejecutar. El resultado fue el logaritmo, publicado en 1614.
+    </p>
+
+    <p>
+      La idea central de Napier fue esta: si existe una correspondencia entre dos secuencias, una aritmética
+      (0, 1, 2, 3…) y una geométrica (1, 2, 4, 8…), entonces multiplicar en la secuencia geométrica equivale
+      a sumar en la aritmética. El logaritmo es el índice de esa correspondencia.
+    </p>
+
+    <p>
+      Más de un siglo después, <strong>Leonhard Euler</strong> demostró en 1748 que la derivada de ln(x) es
+      exactamente 1/x. Esa propiedad convierte al logaritmo natural en la función central del cálculo diferencial
+      e integral. Por eso, en las próximas unidades, lo encontrarás en casi toda integral que involucra
+      crecimiento, decaimiento o acumulación de cantidades.
+    </p>
+
+    <div class="callout note">
+      <p>
+        <strong>Conexión directa con esta asignatura:</strong> cuando calcules derivadas en la Unidad 3,
+        descubrirás que d/dx[ln(x)] = 1/x. Eso significa que el área bajo la curva de 1/x, desde 1 hasta
+        cualquier número positivo x, es exactamente ln(x). El logaritmo no es una fórmula abstracta: es
+        la medida de esa área.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 4. Definición ──────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Concepto fundamental</span>
+    <h2 class="section-title">Definición del logaritmo</h2>
+
+    <p>
+      El logaritmo es la operación inversa de la exponenciación. Si la función exponencial responde a la
+      pregunta <em>"¿cuánto produce la base a elevada al exponente y?"</em>, el logaritmo responde a la
+      pregunta inversa: <em>"¿a qué exponente hay que elevar la base a para obtener x?"</em>
+    </p>
+
+    <div class="concept-box">
+      <span class="concept-title">Definición formal</span>
+      <p style="margin-bottom:.5rem;">
+        Sea <strong>a &gt; 0</strong> y <strong>a &#8800; 1</strong>. El logaritmo de x en base a es el número y
+        tal que:
+      </p>
+      <code class="formula">log_a(x) = y    si y solo si    a^y = x</code>
+      <p class="formula-note" style="margin-top:.5rem;">
+        Son la misma información escrita en distinto orden. La base a siempre es positiva y distinta de 1.
+        El argumento x siempre es positivo.
+      </p>
+      <div class="desmos-row">
+        <span class="desmos-label">Ver en Desmos — logaritmo y exponencial como funciones inversas:</span>
+        <a class="desmos-link"
+           href="https://www.desmos.com/calculator?lang=es#{"version":9,"graph":{"viewport":{"xmin":-3,"ymin":-4,"xmax":8,"ymax":8}},"expressions":{"list":[{"id":"1","type":"expression","latex":"y=\\ln\\left(x\\right)","color":"#7B1034","style":"SOLID"},{"id":"2","type":"expression","latex":"y=e^{x}","color":"#550B23","style":"DASHED"},{"id":"3","type":"expression","latex":"y=x","color":"#AAAAAA","style":"DASHED"},{"id":"4","type":"expression","latex":"\\left(1,0\\right)","color":"#7B1034","label":"(1, 0)","showLabel":true}]}}"
+           target="_blank" rel="noopener">
+          Abrir en Desmos
+        </a>
+      </div>
+    </div>
+
+    <h3 style="margin-top:1.75rem;">Dominio y rango</h3>
+
+    <div style="display:flex; align-items:flex-start; gap:2rem; margin-top:1.5rem;">
+      <div style="flex:1;">
+        <p>
+          Estas dos restricciones son absolutas y es importante interiorizarlas antes de resolver cualquier ejercicio:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Propiedad</th>
+              <th>Valor</th>
+              <th>Razón</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dominio</td>
+              <td>x &gt; 0 únicamente</td>
+              <td>No existe logaritmo de cero ni de números negativos. En x = 0 la función tiene una asíntota vertical que tiende a &#8722;&#8734;.</td>
+            </tr>
+            <tr>
+              <td>Rango</td>
+              <td>Todos los reales</td>
+              <td>El logaritmo puede producir cualquier número real: positivos, negativos o cero.</td>
+            </tr>
+            <tr>
+              <td>Valor en x = 1</td>
+              <td>log_a(1) = 0 siempre</td>
+              <td>Porque a&#8304; = 1 para cualquier base a. El logaritmo de 1 siempre es cero.</td>
+            </tr>
+            <tr>
+              <td>Asíntota</td>
+              <td>Vertical en x = 0</td>
+              <td>Cuando x se acerca a cero por la derecha, el logaritmo tiende a &#8722;&#8734;.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="flex-shrink:0; text-align:center; padding-top:.5rem;">
+        <img src="Imagen2.png" alt="Logo de apoyo IEDEP"
+             style="width:90px; height:auto; opacity:.72;">
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 5. Los tres logaritmos ─────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Vocabulario esencial</span>
+    <h2 class="section-title">Los tres logaritmos que usarás con mayor frecuencia</h2>
+
+    <div class="grid-2">
+
+      <div class="card">
+        <span class="card-title">Logaritmo común — log(x)</span>
+        <code class="formula">log(x) = log_10(x)</code>
+        <p style="font-size:.95rem; margin-top:.75rem; margin-bottom:.75rem;">
+          Base 10. Cuando no se escribe la base, se sobreentiende que es 10. Aparece en la
+          escala Richter de terremotos, en los decibeles de sonido y en la medida de acidez pH.
+        </p>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log(x)',color:'#7B1034'},{id:'2',type:'expression',latex:'x=0',color:'#AAAAAA',style:'DASHED'},{id:'3',type:'expression',latex:'(1,0)',color:'#7B1034',showLabel:true,label:'(1,0)'}]}}))))">
+          Ver y&#8202;=&#8202;log(x) en Desmos
+        </a>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Logaritmo natural — ln(x)</span>
+        <code class="formula">ln(x) = log_e(x)   (e ≈ 2.71828)</code>
+        <p style="font-size:.95rem; margin-top:.75rem; margin-bottom:.75rem;">
+          Base e. Es el más importante en cálculo diferencial porque su derivada es 1/x,
+          la expresión más limpia posible. Aparece en todos los modelos de crecimiento y
+          decaimiento de esta asignatura.
+        </p>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)',color:'#7B1034'},{id:'2',type:'expression',latex:'y=e^x',color:'#9C1940',style:'DASHED'},{id:'3',type:'expression',latex:'y=x',color:'#CCCCCC',style:'DASHED'}]}}))))">
+          Ver y&#8202;=&#8202;ln(x) en Desmos
+        </a>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Logaritmo binario — log&#8322;(x)</span>
+        <code class="formula">log_2(x)</code>
+        <p style="font-size:.95rem; margin-top:.75rem; margin-bottom:.75rem;">
+          Base 2. Mide la complejidad algorítmica. Una búsqueda binaria en n elementos necesita
+          log&#8322;(n) comparaciones en el peor caso. Aparece en toda la teoría de algoritmos de
+          la Licenciatura en Sistemas Computacionales.
+        </p>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log_2(x)',color:'#7B1034'},{id:'2',type:'expression',latex:'y=2^x',color:'#9C1940',style:'DASHED'}]}}))))">
+          Ver y&#8202;=&#8202;log&#8322;(x) en Desmos
+        </a>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Fórmula de cambio de base</span>
+        <code class="formula">log_a(x) = ln(x) / ln(a)</code>
+        <p style="font-size:.95rem; margin-top:.75rem; margin-bottom:.75rem;">
+          Permite calcular cualquier logaritmo usando la tecla ln de la calculadora.
+          Si necesitas log&#8322;(5), calcula ln(5) / ln(2) = 1.609 / 0.693 ≈ 2.32.
+        </p>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,expressions:{list:[{id:'a',type:'expression',latex:'a=2',sliderBounds:{min:'1.1',max:'10',step:'0.1'}},{id:'1',type:'expression',latex:'y=\\\\ln(x)/\\\\ln(a)',color:'#7B1034',label:'log_a(x)'},{id:'2',type:'expression',latex:'y=\\\\ln(x)',color:'#9C1940',style:'DASHED',label:'ln(x)'}]}}))))">
+          Ver cambio de base (deslizador de <em>a</em>)
+        </a>
+      </div>
+
+    </div>
+
+    <h3 style="margin-top:1.5rem;">Tabla de valores notables</h3>
+    <p>
+      Estos valores deben reconocerse de inmediato sin calculadora. Verificar cada uno con la
+      definición a&#179; = x es el mejor ejercicio de consolidación.
+    </p>
+
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Expresión</th>
+          <th>Resultado</th>
+          <th>Verificación</th>
+          <th>Por qué</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">log_2(1)</code></td>
+          <td>0</td>
+          <td>2&#8304; = 1</td>
+          <td>Cualquier base elevada a 0 da 1.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">log_2(2)</code></td>
+          <td>1</td>
+          <td>2&#185; = 2</td>
+          <td>La base elevada a 1 da la base misma.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">log_2(8)</code></td>
+          <td>3</td>
+          <td>2&#179; = 8</td>
+          <td>2 × 2 × 2 = 8.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">log_10(100)</code></td>
+          <td>2</td>
+          <td>10&#178; = 100</td>
+          <td>10 × 10 = 100.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">log_10(1000)</code></td>
+          <td>3</td>
+          <td>10&#179; = 1000</td>
+          <td>10 × 10 × 10 = 1000.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">ln(1)</code></td>
+          <td>0</td>
+          <td>e&#8304; = 1</td>
+          <td>Igual que cualquier logaritmo evaluado en 1.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">ln(e)</code></td>
+          <td>1</td>
+          <td>e&#185; = e</td>
+          <td>La base elevada a 1 da la base.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:.88rem;">ln(e^5)</code></td>
+          <td>5</td>
+          <td>e&#8309; = e&#8309;</td>
+          <td>ln y exp son inversas: se cancelan.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="desmos-row" style="margin-top:1rem;">
+      <span class="desmos-label">Comparar las tres curvas en Desmos:</span>
+      <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+         onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-5,xmax:12,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log(x)',color:'#7B1034',label:'log(x)',showLabel:true},{id:'2',type:'expression',latex:'y=\\\\ln(x)',color:'#550B23',label:'ln(x)',showLabel:true},{id:'3',type:'expression',latex:'y=\\\\log_2(x)',color:'#C85070',label:'log\u2082(x)',showLabel:true}]}}))))">
+        log(x), ln(x) y log&#8322;(x) juntas
+      </a>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 6. Propiedades ─────────────────────────────────────── -->
+  <section class="section">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <span class="section-label">Herramientas de cálculo</span>
+        <h2 class="section-title">Las tres propiedades algebraicas del logaritmo</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP"
+           style="height:44px; width:auto; opacity:.6; flex-shrink:0; margin-top:.25rem;">
+    </div>
+
+    <p>
+      Estas propiedades son el motivo por el que Napier inventó el logaritmo: transforman operaciones costosas
+      en operaciones más simples. En cálculo diferencial las usarás para simplificar expresiones antes de derivar.
+    </p>
+
+    <div class="formula-block">
+
+      <div class="prop-row">
+        <span class="prop-tag">Producto</span>
+        <div class="prop-body">
+          <code>log_a(M · N) = log_a(M) + log_a(N)</code>
+          <p style="margin-top:.4rem; margin-bottom:0; font-size:.92rem; color:var(--ink-secondary);">
+            Multiplicar dentro del logaritmo equivale a sumar dos logaritmos separados. Esta propiedad permitía
+            a los navegantes del siglo XVII multiplicar números grandes sumando en sus tablas.
+          </p>
+        </div>
+      </div>
+
+      <div class="prop-row">
+        <span class="prop-tag">Cociente</span>
+        <div class="prop-body">
+          <code>log_a(M / N) = log_a(M) - log_a(N)</code>
+          <p style="margin-top:.4rem; margin-bottom:0; font-size:.92rem; color:var(--ink-secondary);">
+            Dividir dentro del logaritmo equivale a restar dos logaritmos. Es el complemento de la propiedad
+            anterior: si el producto se suma, la división se resta.
+          </p>
+        </div>
+      </div>
+
+      <div class="prop-row" style="margin-bottom:0;">
+        <span class="prop-tag">Potencia</span>
+        <div class="prop-body">
+          <code>log_a(M^n) = n · log_a(M)</code>
+          <p style="margin-top:.4rem; margin-bottom:0; font-size:.92rem; color:var(--ink-secondary);">
+            El exponente dentro del logaritmo puede bajarse como factor multiplicativo fuera del logaritmo.
+            Esta es la propiedad más usada para despejar variables que aparecen en exponentes.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout note mt-1">
+      <p>
+        <strong>Propiedad adicional — función inversa:</strong> ln(e&#739;) = x y e^(ln x) = x para todo x positivo.
+        Las funciones ln y exp son inversas entre sí: aplicar una y luego la otra devuelve el valor original.
+        Esta propiedad es la clave para despejar t en cualquier ecuación exponencial.
+      </p>
+    </div>
+
+    <div class="desmos-row">
+      <span class="desmos-label">Verificar las propiedades visualmente:</span>
+      <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+         onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-4,xmax:12,ymax:6}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)',color:'#7B1034',label:'ln(x)',showLabel:true},{id:'2',type:'expression',latex:'y=\\\\ln(x)+\\\\ln(2)',color:'#9C1940',label:'ln(x)+ln(2)=ln(2x)',showLabel:true},{id:'3',type:'expression',latex:'y=\\\\ln(2x)',color:'#C85070',style:'DASHED',label:'ln(2x)',showLabel:true},{id:'4',type:'expression',latex:'y=2\\\\ln(x)',color:'#550B23',label:'2·ln(x)=ln(x²)',showLabel:true}]}}))))">
+        Propiedad de producto y potencia
+      </a>
+      <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+         onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-4,xmax:6,ymax:6}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)',color:'#7B1034',label:'ln(x)',showLabel:true},{id:'2',type:'expression',latex:'y=e^x',color:'#9C1940',style:'DASHED',label:'eˣ',showLabel:true},{id:'3',type:'expression',latex:'y=x',color:'#AAAAAA',style:'DASHED'}]}}))))">
+        Función inversa ln y eˣ
+      </a>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 7. Ejemplos resueltos ──────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Desarrollo detallado</span>
+    <h2 class="section-title">Ejemplos resueltos paso a paso</h2>
+
+
+    <!-- Ejemplo 1 -->
+    <div class="example-block">
+      <div class="example-header">Ejemplo 1 — Evaluación directa y conversión de forma</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Convierte a forma logarítmica y calcula el resultado: 2&#8309; = 32.
+          ¿Cuánto vale log&#8322;(32)?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>Identifico los elementos.</strong> En la expresión 2&#8309; = 32 tengo:
+              base = 2, exponente = 5, resultado = 32.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>Aplico la definición.</strong> La forma logarítmica pregunta:
+              ¿a qué potencia hay que elevar 2 para obtener 32? La respuesta es el exponente que
+              ya tengo: log&#8322;(32) = 5.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>Verifico.</strong> Si log&#8322;(32) = 5, entonces 2&#8309; debe dar 32.
+              2 × 2 × 2 × 2 × 2 = 32. Correcto.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">log&#8322;(32) = 5</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver f(x) = log&#8322;(x) y ubicar el punto (32, 5):</span>
+          <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-4,xmax:40,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log_2(x)',color:'#7B1034'},{id:'2',type:'expression',latex:'(32,5)',color:'#550B23',showLabel:true,label:'(32, 5)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Ejemplo 2 -->
+      <div class="example-body">
+        <div class="example-statement">
+          Simplifica usando la propiedad del producto y calcula el valor numérico:
+          log&#8322;(8 × 4) = ?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>Identifico que puedo aplicar la propiedad del producto.</strong>
+              El argumento es un producto de dos factores, así que puedo separarlo en dos logaritmos.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>Aplico la propiedad.</strong>
+              log&#8322;(8 × 4) = log&#8322;(8) + log&#8322;(4).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>Evalúo cada término por separado.</strong>
+              log&#8322;(8) = 3 porque 2&#179; = 8.
+              log&#8322;(4) = 2 porque 2&#178; = 4.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-content">
+              <strong>Sumo los resultados.</strong> 3 + 2 = 5.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">5</span>
+            <span class="step-content">
+              <strong>Verifico directamente.</strong> 8 × 4 = 32. Y log&#8322;(32) = 5 porque 2&#8309; = 32.
+              El resultado es consistente.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">log&#8322;(8 × 4) = log&#8322;(8) + log&#8322;(4) = 3 + 2 = 5</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Verificar que log&#8322;(8) + log&#8322;(4) = log&#8322;(32):</span>
+          <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-2,xmax:40,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log_2(x)',color:'#7B1034',label:'log₂(x)'},{id:'2',type:'expression',latex:'(8,3)',color:'#550B23',showLabel:true,label:'(8,3)'},{id:'3',type:'expression',latex:'(4,2)',color:'#9C1940',showLabel:true,label:'(4,2)'},{id:'4',type:'expression',latex:'(32,5)',color:'#C85070',showLabel:true,label:'(32,5) = suma'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Ejemplo 3 -->
+    <div class="example-block">
+      <div class="example-header">Ejemplo 3 — Aplicación de la propiedad de potencia</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Simplifica: log&#8323;(9&#178;) = ?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>Identifico la propiedad a aplicar.</strong>
+              El argumento es una potencia (9 elevado a 2), así que aplico la propiedad de potencia.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>Bajo el exponente como factor.</strong>
+              log&#8323;(9&#178;) = 2 · log&#8323;(9).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>Evalúo log&#8323;(9).</strong>
+              ¿3 elevado a qué da 9? Como 3&#178; = 9, entonces log&#8323;(9) = 2.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-content">
+              <strong>Multiplico.</strong> 2 · 2 = 4.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">5</span>
+            <span class="step-content">
+              <strong>Verifico.</strong> 9&#178; = 81. Y log&#8323;(81) = 4 porque 3&#8308; = 81. Correcto.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">log&#8323;(9&#178;) = 2 · log&#8323;(9) = 2 · 2 = 4</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver y = log&#8323;(x) y ubicar el punto (81, 4):</span>
+          <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-3,xmax:90,ymax:7}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)/\\\\ln(3)',color:'#7B1034',label:'log₃(x)'},{id:'2',type:'expression',latex:'(9,2)',color:'#550B23',showLabel:true,label:'(9, 2)'},{id:'3',type:'expression',latex:'(81,4)',color:'#C85070',showLabel:true,label:'(81, 4) = log₃(9²)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Ejemplo 4 -->
+    <div class="example-block">
+      <div class="example-header">Ejemplo 4 — Despeje de variable en una ecuación exponencial</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Una batería tiene 100% de carga. Pierde el 10% de lo que le queda cada hora.
+          El modelo es C(t) = 100 · (0.9)&#739;. ¿Cuántas horas tarda en llegar al 20% de carga?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>Planteo la ecuación.</strong>
+              Quiero que C(t) = 20, entonces: 100 · (0.9)&#739; = 20.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>Despejo la potencia.</strong>
+              Divido ambos lados entre 100: (0.9)&#739; = 0.20.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>Aplico logaritmo natural a ambos lados.</strong>
+              ln((0.9)&#739;) = ln(0.20).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-content">
+              <strong>Uso la propiedad de potencia en el lado izquierdo.</strong>
+              t · ln(0.9) = ln(0.20).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">5</span>
+            <span class="step-content">
+              <strong>Despejo t.</strong>
+              t = ln(0.20) / ln(0.9) = (−1.6094) / (−0.1054) ≈ 15.3 horas.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">6</span>
+            <span class="step-content">
+              <strong>Verifico.</strong>
+              C(15.3) = 100 · (0.9)^15.3 ≈ 100 · 0.200 = 20%. El modelo se confirma.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">t = ln(0.20) / ln(0.9) ≈ 15.3 horas</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver el modelo de batería C(t) = 100 · (0.9)&#739; y la línea C = 20:</span>
+          <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-10,xmax:50,ymax:110}},expressions:{list:[{id:'1',type:'expression',latex:'y=100\\\\cdot0.9^x',color:'#7B1034',label:'C(t) = 100·(0.9)ᵗ'},{id:'2',type:'expression',latex:'y=20',color:'#9C1940',style:'DASHED',label:'20%'},{id:'3',type:'expression',latex:'(15.3,20)',color:'#550B23',showLabel:true,label:'(15.3, 20)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Ejemplo 5 -->
+    <div class="example-block">
+      <div class="example-header">Ejemplo 5 — Aplicación en algoritmos: búsqueda binaria</div>
+      <div class="example-body">
+        <div class="example-statement">
+          La complejidad de una búsqueda binaria sobre n elementos es O(log&#8322;(n)). Una lista tiene
+          1,048,576 elementos (2&#178;&#8304;). ¿Cuántas comparaciones se necesitan como máximo?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>Identifico qué debo calcular.</strong>
+              El número máximo de comparaciones es log&#8322;(1,048,576).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>Reconozco la potencia de 2.</strong>
+              1,048,576 = 2&#178;&#8304;. Lo sé porque 2&#185;&#8304; = 1,024 y 2&#178;&#8304; = 1,024&#178; = 1,048,576.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>Aplico la definición.</strong>
+              log&#8322;(2&#178;&#8304;) = 20, porque 2&#178;&#8304; = 2&#178;&#8304;. El exponente ES el logaritmo.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-content">
+              <strong>Interpreto el resultado.</strong>
+              Una búsqueda secuencial revisaría hasta 1,048,576 elementos. La búsqueda binaria necesita
+              como máximo 20 comparaciones. Esa diferencia es el impacto práctico del logaritmo en el
+              diseño de algoritmos eficientes.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">log&#8322;(1,048,576) = 20 comparaciones máximas</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver y = log&#8322;(x) — crecimiento logarítmico vs. crecimiento lineal:</span>
+          <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-5000,ymin:-5,xmax:1100000,ymax:35}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log_2(x)',color:'#7B1034',label:'O(log₂ n)'},{id:'2',type:'expression',latex:'y=x/100000',color:'#9C1940',style:'DASHED',label:'O(n) escalado'},{id:'3',type:'expression',latex:'(1048576,20)',color:'#550B23',showLabel:true,label:'(1M, 20 pasos)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 8. Conexión con el cálculo diferencial ─────────────── -->
+  <section class="section">
+    <span class="section-label">Fundamento para las unidades siguientes</span>
+    <h2 class="section-title">El logaritmo en el contexto del cálculo diferencial</h2>
+
+    <p>
+      En la Unidad 3 de esta asignatura calcularás derivadas de funciones. La razón por la que el logaritmo
+      natural ocupa un lugar central en el cálculo es la siguiente propiedad, que Euler demostró formalmente
+      en 1748:
+    </p>
+
+    <div class="concept-box">
+      <span class="concept-title">Derivada del logaritmo natural</span>
+      <code class="formula">d/dx [ln(x)] = 1/x     para todo x > 0</code>
+      <p style="margin-top:.75rem; font-size:.97rem;">
+        Esta igualdad significa que la velocidad de cambio instantánea de ln(x) en cualquier punto x es
+        exactamente 1/x. Ninguna otra base produce una expresión tan limpia para la derivada. Por eso,
+        cuando un ingeniero o matemático necesita derivar una función logarítmica, siempre busca expresarla
+        en términos de ln antes de proceder.
+      </p>
+    </div>
+
+    <p>
+      Una consecuencia práctica inmediata: para derivar log&#8336;(x) en cualquier base a, se usa la fórmula de
+      cambio de base y la derivada del ln:
+    </p>
+
+    <div class="formula-block">
+      <code class="formula">d/dx [log_a(x)] = 1 / (x · ln(a))</code>
+      <p class="formula-note">
+        Cuando a = e, ln(e) = 1 y la fórmula se reduce a d/dx[ln(x)] = 1/x. De ahí la preferencia
+        por el logaritmo natural en todo el cálculo.
+      </p>
+      <div class="desmos-row">
+        <span class="desmos-label">Ver ln(x) y su derivada 1/x juntas:</span>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-4,xmax:8,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)',color:'#7B1034',label:'ln(x)',showLabel:true},{id:'2',type:'expression',latex:'y=1/x',color:'#9C1940',style:'DASHED',label:'1/x = d/dx[ln(x)]',showLabel:true},{id:'3',type:'expression',latex:'x=0',color:'#CCCCCC',style:'DASHED',label:'asíntota x=0'}]}}))))">
+          ln(x) y 1/x en Desmos
+        </a>
+        <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+           onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-4,xmax:10,ymax:5}},expressions:{list:[{id:'a',type:'expression',latex:'a=10',sliderBounds:{min:'1.1',max:'20',step:'0.1'}},{id:'1',type:'expression',latex:'y=\\\\ln(x)/\\\\ln(a)',color:'#7B1034',label:'log_a(x)'},{id:'2',type:'expression',latex:'y=1/(x\\\\cdot\\\\ln(a))',color:'#9C1940',style:'DASHED',label:'d/dx[log_a(x)]'}]}}))))">
+          Derivada con deslizador de base <em>a</em>
+        </a>
+      </div>
+    </div>
+
+    <p>
+      El logaritmo también aparece como resultado de integración: la integral de 1/x dx es ln|x| + C.
+      Esto crea un vínculo directo entre la función 1/x, el logaritmo natural y el cálculo integral
+      que se abordará en unidades posteriores.
+    </p>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 9. Ejercicios propuestos ───────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Práctica independiente</span>
+    <h2 class="section-title">Ejercicios propuestos</h2>
+
+    <p>
+      Estos ejercicios corresponden a la actividad independiente de la Unidad 1. Escribe el procedimiento
+      completo, no solo el resultado. Cada paso tiene el mismo valor que la respuesta final.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>N.°</th>
+          <th>Ejercicio</th>
+          <th>Indicación</th>
+          <th>Ver en Desmos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Calcula log&#8322;(64) sin calculadora.</td>
+          <td>Busca el exponente n tal que 2&#8319; = 64.</td>
+          <td>
+            <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-3,xmax:80,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log_2(x)',color:'#7B1034'},{id:'2',type:'expression',latex:'(64,6)',color:'#550B23',showLabel:true,label:'(64, ?)'}]}}))))">
+              Graficar
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Simplifica: log(1000 / 10).</td>
+          <td>Aplica la propiedad de cociente y evalúa cada término.</td>
+          <td>
+            <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-5,ymin:-3,xmax:1200,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\log(x)',color:'#7B1034',label:'log(x)'},{id:'2',type:'expression',latex:'(1000,3)',color:'#9C1940',showLabel:true,label:'(1000,3)'},{id:'3',type:'expression',latex:'(10,1)',color:'#C85070',showLabel:true,label:'(10,1)'},{id:'4',type:'expression',latex:'(100,2)',color:'#550B23',showLabel:true,label:'(100, ?)'}]}}))))">
+              Graficar
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Resuelve: 3&#739; = 243. Escribe la forma logarítmica y el valor de t.</td>
+          <td>Convierte a forma logarítmica, luego verifica directamente.</td>
+          <td>
+            <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-2,xmax:260,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)/\\\\ln(3)',color:'#7B1034',label:'log₃(x)'},{id:'2',type:'expression',latex:'(243,5)',color:'#550B23',showLabel:true,label:'(243, ?)'}]}}))))">
+              Graficar
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Simplifica: ln(e&#8308; · e&#178;). Usa propiedades del logaritmo.</td>
+          <td>Aplica la propiedad de producto y luego la propiedad inversa.</td>
+          <td>
+            <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-4,xmax:500,ymax:9}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\ln(x)',color:'#7B1034',label:'ln(x)'},{id:'2',type:'expression',latex:'(e^6,6)',color:'#550B23',showLabel:true,label:'(e⁶, ?) = e⁴·e²'}]}}))))">
+              Graficar
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>
+            Un servidor recibe 500 solicitudes por minuto y pierde el 20% de capacidad cada hora.
+            Modelo: S(t) = 500 · (0.8)&#739;. ¿En cuántas horas el servidor procesa menos de
+            100 solicitudes por minuto?
+          </td>
+          <td>Plantea la ecuación, aplica logaritmo natural y despeja t.</td>
+          <td>
+            <a class="desmos-link" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-20,xmax:15,ymax:550}},expressions:{list:[{id:'1',type:'expression',latex:'y=500\\\\cdot0.8^x',color:'#7B1034',label:'S(t) = 500·(0.8)ᵗ'},{id:'2',type:'expression',latex:'y=100',color:'#9C1940',style:'DASHED',label:'100 solicitudes'}]}}))))">
+              Graficar
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 10. Conclusión ─────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Cierre de la sesión</span>
+    <h2 class="section-title">Conclusión</h2>
+
+    <p>
+      Al término de esta clase se han establecido los fundamentos del logaritmo como función matemática
+      y como herramienta de modelado. Los siguientes puntos resumen lo esencial:
+    </p>
+
+    <ul class="conclusion-list">
+      <li>
+        <strong>El logaritmo es la operación inversa de la exponenciación.</strong> La relación
+        log&#8336;(x) = y si y solo si a&#739; = x no es una definición arbitraria: es la forma de invertir
+        la pregunta que hace la exponencial. Dominar esta equivalencia es el punto de partida de todo
+        lo demás.
+      </li>
+      <li>
+        <strong>El dominio del logaritmo es estrictamente positivo.</strong> No existe logaritmo de cero ni
+        de números negativos. Esta restricción debe verificarse antes de evaluar cualquier expresión
+        logarítmica en un contexto real.
+      </li>
+      <li>
+        <strong>Las tres propiedades algebraicas transforman multiplicaciones en sumas.</strong> La propiedad
+        de producto, la de cociente y la de potencia permiten simplificar expresiones complejas y, en las
+        unidades siguientes, facilitan el proceso de derivación.
+      </li>
+      <li>
+        <strong>El logaritmo natural es el central en cálculo diferencial</strong> porque su derivada
+        es 1/x, la expresión más simple posible. Toda función logarítmica en otra base puede convertirse
+        a logaritmo natural mediante la fórmula de cambio de base.
+      </li>
+      <li>
+        <strong>El logaritmo aparece en sistemas computacionales reales.</strong> La complejidad O(log n)
+        de la búsqueda binaria, la entropía en teoría de la información, los modelos de decaimiento de
+        señales y la resolución de ecuaciones exponenciales son aplicaciones directas de lo aprendido hoy.
+      </li>
+    </ul>
+
+    <div class="callout mt-1">
+      <p>
+        <strong>Próxima clase:</strong> cierre de la Unidad 1 con composición y modelado completo,
+        seguido de la apertura de la Unidad 2: Límites y Continuidad. Se recomienda revisar el concepto
+        de dominio y comportamiento asintótico de las funciones trabajadas hasta ahora, ya que serán
+        el punto de partida del análisis de límites.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── 11. Referencias ────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="section-title">Referencias bibliográficas</h2>
+
+    <p class="text-muted">
+      Las referencias están ordenadas por unidad del programa, conforme al plan de estudios
+      LSC626374 del IEDEP. Formato APA 7.ª edición.
+    </p>
+
+    <h4 class="mt-1" style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-bottom:.75rem;">Unidad 1 — Básica</h4>
+
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2022</span>
+        Sánchez, J. L. (2022). <em>Introducción a las funciones reales: Un análisis de dominio y
+        rango en el cálculo inicial.</em> Universidad Nacional Autónoma de México (UNAM).
+      </li>
+      <li>
+        <span class="ref-year">2023</span>
+        Gómez, M. (2023). Análisis de funciones trascendentes (trigonométricas, exponenciales y
+        logarítmicas) en modelos biológicos. <em>Revista de Investigación Matemática Latinoamericana.</em>
+      </li>
+      <li>
+        <span class="ref-year">2021</span>
+        Ramírez, C. (2021). <em>Composición de funciones y transformaciones gráficas aplicadas
+        a la ingeniería.</em> Editorial Universitaria, Chile.
+      </li>
+      <li>
+        <span class="ref-year">2024</span>
+        Torres, P. (2024). <em>Modelado matemático con funciones: Aplicaciones prácticas en la
+        física moderna y sistemas dinámicos.</em> Universidad de los Andes, Colombia.
+      </li>
+    </ul>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-top:1.5rem; margin-bottom:.75rem;">Complementaria</h4>
+
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2016</span>
+        Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning.
+        Capítulo 1: Funciones y modelos; Capítulo 3: Reglas de derivación.
+      </li>
+      <li>
+        <span class="ref-year">2017</span>
+        Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.
+      </li>
+      <li>
+        <span class="ref-year">1614</span>
+        Napier, J. (1614). <em>Mirifici Logarithmorum Canonis Descriptio.</em> Edimburgo. [Obra
+        histórica de referencia; edición facsimilar disponible en Archive.org.]
+      </li>
+      <li>
+        <span class="ref-year">1748</span>
+        Euler, L. (1748). <em>Introductio in analysin infinitorum.</em> Lausana. [Primera
+        formalización del número e y del logaritmo natural.]
+      </li>
+    </ul>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-top:1.5rem; margin-bottom:.75rem;">Herramientas digitales recomendadas</h4>
+
+    <ul class="ref-list">
+      <li>
+        Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> Recuperado de
+        https://www.desmos.com/calculator
+      </li>
+      <li>
+        GeoGebra. (s.f.). <em>Applets de funciones con parámetros ajustables.</em> Recuperado de
+        https://www.geogebra.org/
+      </li>
+      <li>
+        WolframAlpha. (s.f.). <em>Motor de conocimiento computacional.</em> Recuperado de
+        https://www.wolframalpha.com
+      </li>
+    </ul>
+  </section>
+
+
+</div><!-- /page-wrapper -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PIE DE PÁGINA
+     ══════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <span>
+    <strong>Instituto de Educación Digital del Estado de Puebla</strong>
+    &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales
+  </span>
+  <span>
+    Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez
+  </span>
+</footer>
+
+</body>
+</html>
