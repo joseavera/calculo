@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funciones, Monomios y Polinomios — Cálculo Diferencial | IEDEP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="base.css">
+
+  <style>
+
+    /* ── Enlace Desmos ─────────────────────────────────────── */
+    .desmos-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--guinda);
+      text-decoration: none;
+      padding: .28rem .75rem;
+      border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm);
+      background: var(--guinda-light);
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+      letter-spacing: .02em;
+    }
+    .desmos-link:hover { background: var(--guinda); color: var(--white); text-decoration: none; }
+    .desmos-link::before {
+      content: '';
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .desmos-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-top: .65rem;
+      flex-wrap: wrap;
+    }
+    .desmos-label {
+      font-family: var(--font-ui);
+      font-size: .75rem;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    /* ── Tabla de propiedades compacta ─────────────────────── */
+    .prop-table { width: 100%; border-collapse: collapse; font-size: .93rem; margin: .75rem 0; }
+    .prop-table th {
+      background: var(--guinda);
+      color: var(--white);
+      padding: .5rem .85rem;
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      text-align: left;
+    }
+    .prop-table td { padding: .55rem .85rem; border-bottom: 1px solid var(--border); font-size: .93rem; vertical-align: top; }
+    .prop-table tr:nth-child(even) td { background: var(--surface); }
+    .prop-table tr:last-child td { border-bottom: none; }
+
+    /* ── Tarjeta de ejemplo informático ─────────────────────── */
+    .cs-example {
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--guinda);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .cs-example-header {
+      background: var(--guinda-light);
+      padding: .65rem 1.4rem;
+      font-family: var(--font-ui);
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--guinda);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      border-bottom: 1px solid var(--border);
+    }
+    .cs-example-body { padding: 1.2rem 1.5rem; background: var(--off-white); }
+    .cs-example-body .context {
+      font-size: .97rem;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+      padding: .75rem 1rem;
+      background: var(--surface);
+      border-left: 3px solid var(--guinda-rule);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    /* ── Sub-preguntas de ejercicio ─────────────────────────── */
+    .subq-list { list-style: none; padding: 0; margin: 0 0 .75rem; }
+    .subq-list li {
+      display: flex;
+      gap: .75rem;
+      margin-bottom: .8rem;
+      align-items: flex-start;
+    }
+    .subq-num {
+      background: var(--guinda);
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .15rem .55rem;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .subq-body { font-size: .97rem; line-height: 1.6; }
+
+    /* ── Solución desplegable ───────────────────────────────── */
+    details { margin-top: .65rem; }
+    details summary {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--guinda);
+      cursor: pointer;
+      padding: .35rem .6rem;
+      border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm);
+      background: var(--guinda-light);
+      display: inline-block;
+      letter-spacing: .02em;
+      user-select: none;
+    }
+    details summary:hover { background: var(--guinda); color: var(--white); }
+    details[open] summary { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .solution-body {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+      padding: 1rem 1.2rem;
+      background: var(--white);
+    }
+    .solution-body .result-line {
+      background: var(--guinda-light);
+      border: 1px solid #D8A8BA;
+      border-radius: var(--radius-sm);
+      padding: .5rem .9rem;
+      font-family: var(--font-mono);
+      font-size: .9rem;
+      color: var(--guinda-dark);
+      margin-top: .65rem;
+      font-weight: 500;
+    }
+
+    /* ── Propiedades de monomios/polinomios ─────────────────── */
+    .prop-row { display: flex; gap: .65rem; align-items: flex-start; margin-bottom: .9rem; }
+    .prop-tag {
+      background: var(--guinda);
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: .18rem .6rem;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .prop-body { font-size: .97rem; line-height: 1.6; }
+    .prop-body code {
+      font-family: var(--font-mono);
+      font-size: .88rem;
+      background: var(--surface);
+      padding: .03rem .32rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+
+    /* ── Desglose visual de monomio ─────────────────────────── */
+    .monomial-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 1.25rem 0;
+      flex-wrap: wrap;
+    }
+    .mono-part {
+      text-align: center;
+      padding: .75rem 1.1rem;
+      border: 1px solid var(--border);
+      background: var(--off-white);
+    }
+    .mono-part:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+    .mono-part:last-child  { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+    .mono-part.accent { background: var(--guinda); border-color: var(--guinda); }
+    .mono-part .value { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 500; color: var(--ink); display: block; }
+    .mono-part.accent .value { color: var(--white); }
+    .mono-part .sublabel { font-family: var(--font-ui); font-size: .72rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .08em; display: block; margin-top: .2rem; }
+    .mono-part.accent .sublabel { color: rgba(255,255,255,.75); }
+    .mono-sep { font-family: var(--font-mono); font-size: 1.5rem; color: var(--border); padding: 0 .25rem; align-self: center; }
+
+    /* ── Degree strip ───────────────────────────────────────── */
+    .degree-strip {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin: .75rem 0;
+    }
+    .degree-chip {
+      background: var(--guinda-light);
+      border: 1px solid #D8A8BA;
+      border-radius: 99px;
+      padding: .22rem .9rem;
+      font-family: var(--font-ui);
+      font-size: .82rem;
+      color: var(--guinda);
+      font-weight: 500;
+    }
+
+    /* ── Ref list ─────────────────────────────────────────── */
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: .95rem; padding: .6rem 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-year { font-family: var(--font-mono); font-size: .82rem; color: var(--guinda); font-weight: 500; margin-right: .35rem; }
+
+    /* ── Conclusión ─────────────────────────────────────────── */
+    .conclusion-list { list-style: none; padding: 0; }
+    .conclusion-list li {
+      padding: .75rem 0 .75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .98rem;
+      position: relative;
+      line-height: 1.65;
+    }
+    .conclusion-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 1.05rem;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--guinda);
+    }
+    .conclusion-list li:last-child { border-bottom: none; }
+
+    @media print {
+      .site-footer { position: fixed; bottom: 0; width: 100%; }
+      .page-wrapper { padding-bottom: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     CABECERA INSTITUCIONAL
+     ══════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png"
+         alt="Logotipo IEDEP — Instituto de Educación Digital del Estado de Puebla"
+         style="height:88px; width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Material de clase</span>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════════════ -->
+<div class="class-hero">
+  <div style="max-width:900px; margin:0 auto; padding:0 2rem;">
+    <span class="class-label">Unidad 1 &nbsp;·&nbsp; Funciones y Modelado</span>
+    <h1>Funciones, Monomios y Polinomios</h1>
+    <span class="class-subtitle">
+      Definición, estructura, clasificación y aplicaciones en el contexto de la programación y los sistemas computacionales
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">
+        Fecha
+        <span>2026</span>
+      </div>
+      <div class="meta-item">
+        Duración
+        <span>60 minutos</span>
+      </div>
+      <div class="meta-item">
+        Asesor
+        <span>Mtro. José Armando Vera Rodríguez</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     CONTENIDO
+     ══════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+
+  <!-- ── Competencias ──────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Propósito de la sesión</span>
+    <h2 class="section-title">Competencias a desarrollar</h2>
+
+    <div class="competency-card">
+      <span class="comp-num">01</span>
+      <span class="comp-text">
+        <strong>Identificar y clasificar funciones:</strong> reconocer qué es una función, distinguirla de una
+        relación que no lo es, y determinar su dominio y rango a partir de una expresión o tabla de valores.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">02</span>
+      <span class="comp-text">
+        <strong>Operar con monomios:</strong> identificar coeficiente, variable y grado de un monomio; sumar,
+        restar y multiplicar monomios semejantes; y evaluar un monomio en un valor concreto.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">03</span>
+      <span class="comp-text">
+        <strong>Construir y evaluar polinomios:</strong> reconocer la estructura de un polinomio, identificar
+        su grado, ordenarlo de mayor a menor grado y sustituir valores para calcular resultados numéricos.
+      </span>
+    </div>
+
+    <div class="competency-card">
+      <span class="comp-num">04</span>
+      <span class="comp-text">
+        <strong>Vincular los conceptos con sistemas computacionales:</strong> traducir situaciones reales de
+        programación, redes y algoritmos a expresiones funcionales, monomiales o polinomiales, y resolver
+        preguntas concretas sustituyendo valores.
+      </span>
+    </div>
+
+    <div class="callout mt-1">
+      <p>
+        Estas competencias forman parte del fin de aprendizaje de la Unidad 1: <em>"Categorizar distintos
+        tipos de funciones a partir de sus propiedades algebraicas y gráficas, con el fin de representar
+        matemáticamente problemas de la vida real y técnica."</em>
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════════════════════════════════════════════
+       BLOQUE 1 — FUNCIONES
+       ══════════════════════════════════════════════════ -->
+  <section class="section">
+    <span class="section-label">Bloque 1</span>
+    <h2 class="section-title">Funciones</h2>
+
+
+    <!-- ── 1.1 ¿Qué es una función? ──────────────────── -->
+    <h3>¿Qué es una función?</h3>
+
+    <p>
+      Una <strong>función</strong> es una regla que toma un valor de entrada y produce exactamente un valor
+      de salida. Nada más, nada menos. La clave está en esa palabra: <em>exactamente uno</em>. Si un valor
+      de entrada puede producir dos salidas distintas, ya no es una función.
+    </p>
+
+    <div class="concept-box">
+      <span class="concept-title">Definición formal</span>
+      <p style="margin-bottom:.5rem;">
+        Una función <strong>f</strong> de un conjunto A a un conjunto B es una regla que asigna a cada
+        elemento <strong>x</strong> del dominio A exactamente un elemento <strong>f(x)</strong> del codominio B.
+      </p>
+      <code class="formula">f : A  →  B       f(x) = expresión</code>
+      <p class="formula-note">
+        Se lee: "f de x". La x es la variable independiente (entrada). El valor f(x) es la variable
+        dependiente (salida). El dominio A es el conjunto de entradas permitidas.
+      </p>
+    </div>
+
+    <p>
+      Piénsalo como una máquina: metes un número por un lado, la máquina ejecuta una operación, y te devuelve
+      exactamente un número por el otro lado. Si la máquina pudiera darte dos respuestas distintas para la
+      misma entrada, no sería una función; sería un comportamiento no determinista, algo que en programación
+      llamaríamos un error.
+    </p>
+
+
+    <!-- ── 1.2 Función vs no-función ──────────────────── -->
+    <h3>Función vs. relación que no es función</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Expresión</th>
+          <th>¿Es función?</th>
+          <th>Razón</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code style="font-family:var(--font-mono);">f(x) = 2x + 1</code></td>
+          <td>Sí</td>
+          <td>A cada x le corresponde exactamente un valor: x = 3 da f(3) = 7, siempre.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);">f(x) = x²</code></td>
+          <td>Sí</td>
+          <td>Aunque f(2) = 4 y f(−2) = 4, a cada x le corresponde un único resultado.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);">x² + y² = 25</code></td>
+          <td>No</td>
+          <td>Para x = 3 hay dos valores de y: y = 4 y y = −4. Una entrada produce dos salidas.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);">f(x) = 1/x</code></td>
+          <td>Sí (con restricción)</td>
+          <td>Es función para todo x distinto de 0. En x = 0 no está definida, por eso el dominio excluye el cero.</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── 1.3 Dominio y rango ─────────────────────── -->
+    <h3>Dominio y rango</h3>
+
+    <p>
+      El <strong>dominio</strong> es el conjunto de todos los valores de x que la función acepta como entrada.
+      El <strong>rango</strong> es el conjunto de todos los valores que la función puede producir como salida.
+      Siempre se definen en contexto: un modelo matemático puede tener dominio infinito, pero si representa
+      tiempo, el dominio real es t &#8805; 0.
+    </p>
+
+    <div class="formula-block">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div>
+          <p style="font-family:var(--font-ui); font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); margin-bottom:.4rem;">Dominio</p>
+          <code class="formula">f(x) = 2x + 3   →   Dominio: todos los reales ℝ</code>
+          <code class="formula">f(x) = 1/x       →   Dominio: x ≠ 0</code>
+          <code class="formula">f(x) = √x        →   Dominio: x ≥ 0</code>
+        </div>
+        <div>
+          <p style="font-family:var(--font-ui); font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); margin-bottom:.4rem;">Rango</p>
+          <code class="formula">f(x) = 2x + 3   →   Rango: todos los reales ℝ</code>
+          <code class="formula">f(x) = x²        →   Rango: y ≥ 0</code>
+          <code class="formula">f(x) = √x        →   Rango: y ≥ 0</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="desmos-row">
+      <span class="desmos-label">Explorar dominio y rango visualmente:</span>
+      <a class="desmos-link"
+         href="https://www.desmos.com/calculator?lang=es"
+         target="_blank" rel="noopener"
+         onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-6,ymin:-4,xmax:6,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x+3',color:'#7B1034',label:'f(x)=2x+3',showLabel:true},{id:'2',type:'expression',latex:'y=x^2',color:'#9C1940',label:'f(x)=x²',showLabel:true},{id:'3',type:'expression',latex:'y=\\\\sqrt{x}',color:'#C85070',label:'f(x)=√x',showLabel:true}]}}))))">
+        f(x) = 2x+3, x² y √x
+      </a>
+    </div>
+
+
+    <!-- ── 1.4 Evaluación de funciones ──────────────── -->
+    <h3>Evaluación de una función</h3>
+
+    <p>
+      Evaluar f(x) en un valor concreto significa sustituir x por ese número y calcular el resultado.
+      Es la operación más básica y la más usada: cada vez que un programa llama a una función con un
+      argumento, está evaluando f en ese valor.
+    </p>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo — Evaluación básica paso a paso</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Sea f(x) = 3x&#178; &#8722; 2x + 1. Calcula f(0), f(2) y f(&#8722;1).
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>f(0):</strong> sustituyo x = 0.<br>
+              f(0) = 3(0)&#178; &#8722; 2(0) + 1 = 0 &#8722; 0 + 1 = <strong>1</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>f(2):</strong> sustituyo x = 2.<br>
+              f(2) = 3(2)&#178; &#8722; 2(2) + 1 = 3(4) &#8722; 4 + 1 = 12 &#8722; 4 + 1 = <strong>9</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>f(&#8722;1):</strong> sustituyo x = &#8722;1.<br>
+              f(&#8722;1) = 3(&#8722;1)&#178; &#8722; 2(&#8722;1) + 1 = 3(1) + 2 + 1 = 3 + 2 + 1 = <strong>6</strong>
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">f(0) = 1 &nbsp;·&nbsp; f(2) = 9 &nbsp;·&nbsp; f(−1) = 6</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver la función y confirmar los tres puntos:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-2,xmax:4,ymax:14}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x^2-2x+1',color:'#7B1034'},{id:'2',type:'expression',latex:'(0,1)',color:'#550B23',showLabel:true,label:'f(0)=1'},{id:'3',type:'expression',latex:'(2,9)',color:'#550B23',showLabel:true,label:'f(2)=9'},{id:'4',type:'expression',latex:'(-1,6)',color:'#550B23',showLabel:true,label:'f(-1)=6'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Ejemplo informático 1 ─────────────────────── -->
+    <div class="cs-example">
+      <div class="cs-example-header">Ejemplo informático 1 — Descarga de datos</div>
+      <div class="cs-example-body">
+        <div class="context">
+          La cantidad de datos descargados (en MB) está dada por D(t) = 50t, donde t es el tiempo en minutos.
+        </div>
+        <ul class="subq-list">
+          <li>
+            <span class="subq-num">1</span>
+            <span class="subq-body">¿Cuántos MB se descargan en 2 minutos?</span>
+          </li>
+          <li>
+            <span class="subq-num">2</span>
+            <span class="subq-body">¿Cuántos MB se descargan en 5 minutos?</span>
+          </li>
+          <li>
+            <span class="subq-num">3</span>
+            <span class="subq-body">¿En cuántos minutos se habrán descargado 350 MB?</span>
+          </li>
+        </ul>
+        <details>
+          <summary>Ver solución</summary>
+          <div class="solution-body">
+            <ul class="step-list">
+              <li>
+                <span class="step-n">1</span>
+                <span class="step-content">
+                  D(2) = 50 · 2 = <strong>100 MB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">2</span>
+                <span class="step-content">
+                  D(5) = 50 · 5 = <strong>250 MB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">3</span>
+                <span class="step-content">
+                  50t = 350 &nbsp;→&nbsp; t = 350 / 50 = <strong>7 minutos</strong>
+                </span>
+              </li>
+            </ul>
+            <div class="result-line">D(t) = 50t &nbsp;·&nbsp; D(2) = 100 MB &nbsp;·&nbsp; D(5) = 250 MB &nbsp;·&nbsp; t = 7 min para 350 MB</div>
+          </div>
+        </details>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver D(t) = 50t y los puntos solución:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-20,xmax:10,ymax:400}},expressions:{list:[{id:'1',type:'expression',latex:'y=50x',color:'#7B1034',label:'D(t)=50t'},{id:'2',type:'expression',latex:'(2,100)',color:'#550B23',showLabel:true,label:'(2, 100 MB)'},{id:'3',type:'expression',latex:'(5,250)',color:'#9C1940',showLabel:true,label:'(5, 250 MB)'},{id:'4',type:'expression',latex:'(7,350)',color:'#C85070',showLabel:true,label:'(7, 350 MB)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Ejemplo informático 2 ─────────────────────── -->
+    <div class="cs-example">
+      <div class="cs-example-header">Ejemplo informático 2 — Consumo de memoria RAM</div>
+      <div class="cs-example-body">
+        <div class="context">
+          Un proceso en ejecución consume memoria según M(n) = 4n + 16 MB, donde n es el número de
+          hilos activos. El sistema tiene un límite de 128 MB disponibles para ese proceso.
+        </div>
+        <ul class="subq-list">
+          <li>
+            <span class="subq-num">1</span>
+            <span class="subq-body">¿Cuánta memoria usa el proceso con 5 hilos activos?</span>
+          </li>
+          <li>
+            <span class="subq-num">2</span>
+            <span class="subq-body">¿Cuánta memoria usa con 10 hilos?</span>
+          </li>
+          <li>
+            <span class="subq-num">3</span>
+            <span class="subq-body">¿Cuántos hilos puede lanzar sin superar el límite de 128 MB?</span>
+          </li>
+        </ul>
+        <details>
+          <summary>Ver solución</summary>
+          <div class="solution-body">
+            <ul class="step-list">
+              <li>
+                <span class="step-n">1</span>
+                <span class="step-content">
+                  M(5) = 4(5) + 16 = 20 + 16 = <strong>36 MB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">2</span>
+                <span class="step-content">
+                  M(10) = 4(10) + 16 = 40 + 16 = <strong>56 MB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">3</span>
+                <span class="step-content">
+                  4n + 16 &#8804; 128 &nbsp;→&nbsp; 4n &#8804; 112 &nbsp;→&nbsp; n &#8804; 28.
+                  El proceso puede tener hasta <strong>28 hilos</strong> sin superar el límite.
+                </span>
+              </li>
+            </ul>
+            <div class="result-line">M(5) = 36 MB &nbsp;·&nbsp; M(10) = 56 MB &nbsp;·&nbsp; máximo 28 hilos</div>
+          </div>
+        </details>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver M(n) = 4n + 16 y la línea de límite 128 MB:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-10,xmax:35,ymax:160}},expressions:{list:[{id:'1',type:'expression',latex:'y=4x+16',color:'#7B1034',label:'M(n)=4n+16'},{id:'2',type:'expression',latex:'y=128',color:'#9C1940',style:'DASHED',label:'límite 128 MB'},{id:'3',type:'expression',latex:'(5,36)',color:'#550B23',showLabel:true,label:'(5, 36 MB)'},{id:'4',type:'expression',latex:'(28,128)',color:'#C85070',showLabel:true,label:'(28, 128 MB) — límite'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════════════════════════════════════════════
+       BLOQUE 2 — MONOMIOS
+       ══════════════════════════════════════════════════ -->
+  <section class="section">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <span class="section-label">Bloque 2</span>
+        <h2 class="section-title">Monomios</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP"
+           style="height:44px; width:auto; opacity:.6; flex-shrink:0; margin-top:.25rem;">
+    </div>
+
+
+    <!-- ── 2.1 Definición ─────────────────────────────── -->
+    <h3>¿Qué es un monomio?</h3>
+
+    <p>
+      Un <strong>monomio</strong> es la expresión algebraica más simple: un solo término formado por un
+      coeficiente numérico multiplicado por una o más variables elevadas a exponentes enteros no negativos.
+      No tiene sumas ni restas; es un producto.
+    </p>
+
+    <div class="monomial-diagram">
+      <div class="mono-part accent">
+        <span class="value">&#8722;6</span>
+        <span class="sublabel">Coeficiente</span>
+      </div>
+      <div class="mono-sep">&#215;</div>
+      <div class="mono-part">
+        <span class="value">x</span>
+        <span class="sublabel">Variable</span>
+      </div>
+      <div class="mono-part accent">
+        <span class="value">&#179;</span>
+        <span class="sublabel">Exponente</span>
+      </div>
+      <div class="mono-sep">&#215;</div>
+      <div class="mono-part">
+        <span class="value">y</span>
+        <span class="sublabel">Variable</span>
+      </div>
+      <div class="mono-part accent">
+        <span class="value">&#178;</span>
+        <span class="sublabel">Exponente</span>
+      </div>
+    </div>
+    <p style="text-align:center; font-family:var(--font-mono); font-size:1.05rem; color:var(--guinda-dark); margin-bottom:1.25rem;">
+      &#8722;6x&#179;y&#178;
+    </p>
+
+    <table class="prop-table">
+      <thead>
+        <tr>
+          <th>Elemento</th>
+          <th>Descripción</th>
+          <th>En el ejemplo &#8722;6x&#179;y&#178;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Coeficiente</strong></td>
+          <td>El factor numérico del monomio. Puede ser entero, fraccionario o irracional.</td>
+          <td>&#8722;6</td>
+        </tr>
+        <tr>
+          <td><strong>Variable(s)</strong></td>
+          <td>Las letras que representan valores desconocidos.</td>
+          <td>x e y</td>
+        </tr>
+        <tr>
+          <td><strong>Exponentes</strong></td>
+          <td>Los valores a los que están elevadas las variables. Siempre enteros no negativos.</td>
+          <td>3 (en x) y 2 (en y)</td>
+        </tr>
+        <tr>
+          <td><strong>Grado</strong></td>
+          <td>La suma de todos los exponentes del monomio.</td>
+          <td>3 + 2 = <strong>5</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── 2.2 Monomios semejantes ─────────────────────── -->
+    <h3>Monomios semejantes</h3>
+
+    <p>
+      Dos monomios son <strong>semejantes</strong> cuando tienen exactamente las mismas variables con
+      exactamente los mismos exponentes. Solo los monomios semejantes pueden sumarse o restarse; los que
+      no son semejantes no pueden combinarse, igual que no puedes sumar manzanas con kilómetros.
+    </p>
+
+    <div class="formula-block">
+      <div class="prop-row">
+        <span class="prop-tag">Semejantes</span>
+        <div class="prop-body">
+          <code>3x²</code> y <code>−7x²</code> son semejantes: ambos tienen x con exponente 2.<br>
+          Su suma: 3x² + (−7x²) = (3 − 7)x² = <code>−4x²</code>
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-tag">No semejantes</span>
+        <div class="prop-body">
+          <code>3x²</code> y <code>5x³</code> no son semejantes: el exponente de x es distinto.<br>
+          No se pueden combinar. La expresión 3x² + 5x³ no simplifica más.
+        </div>
+      </div>
+      <div class="prop-row" style="margin-bottom:0;">
+        <span class="prop-tag">Multiplicación</span>
+        <div class="prop-body">
+          En la multiplicación <em>no</em> hace falta que sean semejantes. Se multiplican coeficientes
+          y se suman exponentes de la misma variable.<br>
+          <code>(4x²)(3x⁵) = 12x⁷</code> &nbsp;·&nbsp; <code>(2x³y)(−5xy²) = −10x⁴y³</code>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── 2.3 Ejemplos básicos de monomios ──────────── -->
+    <h3>Ejemplos resueltos — Monomios</h3>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo — Identificar partes y grado</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Para cada monomio, identifica el coeficiente, las variables, los exponentes y el grado:
+          (a) 7x&#8308;, (b) &#8722;3a&#178;b, (c) 9
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">a</span>
+            <span class="step-content">
+              <strong>7x&#8308;:</strong> coeficiente = 7, variable = x, exponente = 4, grado = 4.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">b</span>
+            <span class="step-content">
+              <strong>&#8722;3a&#178;b:</strong> coeficiente = &#8722;3, variables = a y b,
+              exponentes = 2 (en a) y 1 (en b, ya que b = b&#185;), grado = 2 + 1 = 3.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">c</span>
+            <span class="step-content">
+              <strong>9:</strong> coeficiente = 9, sin variables, grado = 0. Un número solo es un
+              monomio de grado cero (monomio constante).
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">Grados: 7x⁴ → 4 &nbsp;·&nbsp; −3a²b → 3 &nbsp;·&nbsp; 9 → 0</div>
+      </div>
+    </div>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo — Suma y multiplicación de monomios</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Resuelve: (a) 8x&#178; + (&#8722;3x&#178;) + x&#178;, (b) (2x&#179;)(5x&#178;), (c) (&#8722;4ab&#178;)(3a&#178;b)
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">a</span>
+            <span class="step-content">
+              Los tres términos son semejantes (misma variable, mismo exponente).
+              Sumo coeficientes: 8 + (&#8722;3) + 1 = 6 &nbsp;→&nbsp; <strong>6x&#178;</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">b</span>
+            <span class="step-content">
+              Multiplico coeficientes: 2 · 5 = 10. Sumo exponentes de x: 3 + 2 = 5.
+              Resultado: <strong>10x&#8309;</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">c</span>
+            <span class="step-content">
+              Coeficientes: (&#8722;4)(3) = &#8722;12. Exponentes de a: 1 + 2 = 3.
+              Exponentes de b: 2 + 1 = 3.
+              Resultado: <strong>&#8722;12a&#179;b&#179;</strong>
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">6x² &nbsp;·&nbsp; 10x⁵ &nbsp;·&nbsp; −12a³b³</div>
+      </div>
+    </div>
+
+
+    <!-- ── Ejemplo informático 3 ─────────────────────── -->
+    <div class="cs-example">
+      <div class="cs-example-header">Ejemplo informático 3 — Tiempo de respuesta de un servidor</div>
+      <div class="cs-example-body">
+        <div class="context">
+          El tiempo de respuesta de un servidor (en milisegundos) para procesar n peticiones simultáneas
+          se modela con el monomio T(n) = 3n&#178;. Cada petición ocupa el mismo tiempo base,
+          pero al haber más peticiones simultáneas el servidor las procesa en bloques cuadráticos.
+        </div>
+        <ul class="subq-list">
+          <li>
+            <span class="subq-num">1</span>
+            <span class="subq-body">¿Cuál es el tiempo de respuesta con 4 peticiones?</span>
+          </li>
+          <li>
+            <span class="subq-num">2</span>
+            <span class="subq-body">¿Cuál es el tiempo de respuesta con 10 peticiones?</span>
+          </li>
+          <li>
+            <span class="subq-num">3</span>
+            <span class="subq-body">Si el tiempo máximo aceptable es 300 ms, ¿cuántas peticiones simultáneas puede manejar el servidor?</span>
+          </li>
+        </ul>
+        <details>
+          <summary>Ver solución</summary>
+          <div class="solution-body">
+            <ul class="step-list">
+              <li>
+                <span class="step-n">1</span>
+                <span class="step-content">
+                  T(4) = 3(4)&#178; = 3(16) = <strong>48 ms</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">2</span>
+                <span class="step-content">
+                  T(10) = 3(10)&#178; = 3(100) = <strong>300 ms</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">3</span>
+                <span class="step-content">
+                  3n&#178; &#8804; 300 &nbsp;→&nbsp; n&#178; &#8804; 100 &nbsp;→&nbsp; n &#8804; 10.
+                  El servidor puede manejar como máximo <strong>10 peticiones simultáneas</strong>.
+                </span>
+              </li>
+            </ul>
+            <div class="result-line">T(4) = 48 ms &nbsp;·&nbsp; T(10) = 300 ms &nbsp;·&nbsp; máximo 10 peticiones</div>
+          </div>
+        </details>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver T(n) = 3n² y la línea de 300 ms:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-20,xmax:14,ymax:400}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x^2',color:'#7B1034',label:'T(n)=3n²'},{id:'2',type:'expression',latex:'y=300',color:'#9C1940',style:'DASHED',label:'300 ms límite'},{id:'3',type:'expression',latex:'(4,48)',color:'#550B23',showLabel:true,label:'(4, 48 ms)'},{id:'4',type:'expression',latex:'(10,300)',color:'#C85070',showLabel:true,label:'(10, 300 ms) límite'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════════════════════════════════════════════
+       BLOQUE 3 — POLINOMIOS
+       ══════════════════════════════════════════════════ -->
+  <section class="section">
+    <span class="section-label">Bloque 3</span>
+    <h2 class="section-title">Polinomios</h2>
+
+
+    <!-- ── 3.1 Definición ─────────────────────────────── -->
+    <h3>¿Qué es un polinomio?</h3>
+
+    <p>
+      Un <strong>polinomio</strong> es la suma de uno o más monomios. Cada monomio dentro del polinomio
+      se llama <strong>término</strong>. Los polinomios son las funciones algebraicas más comunes en
+      matemáticas e ingeniería: desde modelar la trayectoria de un objeto hasta describir la complejidad
+      de un algoritmo.
+    </p>
+
+    <div class="concept-box">
+      <span class="concept-title">Forma general de un polinomio en x</span>
+      <code class="formula">P(x) = aₙxⁿ + aₙ₋₁xⁿ⁻¹ + ··· + a₁x + a₀</code>
+      <p class="formula-note">
+        aₙ es el coeficiente líder (≠ 0), n es el grado del polinomio y a₀ es el término independiente.
+        Los exponentes son enteros no negativos, escritos de mayor a menor.
+      </p>
+    </div>
+
+
+    <!-- ── 3.2 Clasificación ──────────────────────────── -->
+    <h3>Clasificación por número de términos y por grado</h3>
+
+    <div class="grid-2">
+      <div>
+        <p style="font-family:var(--font-ui); font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); margin-bottom:.6rem;">Por número de términos</p>
+        <table class="prop-table">
+          <thead><tr><th>Nombre</th><th>Términos</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>Monomio</td><td>1</td><td>4x&#179;</td></tr>
+            <tr><td>Binomio</td><td>2</td><td>3x&#178; &#8722; 5</td></tr>
+            <tr><td>Trinomio</td><td>3</td><td>x&#178; + 2x + 1</td></tr>
+            <tr><td>Polinomio</td><td>4 o más</td><td>x&#179; &#8722; 2x&#178; + x &#8722; 7</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p style="font-family:var(--font-ui); font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); margin-bottom:.6rem;">Por grado</p>
+        <table class="prop-table">
+          <thead><tr><th>Nombre</th><th>Grado</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>Constante</td><td>0</td><td>7</td></tr>
+            <tr><td>Lineal</td><td>1</td><td>3x + 2</td></tr>
+            <tr><td>Cuadrático</td><td>2</td><td>x&#178; &#8722; 4x + 3</td></tr>
+            <tr><td>Cúbico</td><td>3</td><td>2x&#179; + x &#8722; 1</td></tr>
+            <tr><td>Cuártico</td><td>4</td><td>x&#8308; &#8722; 5x&#178; + 2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ── 3.3 Grado de un polinomio ─────────────────── -->
+    <h3>Cómo determinar el grado de un polinomio</h3>
+
+    <p>
+      El grado de un polinomio es el <strong>mayor exponente</strong> que aparece en cualquiera de sus
+      términos, una vez que el polinomio está simplificado. Determinar el grado correcto es fundamental
+      porque el grado describe el comportamiento a largo plazo de la función.
+    </p>
+
+    <div class="formula-block">
+      <div class="prop-row">
+        <span class="prop-tag">Ejemplo</span>
+        <div class="prop-body">
+          P(x) = 5x&#8308; &#8722; 3x&#178; + 7x &#8722; 2 &nbsp;→&nbsp; grado = <strong>4</strong>
+          (el mayor exponente es 4, en el primer término)
+        </div>
+      </div>
+      <div class="prop-row">
+        <span class="prop-tag">Ejemplo</span>
+        <div class="prop-body">
+          Q(x) = &#8722;9x&#179; + x&#178; &#8722; x + 11 &nbsp;→&nbsp; grado = <strong>3</strong>
+          (el mayor exponente es 3, aunque el coeficiente sea negativo)
+        </div>
+      </div>
+      <div class="prop-row" style="margin-bottom:0;">
+        <span class="prop-tag">Atención</span>
+        <div class="prop-body">
+          Un polinomio puede estar desordenado: 4 + x&#178; &#8722; 3x tiene grado 2, aunque el término
+          de mayor grado no esté primero. Antes de determinar el grado, ordena de mayor a menor:
+          &#8722;3x&#178; + x &#8722; 4 (se reescribe con signo incluido en el coeficiente, grado = 2).
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── 3.4 Evaluación de polinomios ──────────────── -->
+    <h3>Evaluación de un polinomio</h3>
+
+    <p>
+      Evaluar un polinomio es exactamente igual que evaluar cualquier función: sustituir la variable por
+      un valor concreto y operar respetando la jerarquía de operaciones (primero potencias, luego
+      productos, luego sumas y restas).
+    </p>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo — Evaluación de polinomio de grado 3</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Sea P(x) = 2x&#179; &#8722; x&#178; + 4x &#8722; 5. Calcula P(1), P(&#8722;2) y P(3).
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-content">
+              <strong>P(1):</strong><br>
+              2(1)&#179; &#8722; (1)&#178; + 4(1) &#8722; 5 = 2 &#8722; 1 + 4 &#8722; 5 = <strong>0</strong><br>
+              <em>Nota: P(1) = 0 significa que x = 1 es una raíz del polinomio.</em>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-content">
+              <strong>P(&#8722;2):</strong><br>
+              2(&#8722;2)&#179; &#8722; (&#8722;2)&#178; + 4(&#8722;2) &#8722; 5 = 2(&#8722;8) &#8722; 4 &#8722; 8 &#8722; 5 = &#8722;16 &#8722; 4 &#8722; 8 &#8722; 5 = <strong>&#8722;33</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-content">
+              <strong>P(3):</strong><br>
+              2(3)&#179; &#8722; (3)&#178; + 4(3) &#8722; 5 = 2(27) &#8722; 9 + 12 &#8722; 5 = 54 &#8722; 9 + 12 &#8722; 5 = <strong>52</strong>
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">P(1) = 0 &nbsp;·&nbsp; P(−2) = −33 &nbsp;·&nbsp; P(3) = 52</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver P(x) = 2x³ − x² + 4x − 5 y los tres puntos:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-40,xmax:5,ymax:60}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x^3-x^2+4x-5',color:'#7B1034'},{id:'2',type:'expression',latex:'(1,0)',color:'#550B23',showLabel:true,label:'P(1)=0 raíz'},{id:'3',type:'expression',latex:'(-2,-33)',color:'#9C1940',showLabel:true,label:'P(-2)=-33'},{id:'4',type:'expression',latex:'(3,52)',color:'#C85070',showLabel:true,label:'P(3)=52'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── 3.5 Suma y resta de polinomios ─────────────── -->
+    <h3>Suma y resta de polinomios</h3>
+
+    <p>
+      Para sumar o restar polinomios se agrupan los <strong>términos semejantes</strong> (misma variable,
+      mismo exponente) y se suman o restan sus coeficientes. Los términos no semejantes simplemente
+      permanecen por separado en el resultado.
+    </p>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo — Suma y resta de polinomios</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Dados P(x) = 3x&#179; &#8722; 2x&#178; + x &#8722; 4 y Q(x) = x&#179; + 5x&#178; &#8722; 3x + 7.<br>
+          Calcula: (a) P(x) + Q(x) y (b) P(x) &#8722; Q(x).
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">a</span>
+            <span class="step-content">
+              <strong>Suma:</strong><br>
+              (3+1)x&#179; + (&#8722;2+5)x&#178; + (1&#8722;3)x + (&#8722;4+7)<br>
+              = <strong>4x&#179; + 3x&#178; &#8722; 2x + 3</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">b</span>
+            <span class="step-content">
+              <strong>Resta</strong> — distribuyo el signo negativo en Q(x):<br>
+              (3&#8722;1)x&#179; + (&#8722;2&#8722;5)x&#178; + (1+3)x + (&#8722;4&#8722;7)<br>
+              = <strong>2x&#179; &#8722; 7x&#178; + 4x &#8722; 11</strong>
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">P+Q = 4x³ + 3x² − 2x + 3 &nbsp;·&nbsp; P−Q = 2x³ − 7x² + 4x − 11</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver P, Q, P+Q y P−Q en la misma ventana:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-30,xmax:4,ymax:30}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x^3-2x^2+x-4',color:'#7B1034',label:'P(x)',showLabel:true},{id:'2',type:'expression',latex:'y=x^3+5x^2-3x+7',color:'#9C1940',label:'Q(x)',showLabel:true},{id:'3',type:'expression',latex:'y=4x^3+3x^2-2x+3',color:'#C85070',style:'DASHED',label:'P+Q',showLabel:true},{id:'4',type:'expression',latex:'y=2x^3-7x^2+4x-11',color:'#550B23',style:'DASHED',label:'P-Q',showLabel:true}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Ejemplo informático 4 ─────────────────────── -->
+    <div class="cs-example">
+      <div class="cs-example-header">Ejemplo informático 4 — Complejidad de dos algoritmos</div>
+      <div class="cs-example-body">
+        <div class="context">
+          Un sistema ejecuta dos procesos de forma secuencial. El primero tiene complejidad temporal
+          A(n) = 2n&#178; + 3n y el segundo B(n) = n&#178; &#8722; n + 5, donde n es el tamaño de la
+          entrada. El tiempo total de ejecución es T(n) = A(n) + B(n).
+        </div>
+        <ul class="subq-list">
+          <li>
+            <span class="subq-num">1</span>
+            <span class="subq-body">Calcula T(n) = A(n) + B(n) simplificado.</span>
+          </li>
+          <li>
+            <span class="subq-num">2</span>
+            <span class="subq-body">¿Cuánto tarda el sistema completo para n = 10?</span>
+          </li>
+          <li>
+            <span class="subq-num">3</span>
+            <span class="subq-body">¿Cuánto ahorra el sistema si se elimina el segundo proceso? Calcula A(10).</span>
+          </li>
+        </ul>
+        <details>
+          <summary>Ver solución</summary>
+          <div class="solution-body">
+            <ul class="step-list">
+              <li>
+                <span class="step-n">1</span>
+                <span class="step-content">
+                  T(n) = (2n&#178; + 3n) + (n&#178; &#8722; n + 5)<br>
+                  = (2+1)n&#178; + (3&#8722;1)n + 5<br>
+                  = <strong>3n&#178; + 2n + 5</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">2</span>
+                <span class="step-content">
+                  T(10) = 3(10)&#178; + 2(10) + 5 = 300 + 20 + 5 = <strong>325 unidades de tiempo</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">3</span>
+                <span class="step-content">
+                  A(10) = 2(10)&#178; + 3(10) = 200 + 30 = <strong>230 unidades de tiempo</strong><br>
+                  Ahorro: 325 &#8722; 230 = 95 unidades, que es exactamente B(10) = 100 &#8722; 10 + 5 = 95.
+                </span>
+              </li>
+            </ul>
+            <div class="result-line">T(n) = 3n² + 2n + 5 &nbsp;·&nbsp; T(10) = 325 &nbsp;·&nbsp; A(10) = 230</div>
+          </div>
+        </details>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver A(n), B(n) y T(n) = A+B:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-10,xmax:12,ymax:360}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x^2+3x',color:'#7B1034',label:'A(n)',showLabel:true},{id:'2',type:'expression',latex:'y=x^2-x+5',color:'#9C1940',label:'B(n)',showLabel:true},{id:'3',type:'expression',latex:'y=3x^2+2x+5',color:'#550B23',style:'DASHED',label:'T(n)=A+B',showLabel:true},{id:'4',type:'expression',latex:'(10,325)',color:'#C85070',showLabel:true,label:'T(10)=325'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Ejemplo informático 5 ─────────────────────── -->
+    <div class="cs-example">
+      <div class="cs-example-header">Ejemplo informático 5 — Almacenamiento en una base de datos</div>
+      <div class="cs-example-body">
+        <div class="context">
+          El espacio de almacenamiento (en GB) que ocupa una base de datos después de t meses de
+          operación está modelado por S(t) = 0.5t&#178; + 2t + 1, donde t es el número de meses.
+          Los primeros datos (en t = 0) ocupan 1 GB de espacio base.
+        </div>
+        <ul class="subq-list">
+          <li>
+            <span class="subq-num">1</span>
+            <span class="subq-body">¿Cuánto espacio ocupa la base de datos a los 4 meses?</span>
+          </li>
+          <li>
+            <span class="subq-num">2</span>
+            <span class="subq-body">¿Cuánto espacio ocupa a los 12 meses (1 año)?</span>
+          </li>
+          <li>
+            <span class="subq-num">3</span>
+            <span class="subq-body">Identifica el grado del polinomio y explica qué tipo de crecimiento representa.</span>
+          </li>
+        </ul>
+        <details>
+          <summary>Ver solución</summary>
+          <div class="solution-body">
+            <ul class="step-list">
+              <li>
+                <span class="step-n">1</span>
+                <span class="step-content">
+                  S(4) = 0.5(4)&#178; + 2(4) + 1 = 0.5(16) + 8 + 1 = 8 + 8 + 1 = <strong>17 GB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">2</span>
+                <span class="step-content">
+                  S(12) = 0.5(12)&#178; + 2(12) + 1 = 0.5(144) + 24 + 1 = 72 + 24 + 1 = <strong>97 GB</strong>
+                </span>
+              </li>
+              <li>
+                <span class="step-n">3</span>
+                <span class="step-content">
+                  Grado del polinomio = <strong>2</strong> (cuadrático). El crecimiento es cuadrático:
+                  el almacenamiento no crece de forma constante, sino que acelera con el tiempo. Esto
+                  indica que la base de datos requiere planificación de capacidad a mediano plazo.
+                </span>
+              </li>
+            </ul>
+            <div class="result-line">S(4) = 17 GB &nbsp;·&nbsp; S(12) = 97 GB &nbsp;·&nbsp; Grado 2 — crecimiento cuadrático</div>
+          </div>
+        </details>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver S(t) = 0.5t² + 2t + 1 y el crecimiento a lo largo del tiempo:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-5,xmax:14,ymax:110}},expressions:{list:[{id:'1',type:'expression',latex:'y=0.5x^2+2x+1',color:'#7B1034',label:'S(t)=0.5t²+2t+1'},{id:'2',type:'expression',latex:'(4,17)',color:'#550B23',showLabel:true,label:'4 meses: 17 GB'},{id:'3',type:'expression',latex:'(12,97)',color:'#9C1940',showLabel:true,label:'12 meses: 97 GB'},{id:'4',type:'expression',latex:'(0,1)',color:'#C85070',showLabel:true,label:'inicio: 1 GB'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── Conclusión ────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Cierre de la sesión</span>
+    <h2 class="section-title">Conclusión</h2>
+
+    <p>
+      Los tres conceptos trabajados hoy —función, monomio y polinomio— forman la base algebraica sobre
+      la que se construye todo el cálculo diferencial. Las ideas clave que deben quedar consolidadas son:
+    </p>
+
+    <ul class="conclusion-list">
+      <li>
+        <strong>Una función es una regla de asignación única.</strong> Lo que define a una función no es
+        su forma algebraica, sino la propiedad de que a cada entrada le corresponde exactamente una salida.
+        Esta unicidad es el fundamento de cualquier modelo computacional determinista.
+      </li>
+      <li>
+        <strong>Un monomio es el bloque de construcción más simple del álgebra.</strong> Tiene un coeficiente,
+        una o más variables y exponentes enteros no negativos. Su grado es la suma de todos sus exponentes.
+        Solo los monomios semejantes pueden sumarse o restarse directamente.
+      </li>
+      <li>
+        <strong>Un polinomio es una suma de monomios y describe una amplia variedad de comportamientos.</strong>
+        Su grado determina cuántas veces puede cambiar de dirección la gráfica y cómo se comporta para valores
+        muy grandes de x. Los polinomios de grado 1 son lineales, los de grado 2 son cuadráticos, y así sucesivamente.
+      </li>
+      <li>
+        <strong>Evaluar una función o polinomio es la operación más fundamental en modelado.</strong>
+        Sustituir el valor de la variable y calcular el resultado es exactamente lo que hace un programa
+        cada vez que llama a una función con un argumento concreto. Dominar esta mecánica es el primer paso
+        para resolver cualquier problema de modelado real.
+      </li>
+      <li>
+        <strong>Los polinomios aparecen en sistemas computacionales en todas partes.</strong> La complejidad
+        algorítmica O(n&#178;), el consumo de memoria, el crecimiento de datos almacenados y los modelos de
+        latencia son ejemplos directos. Reconocer la forma polinomial de un fenómeno permite predecir su
+        comportamiento futuro con solo evaluar la función en el valor deseado.
+      </li>
+    </ul>
+
+    <div class="callout mt-1">
+      <p>
+        <strong>Próxima sesión:</strong> con la base de funciones y polinomios establecida, la siguiente
+        clase abordará las funciones trigonométricas y exponenciales, completando el repertorio de
+        funciones de la Unidad 1 antes de avanzar a la Unidad 2: Límites y Continuidad.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── Bibliografía ───────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="section-title">Referencias bibliográficas</h2>
+
+    <p class="text-muted">
+      Formato APA 7.ª edición. Las mismas fuentes del programa LSC626374, Unidad 1.
+    </p>
+
+    <h4 class="mt-1" style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-bottom:.75rem;">Unidad 1 — Básica</h4>
+
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2022</span>
+        Sánchez, J. L. (2022). <em>Introducción a las funciones reales: Un análisis de dominio y
+        rango en el cálculo inicial.</em> Universidad Nacional Autónoma de México (UNAM).
+      </li>
+      <li>
+        <span class="ref-year">2023</span>
+        Gómez, M. (2023). Análisis de funciones trascendentes (trigonométricas, exponenciales y
+        logarítmicas) en modelos biológicos. <em>Revista de Investigación Matemática Latinoamericana.</em>
+      </li>
+      <li>
+        <span class="ref-year">2021</span>
+        Ramírez, C. (2021). <em>Composición de funciones y transformaciones gráficas aplicadas
+        a la ingeniería.</em> Editorial Universitaria, Chile.
+      </li>
+      <li>
+        <span class="ref-year">2024</span>
+        Torres, P. (2024). <em>Modelado matemático con funciones: Aplicaciones prácticas en la
+        física moderna y sistemas dinámicos.</em> Universidad de los Andes, Colombia.
+      </li>
+    </ul>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-top:1.5rem; margin-bottom:.75rem;">Complementaria</h4>
+
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2016</span>
+        Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning.
+        Capítulo 1: Funciones y modelos; Capítulo 3: Reglas de derivación.
+      </li>
+      <li>
+        <span class="ref-year">2017</span>
+        Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.
+      </li>
+      <li>
+        <span class="ref-year">1614</span>
+        Napier, J. (1614). <em>Mirifici Logarithmorum Canonis Descriptio.</em> Edimburgo. [Obra
+        histórica de referencia; edición facsimilar disponible en Archive.org.]
+      </li>
+      <li>
+        <span class="ref-year">1748</span>
+        Euler, L. (1748). <em>Introductio in analysin infinitorum.</em> Lausana. [Primera
+        formalización del número e y del logaritmo natural.]
+      </li>
+    </ul>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-top:1.5rem; margin-bottom:.75rem;">Herramientas digitales recomendadas</h4>
+
+    <ul class="ref-list">
+      <li>
+        Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> Recuperado de
+        https://www.desmos.com/calculator
+      </li>
+      <li>
+        GeoGebra. (s.f.). <em>Applets de funciones con parámetros ajustables.</em> Recuperado de
+        https://www.geogebra.org/
+      </li>
+      <li>
+        WolframAlpha. (s.f.). <em>Motor de conocimiento computacional.</em> Recuperado de
+        https://www.wolframalpha.com
+      </li>
+    </ul>
+  </section>
+
+
+</div><!-- /page-wrapper -->
+
+
+<!-- ══════════════════════════════════════════════════
+     PIE DE PÁGINA
+     ══════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <span>
+    <strong>Instituto de Educación Digital del Estado de Puebla</strong>
+    &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales
+  </span>
+  <span>
+    Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez
+  </span>
+</footer>
+
+</body>
+</html>
