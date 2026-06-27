@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación — Monomios y Polinomios | IEDEP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="base.css">
+
+  <style>
+    /* ── Bloqueo de selección, copiado e impresión ─────────── */
+    html, body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    input, textarea { -webkit-user-select: text; user-select: text; }
+
+    @media print {
+      body::before {
+        content: "DOCUMENTO PROTEGIDO — NO DISPONIBLE PARA IMPRESIÓN";
+        position: fixed;
+        top: 50%; left: 0; right: 0;
+        text-align: center;
+        font-size: 28px;
+        font-family: var(--font-ui);
+        color: #000;
+        z-index: 999999;
+      }
+      .page-wrapper, .site-header, .class-hero, .site-footer { display: none !important; }
+    }
+
+    /* ── Overlay de advertencia ─────────────────────────────── */
+    #lock-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,18,21,.94);
+      z-index: 999998;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    #lock-overlay .lock-box {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2.5rem;
+      max-width: 440px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    }
+    #lock-overlay h2 {
+      color: var(--guinda);
+      font-size: 1.5rem;
+      margin-bottom: .75rem;
+    }
+    #lock-overlay p { font-family: var(--font-ui); font-size: .92rem; color: var(--ink-secondary); margin-bottom: 1.25rem; }
+    #lock-overlay button {
+      background: var(--guinda);
+      color: var(--white);
+      border: none;
+      padding: .6rem 1.6rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    /* ── Banner de advertencia fijo ──────────────────────────── */
+    .integrity-banner {
+      background: var(--guinda-dark);
+      color: var(--white);
+      text-align: center;
+      padding: .55rem 1rem;
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      letter-spacing: .03em;
+    }
+
+    /* ── Datos del alumno ────────────────────────────────────── */
+    .student-data {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.6rem;
+      margin: 0 0 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .student-data .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .student-data label {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--ink-muted);
+      margin-bottom: .3rem;
+    }
+    .student-data input {
+      width: 100%;
+      padding: .5rem .7rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: .95rem;
+      background: var(--white);
+    }
+    .student-data input:focus { outline: 2px solid var(--guinda); outline-offset: 1px; }
+
+    /* ── Aviso de honestidad académica ──────────────────────── */
+    .integrity-notice {
+      border: 1.5px solid var(--guinda);
+      background: var(--guinda-light);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 2rem;
+    }
+    .integrity-notice .notice-title {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--guinda-dark);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: block;
+      margin-bottom: .5rem;
+    }
+    .integrity-notice p { font-size: .92rem; margin-bottom: .5rem; }
+    .integrity-notice p:last-child { margin-bottom: 0; }
+    .integrity-notice .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      margin-top: .9rem;
+      padding-top: .9rem;
+      border-top: 1px solid #D8A8BA;
+    }
+    .integrity-notice .checkbox-row input { margin-top: .2rem; flex-shrink: 0; }
+    .integrity-notice .checkbox-row label { font-size: .9rem; font-family: var(--font-ui); color: var(--ink); cursor: pointer; }
+
+    /* ── Pregunta ─────────────────────────────────────────── */
+    .question-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: opacity .2s;
+    }
+    .question-block.locked { opacity: .45; pointer-events: none; }
+    .question-header {
+      background: var(--guinda);
+      color: var(--white);
+      padding: .65rem 1.4rem;
+      font-family: var(--font-ui);
+      font-size: .85rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .question-header .q-points {
+      font-size: .75rem;
+      background: rgba(255,255,255,.18);
+      padding: .15rem .6rem;
+      border-radius: 99px;
+    }
+    .question-body { padding: 1.25rem 1.5rem; background: var(--off-white); }
+    .question-statement { font-size: 1rem; line-height: 1.65; margin-bottom: 1rem; }
+    .question-statement code {
+      font-family: var(--font-mono);
+      font-size: .92rem;
+      background: var(--surface);
+      padding: .05rem .35rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+
+    /* ── Opciones de opción múltiple ─────────────────────────── */
+    .option-list { list-style: none; padding: 0; margin: 0; }
+    .option-list li { margin-bottom: .6rem; }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .6rem .9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      cursor: pointer;
+      font-size: .95rem;
+      transition: border-color .15s, background .15s;
+    }
+    .option-label:hover { border-color: var(--guinda-rule); background: var(--guinda-light); }
+    .option-label input[type="radio"] { accent-color: var(--guinda); width: 16px; height: 16px; flex-shrink: 0; }
+    .option-letter {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--guinda);
+      min-width: 18px;
+    }
+
+    /* ── Input de respuesta abierta ──────────────────────────── */
+    .answer-input {
+      width: 100%;
+      max-width: 320px;
+      padding: .6rem .85rem;
+      font-size: 1rem;
+      font-family: var(--font-mono);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      background: var(--white);
+    }
+    .answer-input:focus { outline: 2px solid var(--guinda); outline-offset: 1px; }
+
+    /* ── Botón de envío y resultado ─────────────────────────── */
+    .submit-wrap { text-align: center; margin: 2.5rem 0; }
+    .btn-submit {
+      background: var(--guinda);
+      color: var(--white);
+      border: none;
+      padding: .85rem 2.5rem;
+      font-size: 1rem;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      letter-spacing: .02em;
+    }
+    .btn-submit:hover { opacity: .9; }
+    .btn-submit:disabled { background: var(--border-strong); cursor: not-allowed; opacity: .6; }
+
+    .results-panel { display: none; margin-top: 2rem; }
+    .score-card {
+      text-align: center;
+      padding: 2.25rem;
+      background: var(--guinda-light);
+      border: 1px solid #D8A8BA;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+    }
+    .score-card .score-big {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 600;
+      color: var(--guinda);
+      display: block;
+      line-height: 1;
+    }
+    .score-card .score-sub { font-family: var(--font-ui); font-size: .9rem; color: var(--ink-secondary); margin-top: .4rem; display: block; }
+
+    .result-row {
+      display: flex;
+      gap: .8rem;
+      padding: .85rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-mark { font-family: var(--font-ui); font-weight: 700; font-size: .85rem; min-width: 22px; flex-shrink: 0; margin-top: .15rem; }
+    .result-mark.ok  { color: #2A5C2A; }
+    .result-mark.err { color: #7A2020; }
+    .result-detail { font-size: .92rem; line-height: 1.55; }
+    .result-detail .r-correct { color: var(--ink-muted); font-size: .85rem; margin-top: .2rem; }
+
+    /* ── Timer ──────────────────────────────────────────────── */
+    .timer-badge {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--guinda-dark);
+      color: var(--white);
+      text-align: center;
+      padding: .5rem 1rem;
+      font-family: var(--font-mono);
+      font-size: .9rem;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 560px) {
+      .student-data .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+<!-- ══════════════════════════════════════════════
+     CANDADOS ANTI-COPIA / ANTI-IA
+     ══════════════════════════════════════════════ -->
+<div id="lock-overlay">
+  <div class="lock-box">
+    <h2>Acción no permitida</h2>
+    <p>
+      Esta evaluación está protegida. No se permite copiar texto, abrir herramientas de
+      desarrollador, ni usar asistentes de inteligencia artificial durante la prueba.
+      Esta acción ha sido registrada.
+    </p>
+    <button onclick="document.getElementById('lock-overlay').style.display='none'">Entendido, continuar</button>
+  </div>
+</div>
+
+<div class="integrity-banner">
+  EVALUACIÓN INDIVIDUAL &nbsp;·&nbsp; PROHIBIDO EL USO DE INTELIGENCIA ARTIFICIAL, CALCULADORA SIMBÓLICA O AYUDA EXTERNA &nbsp;·&nbsp; COPIAR Y PEGAR DESHABILITADO
+</div>
+
+<div class="timer-badge" id="timer-badge">Tiempo transcurrido: 00:00</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CABECERA
+     ══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP — Instituto de Educación Digital del Estado de Puebla" style="height:88px; width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Evaluación de unidad</span>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════════ -->
+<div class="class-hero">
+  <div style="max-width:900px; margin:0 auto; padding:0 2rem;">
+    <span class="class-label">Unidad 1 &nbsp;·&nbsp; Evaluación corta</span>
+    <h1>Monomios y Polinomios</h1>
+    <span class="class-subtitle">
+      Evaluación individual de nivel básico — 10 preguntas
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">
+        Duración
+        <span>30 minutos</span>
+      </div>
+      <div class="meta-item">
+        Puntaje total
+        <span>10 puntos</span>
+      </div>
+      <div class="meta-item">
+        Asesor
+        <span>Mtro. José Armando Vera Rodríguez</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CONTENIDO
+     ══════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- ── Datos del alumno ─────────────────────────── -->
+  <div class="student-data">
+    <span class="card-title" style="margin-bottom:1rem; display:block;">Datos del estudiante</span>
+    <div class="field-row">
+      <div>
+        <label for="alumno-nombre">Nombre completo</label>
+        <input type="text" id="alumno-nombre" placeholder="Apellido(s) y nombre(s)" autocomplete="off">
+      </div>
+      <div>
+        <label for="alumno-matricula">Matrícula</label>
+        <input type="text" id="alumno-matricula" placeholder="Número de matrícula" autocomplete="off">
+      </div>
+    </div>
+    <div class="field-row" style="margin-bottom:0;">
+      <div>
+        <label for="alumno-grupo">Grupo</label>
+        <input type="text" id="alumno-grupo" placeholder="Grupo" autocomplete="off">
+      </div>
+      <div>
+        <label for="alumno-fecha">Fecha</label>
+        <input type="text" id="alumno-fecha" placeholder="dd/mm/aaaa" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Aviso de honestidad académica ────────────── -->
+  <div class="integrity-notice">
+    <span class="notice-title">Declaración de honestidad académica</span>
+    <p>
+      Esta evaluación debe resolverse de forma individual, sin el uso de inteligencia artificial,
+      buscadores, calculadoras simbólicas, ni ayuda de terceros. El propósito es medir tu comprensión
+      real de monomios y polinomios.
+    </p>
+    <p>
+      Esta página intenta bloquear copiar y pegar, el menú contextual y algunos atajos de teclado.
+      Estas medidas son de apoyo; la responsabilidad principal de actuar con honestidad es tuya.
+    </p>
+    <div class="checkbox-row">
+      <input type="checkbox" id="integrity-check">
+      <label for="integrity-check">
+        Confirmo que resolveré esta evaluación sin ayuda externa ni inteligencia artificial.
+      </label>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       PREGUNTAS
+       ══════════════════════════════════════════════ -->
+  <form id="exam-form">
+
+    <!-- P1 -->
+    <div class="question-block locked" data-qid="1">
+      <div class="question-header"><span>Pregunta 1</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          ¿Cuál de las siguientes expresiones es un monomio?
+        </div>
+        <ul class="option-list">
+          <li><label class="option-label"><input type="radio" name="q1" value="a"><span class="option-letter">A)</span> 3x + 5</label></li>
+          <li><label class="option-label"><input type="radio" name="q1" value="b"><span class="option-letter">B)</span> 7x&#178;</label></li>
+          <li><label class="option-label"><input type="radio" name="q1" value="c"><span class="option-letter">C)</span> x&#178; &#8722; 4x + 1</label></li>
+          <li><label class="option-label"><input type="radio" name="q1" value="d"><span class="option-letter">D)</span> 2/x</label></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="question-block locked" data-qid="2">
+      <div class="question-header"><span>Pregunta 2</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          En el monomio <code>&#8722;5x&#179;</code>, ¿cuál es el coeficiente?
+        </div>
+        <ul class="option-list">
+          <li><label class="option-label"><input type="radio" name="q2" value="a"><span class="option-letter">A)</span> 3</label></li>
+          <li><label class="option-label"><input type="radio" name="q2" value="b"><span class="option-letter">B)</span> x</label></li>
+          <li><label class="option-label"><input type="radio" name="q2" value="c"><span class="option-letter">C)</span> &#8722;5</label></li>
+          <li><label class="option-label"><input type="radio" name="q2" value="d"><span class="option-letter">D)</span> 5</label></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="question-block locked" data-qid="3">
+      <div class="question-header"><span>Pregunta 3</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          ¿Cuál es el grado del monomio <code>4x&#178;y&#179;</code>?
+        </div>
+        <ul class="option-list">
+          <li><label class="option-label"><input type="radio" name="q3" value="a"><span class="option-letter">A)</span> 2</label></li>
+          <li><label class="option-label"><input type="radio" name="q3" value="b"><span class="option-letter">B)</span> 3</label></li>
+          <li><label class="option-label"><input type="radio" name="q3" value="c"><span class="option-letter">C)</span> 5</label></li>
+          <li><label class="option-label"><input type="radio" name="q3" value="d"><span class="option-letter">D)</span> 6</label></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="question-block locked" data-qid="4">
+      <div class="question-header"><span>Pregunta 4</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          ¿Cuáles de estos dos monomios son semejantes?
+        </div>
+        <ul class="option-list">
+          <li><label class="option-label"><input type="radio" name="q4" value="a"><span class="option-letter">A)</span> 3x&#178; y 3x&#179;</label></li>
+          <li><label class="option-label"><input type="radio" name="q4" value="b"><span class="option-letter">B)</span> 5x&#178; y &#8722;2x&#178;</label></li>
+          <li><label class="option-label"><input type="radio" name="q4" value="c"><span class="option-letter">C)</span> 4x y 4y</label></li>
+          <li><label class="option-label"><input type="radio" name="q4" value="d"><span class="option-letter">D)</span> 2x&#178; y 2x&#178;y</label></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="question-block locked" data-qid="5">
+      <div class="question-header"><span>Pregunta 5</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          Resuelve: <code>5x&#178; + 3x&#178; &#8722; 2x&#178;</code> = ?
+        </div>
+        <input type="text" class="answer-input" name="q5" placeholder="Escribe tu respuesta, ej: 6x^2">
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="question-block locked" data-qid="6">
+      <div class="question-header"><span>Pregunta 6</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          Resuelve: <code>(3x&#178;)(2x&#179;)</code> = ?
+        </div>
+        <input type="text" class="answer-input" name="q6" placeholder="Escribe tu respuesta, ej: 6x^5">
+      </div>
+    </div>
+
+    <!-- P7 -->
+    <div class="question-block locked" data-qid="7">
+      <div class="question-header"><span>Pregunta 7</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          ¿Cuál es el grado del polinomio <code>P(x) = 4x&#179; &#8722; 2x&#178; + 5x &#8722; 1</code>?
+        </div>
+        <ul class="option-list">
+          <li><label class="option-label"><input type="radio" name="q7" value="a"><span class="option-letter">A)</span> 1</label></li>
+          <li><label class="option-label"><input type="radio" name="q7" value="b"><span class="option-letter">B)</span> 2</label></li>
+          <li><label class="option-label"><input type="radio" name="q7" value="c"><span class="option-letter">C)</span> 3</label></li>
+          <li><label class="option-label"><input type="radio" name="q7" value="d"><span class="option-letter">D)</span> 4</label></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P8 -->
+    <div class="question-block locked" data-qid="8">
+      <div class="question-header"><span>Pregunta 8</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          Sea <code>P(x) = 2x&#178; &#8722; 3x + 1</code>. ¿Cuánto vale <code>P(2)</code>?
+        </div>
+        <input type="text" class="answer-input" name="q8" placeholder="Escribe el número resultado">
+      </div>
+    </div>
+
+    <!-- P9 -->
+    <div class="question-block locked" data-qid="9">
+      <div class="question-header"><span>Pregunta 9</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          Dados <code>P(x) = 2x&#178; + 3x</code> y <code>Q(x) = x&#178; &#8722; x + 4</code>,
+          calcula <code>P(x) + Q(x)</code>.
+        </div>
+        <input type="text" class="answer-input" name="q9" placeholder="Escribe tu respuesta, ej: 3x^2+2x+4" style="max-width:380px;">
+      </div>
+    </div>
+
+    <!-- P10 -->
+    <div class="question-block locked" data-qid="10">
+      <div class="question-header"><span>Pregunta 10</span><span class="q-points">1 punto</span></div>
+      <div class="question-body">
+        <div class="question-statement">
+          Un programa consume memoria según <code>M(n) = 2n&#178; + 1</code>, donde n es el número de
+          procesos abiertos. ¿Cuántos MB consume con <code>n = 3</code> procesos?
+        </div>
+        <input type="text" class="answer-input" name="q10" placeholder="Escribe el número de MB">
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="button" class="btn-submit" id="btn-submit" onclick="finishExam()" disabled>
+        Entregar evaluación
+      </button>
+      <p style="font-family:var(--font-ui); font-size:.78rem; color:var(--ink-muted); margin-top:.6rem;">
+        Acepta la declaración de honestidad académica para habilitar la entrega.
+      </p>
+    </div>
+  </form>
+
+
+  <!-- ══════════════════════════════════════════════
+       RESULTADOS
+       ══════════════════════════════════════════════ -->
+  <div class="results-panel" id="results-panel">
+    <hr class="section-rule">
+    <h2 class="section-title">Resultado de la evaluación</h2>
+
+    <div class="score-card">
+      <span class="score-big" id="score-big">0 / 10</span>
+      <span class="score-sub" id="score-sub">Calificación obtenida</span>
+    </div>
+
+    <div id="results-detail"></div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+
+<!-- ══════════════════════════════════════════════
+     PIE DE PÁGINA
+     ══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <span>
+    <strong>Instituto de Educación Digital del Estado de Puebla</strong>
+    &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales
+  </span>
+  <span>
+    Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez
+  </span>
+</footer>
+
+
+<script>
+  /* ════════════════════════════════════════════
+     CANDADOS ANTI-COPIA / ANTI-IA
+     Disuasivos en cliente. No sustituyen supervisión presencial.
+     ════════════════════════════════════════════ */
+
+  function showLock() {
+    document.getElementById('lock-overlay').style.display = 'flex';
+  }
+
+  // Bloquear menú contextual (clic derecho)
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    showLock();
+  });
+
+  // Bloquear selección y copiado de texto del documento (no de inputs)
+  document.addEventListener('copy', function (e) {
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      showLock();
+    }
+  });
+  document.addEventListener('cut', function (e) { e.preventDefault(); });
+
+  // Bloquear atajos de teclado comunes: copiar, pegar, imprimir, guardar,
+  // herramientas de desarrollador, buscar, ver código fuente
+  document.addEventListener('keydown', function (e) {
+    const k = e.key.toLowerCase();
+    const blockedCombos =
+      (e.ctrlKey || e.metaKey) && ['c','v','x','p','s','u','f','a'].includes(k);
+    const devTools =
+      k === 'f12' ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i','j','c'].includes(k));
+
+    if (blockedCombos || devTools) {
+      e.preventDefault();
+      showLock();
+    }
+  });
+
+  // Detectar pérdida de foco prolongada (posible cambio a otra ventana/app de IA)
+  let blurTimer = null;
+  window.addEventListener('blur', function () {
+    blurTimer = setTimeout(function () {
+      showLock();
+    }, 8000); // si pasan más de 8s fuera de la pestaña, se asume consulta externa
+  });
+  window.addEventListener('focus', function () {
+    if (blurTimer) clearTimeout(blurTimer);
+  });
+
+  // Aviso si se detecta un tamaño de ventana inusualmente angosto
+  // (indicio de DevTools acoplado al lateral)
+  let devToolsWarned = false;
+  setInterval(function () {
+    const threshold = 160;
+    const widthDiff = window.outerWidth - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+    if ((widthDiff > threshold || heightDiff > threshold) && !devToolsWarned) {
+      devToolsWarned = true;
+      showLock();
+    }
+  }, 1500);
+
+
+  /* ════════════════════════════════════════════
+     HABILITAR EXAMEN SOLO TRAS ACEPTAR HONESTIDAD
+     ════════════════════════════════════════════ */
+  const integrityCheck = document.getElementById('integrity-check');
+  const btnSubmit = document.getElementById('btn-submit');
+  const questionBlocks = document.querySelectorAll('.question-block');
+
+  integrityCheck.addEventListener('change', function () {
+    const enabled = this.checked;
+    questionBlocks.forEach(function (q) {
+      q.classList.toggle('locked', !enabled);
+    });
+    btnSubmit.disabled = !enabled;
+    if (enabled) startTimer();
+  });
+
+
+  /* ════════════════════════════════════════════
+     TEMPORIZADOR
+     ════════════════════════════════════════════ */
+  let seconds = 0;
+  let timerInterval = null;
+  function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(function () {
+      seconds++;
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(seconds % 60).padStart(2, '0');
+      document.getElementById('timer-badge').textContent = 'Tiempo transcurrido: ' + m + ':' + s;
+    }, 1000);
+  }
+
+
+  /* ════════════════════════════════════════════
+     RESPUESTAS CORRECTAS
+     ════════════════════════════════════════════ */
+  const answerKey = {
+    q1:  { type: 'mc',   correct: 'b', text: '7x²', explain: 'Un monomio es un solo término: coeficiente por variable(s) con exponente entero no negativo. 7x² cumple esto; las demás opciones tienen sumas o restas (son polinomios) o un exponente negativo (2/x).' },
+    q2:  { type: 'mc',   correct: 'c', text: '−5', explain: 'El coeficiente es el factor numérico que multiplica a la variable, incluyendo su signo: −5.' },
+    q3:  { type: 'mc',   correct: 'c', text: '5', explain: 'El grado de un monomio es la suma de los exponentes de todas sus variables: 2 (de x²) + 3 (de y³) = 5.' },
+    q4:  { type: 'mc',   correct: 'b', text: '5x² y −2x²', explain: 'Los monomios semejantes tienen exactamente la misma variable con el mismo exponente. 5x² y −2x² cumplen esto.' },
+    q5:  { type: 'text', correct: ['6x^2','6x²','6x2'], explain: 'Como los tres términos son semejantes, se suman los coeficientes: 5+3−2 = 6. Resultado: 6x².' },
+    q6:  { type: 'text', correct: ['6x^5','6x⁵','6x5'], explain: 'Se multiplican los coeficientes (3×2=6) y se suman los exponentes (2+3=5). Resultado: 6x⁵.' },
+    q7:  { type: 'mc',   correct: 'c', text: '3', explain: 'El grado de un polinomio es el mayor exponente presente. En 4x³−2x²+5x−1 el mayor exponente es 3.' },
+    q8:  { type: 'text', correct: ['3'], explain: 'P(2) = 2(2)² − 3(2) + 1 = 2(4) − 6 + 1 = 8 − 6 + 1 = 3.' },
+    q9:  { type: 'text', correct: ['3x^2+2x+4','3x²+2x+4'], explain: 'Se suman los términos semejantes: (2+1)x² + (3−1)x + 4 = 3x² + 2x + 4.' },
+    q10: { type: 'text', correct: ['19'], explain: 'M(3) = 2(3)² + 1 = 2(9) + 1 = 18 + 1 = 19 MB.' },
+  };
+
+  function normalize(s) {
+    return String(s).trim().toLowerCase().replace(/\s+/g, '');
+  }
+
+  function finishExam() {
+    clearInterval(timerInterval);
+    const form = document.getElementById('exam-form');
+    let correctCount = 0;
+    const detailHTML = [];
+
+    Object.keys(answerKey).forEach(function (qid, idx) {
+      const ans = answerKey[qid];
+      let userVal = '';
+      let isCorrect = false;
+
+      if (ans.type === 'mc') {
+        const checked = form.querySelector('input[name="' + qid + '"]:checked');
+        userVal = checked ? checked.value.toUpperCase() : '(sin respuesta)';
+        isCorrect = checked && checked.value === ans.correct;
+      } else {
+        const input = form.querySelector('input[name="' + qid + '"]');
+        userVal = input.value || '(sin respuesta)';
+        isCorrect = ans.correct.some(function (c) { return normalize(c) === normalize(userVal); });
+      }
+
+      if (isCorrect) correctCount++;
+
+      detailHTML.push(
+        '<div class="result-row">' +
+          '<span class="result-mark ' + (isCorrect ? 'ok' : 'err') + '">' + (isCorrect ? 'OK' : 'X') + '</span>' +
+          '<div class="result-detail">' +
+            '<strong>Pregunta ' + (idx + 1) + '.</strong> Tu respuesta: <strong>' + userVal + '</strong>' +
+            (ans.type === 'mc' ? ' (' + ans.text + ')' : '') +
+            '<div class="r-correct">' + ans.explain + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    document.getElementById('score-big').textContent = correctCount + ' / 10';
+    const pct = Math.round(correctCount / 10 * 100);
+    document.getElementById('score-sub').textContent =
+      'Calificación obtenida — ' + pct + '%' +
+      (pct >= 80 ? ' · Excelente dominio del tema' :
+       pct >= 60 ? ' · Aprobatorio, conviene repasar' :
+       ' · Se recomienda reforzar el tema antes de continuar');
+
+    document.getElementById('results-detail').innerHTML = detailHTML.join('');
+    document.getElementById('results-panel').style.display = 'block';
+    document.getElementById('exam-form').style.display = 'none';
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
