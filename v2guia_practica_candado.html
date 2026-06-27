@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Práctica — Monomios y Polinomios | IEDEP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="base.css">
+
+  <style>
+    .ex-card {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--guinda);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      background: var(--off-white);
+    }
+    .ex-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .7rem 1.4rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .ex-card-header .ex-num {
+      font-family: var(--font-ui);
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--guinda);
+      letter-spacing: .02em;
+    }
+    .ex-card-header .ex-topic {
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: var(--guinda-light);
+      padding: .15rem .65rem;
+      border-radius: 99px;
+    }
+    .ex-card-body { padding: 1.1rem 1.4rem 1.3rem; }
+    .ex-statement { font-size: 1rem; line-height: 1.65; margin-bottom: 0; }
+    .ex-statement code {
+      font-family: var(--font-mono);
+      font-size: .92rem;
+      background: var(--surface);
+      padding: .05rem .35rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+
+    .work-space {
+      margin-top: .9rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-sm);
+      min-height: 70px;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 27px,
+        var(--border) 27px,
+        var(--border) 28px
+      );
+    }
+    .work-space-label {
+      font-family: var(--font-ui);
+      font-size: .7rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-top: .8rem;
+      margin-bottom: .3rem;
+      display: block;
+    }
+
+    .solution-locked {
+      margin-top: .9rem;
+      padding: .85rem 1.1rem;
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+    .solution-locked .lock-icon {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--ink-muted);
+      flex-shrink: 0;
+    }
+    .solution-locked .lock-text {
+      font-family: var(--font-ui);
+      font-size: .82rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+    .solution-locked .lock-text strong { color: var(--guinda); }
+
+    details { margin-top: .9rem; }
+    details summary {
+      font-family: var(--font-ui);
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--guinda);
+      cursor: pointer;
+      padding: .4rem .75rem;
+      border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm);
+      background: var(--guinda-light);
+      display: inline-block;
+      letter-spacing: .02em;
+      user-select: none;
+    }
+    details summary:hover { background: var(--guinda); color: var(--white); }
+    details[open] summary { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .solution-body {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+      padding: 1rem 1.2rem;
+      background: var(--white);
+    }
+    .solution-body .step-list { list-style: none; padding: 0; margin: 0; }
+    .solution-body .step-list li { display: flex; gap: .7rem; margin-bottom: .6rem; align-items: flex-start; }
+    .solution-body .step-n {
+      min-width: 22px; height: 22px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-ui); font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .solution-body .step-text { font-size: .94rem; line-height: 1.6; }
+    .result-line {
+      background: var(--guinda-light);
+      border: 1px solid #D8A8BA;
+      border-radius: var(--radius-sm);
+      padding: .55rem .9rem;
+      font-family: var(--font-mono);
+      font-size: .9rem;
+      color: var(--guinda-dark);
+      margin-top: .75rem;
+      font-weight: 500;
+    }
+
+    .unlock-banner {
+      border-radius: var(--radius-md);
+      padding: 1rem 1.3rem;
+      margin-bottom: 1.75rem;
+      font-size: .95rem;
+      line-height: 1.6;
+    }
+    .unlock-banner.pending {
+      background: var(--guinda-light);
+      border: 1.5px solid var(--guinda);
+    }
+    .unlock-banner.pending .ub-title {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--guinda-dark);
+      display: block;
+      margin-bottom: .4rem;
+    }
+    .unlock-banner.ready {
+      background: #E8F5E8;
+      border: 1.5px solid #8FBF8F;
+    }
+    .unlock-banner.ready .ub-title {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #2A5C2A;
+      display: block;
+      margin-bottom: .4rem;
+    }
+    .countdown {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--guinda-dark);
+      font-weight: 600;
+      margin-top: .5rem;
+      display: block;
+    }
+
+    @media print {
+      .work-space { min-height: 90px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP — Instituto de Educación Digital del Estado de Puebla" style="height:88px; width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Guía de práctica</span>
+  </div>
+</header>
+
+
+<div class="class-hero">
+  <div style="max-width:900px; margin:0 auto; padding:0 2rem;">
+    <span class="class-label">Unidad 1 &nbsp;·&nbsp; Guía de práctica</span>
+    <h1>Monomios y Polinomios</h1>
+    <span class="class-subtitle">
+      10 ejercicios para practicar antes de la evaluación del sábado
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">
+        Tipo de material
+        <span>Práctica individual</span>
+      </div>
+      <div class="meta-item">
+        Nivel
+        <span>Básico</span>
+      </div>
+      <div class="meta-item">
+        Asesor
+        <span>Mtro. José Armando Vera Rodríguez</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-wrapper">
+
+  <div class="unlock-banner pending" id="unlock-banner">
+    <span class="ub-title">Soluciones disponibles a partir del miércoles 24 de junio</span>
+    <span id="unlock-message">
+      Resuelve cada ejercicio en tu cuaderno usando el espacio de trabajo. Las soluciones se
+      habilitarán automáticamente el miércoles para que puedas verificar tus respuestas antes
+      de la evaluación del sábado 27 de junio.
+    </span>
+    <span class="countdown" id="countdown"></span>
+  </div>
+
+  <div class="callout">
+    <p>
+      <strong>Cómo usar esta guía:</strong> resuelve cada ejercicio por tu cuenta, sin ver las
+      soluciones. El objetivo es que practiques el procedimiento real, no que verifiques una
+      respuesta que aún no intentaste. El miércoles podrás abrir esta misma página y las
+      soluciones aparecerán disponibles.
+    </p>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 1</span>
+      <span class="ex-topic">Identificar monomio</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        ¿Cuál de las siguientes expresiones es un monomio?<br>
+        (a) <code>5x &#8722; 2</code> &nbsp; (b) <code>9x&#8308;</code> &nbsp; (c) <code>3/x&#178;</code> &nbsp; (d) <code>x&#178; + x</code>
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="b9x4"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 2</span>
+      <span class="ex-topic">Coeficiente y variable</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        En el monomio <code>&#8722;8x&#8309;y&#178;</code>, identifica el coeficiente y el grado.
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="coef-8grado7"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 3</span>
+      <span class="ex-topic">Monomios semejantes</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        De esta lista, ¿cuáles monomios son semejantes entre sí?<br>
+        <code>4x&#178;</code>, &nbsp; <code>4x&#179;</code>, &nbsp; <code>&#8722;9x&#178;</code>, &nbsp; <code>4y&#178;</code>
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="4x2y-9x2"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 4</span>
+      <span class="ex-topic">Suma de monomios</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Resuelve: <code>7x&#179; + 2x&#179; &#8722; 5x&#179;</code>
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="4x3"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 5</span>
+      <span class="ex-topic">Multiplicación de monomios</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Resuelve: <code>(4x&#178;)(&#8722;3x&#8308;)</code>
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="-12x6"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 6</span>
+      <span class="ex-topic">Grado de un polinomio</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        ¿Cuál es el grado del polinomio <code>P(x) = 6x&#8308; &#8722; 3x&#178; + x &#8722; 9</code>?
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="grado4"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 7</span>
+      <span class="ex-topic">Evaluación de polinomio</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Sea <code>P(x) = 3x&#178; &#8722; 2x + 5</code>. Calcula <code>P(3)</code>.
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="p3-26"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 8</span>
+      <span class="ex-topic">Suma de polinomios</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Dados <code>P(x) = 4x&#178; &#8722; x + 2</code> y <code>Q(x) = &#8722;2x&#178; + 3x &#8722; 1</code>,
+        calcula <code>P(x) + Q(x)</code>.
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="suma2x2"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 9</span>
+      <span class="ex-topic">Resta de polinomios</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Dados <code>P(x) = 5x&#179; + 2x &#8722; 4</code> y <code>Q(x) = 2x&#179; &#8722; x + 6</code>,
+        calcula <code>P(x) &#8722; Q(x)</code>.
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="resta3x3"></div>
+    </div>
+  </div>
+
+
+  <div class="ex-card">
+    <div class="ex-card-header">
+      <span class="ex-num">Ejercicio 10</span>
+      <span class="ex-topic">Aplicación informática</span>
+    </div>
+    <div class="ex-card-body">
+      <p class="ex-statement">
+        Un proceso en un servidor consume memoria según <code>M(n) = 3n&#178; + 2n + 5</code> MB, donde
+        n es el número de hilos activos. ¿Cuántos MB consume el proceso con <code>n = 4</code> hilos?
+      </p>
+      <span class="work-space-label">Espacio de trabajo</span>
+      <div class="work-space"></div>
+      <div class="solution-slot" data-answer="m4-61mb"></div>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+
+<footer class="site-footer">
+  <span>
+    <strong>Instituto de Educación Digital del Estado de Puebla</strong>
+    &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales
+  </span>
+  <span>
+    Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez
+  </span>
+</footer>
+
+
+<script>
+  const UNLOCK_DATE = new Date('2026-06-24T00:00:00');
+
+  const solutions = {
+    'b9x4': {
+      steps: [
+        'Un monomio es un solo término: coeficiente × variable con exponente entero no negativo, sin sumas ni restas.',
+        '(a) tiene una resta → no es monomio. (c) tiene la variable en el denominador (exponente negativo) → no es monomio. (d) tiene una suma → no es monomio.',
+        '(b) 9x⁴ es un solo término con exponente entero positivo → sí es monomio.'
+      ],
+      result: 'Respuesta: (b) 9x⁴'
+    },
+    'coef-8grado7': {
+      steps: [
+        'El coeficiente es el número que multiplica a las variables, incluyendo su signo: −8.',
+        'El grado es la suma de todos los exponentes: 5 (de x) + 2 (de y) = 7.'
+      ],
+      result: 'Coeficiente: −8 · Grado: 7'
+    },
+    '4x2y-9x2': {
+      steps: [
+        'Dos monomios son semejantes solo si tienen exactamente la misma variable elevada al mismo exponente.',
+        '4x² y −9x² tienen la misma variable (x) con el mismo exponente (2) → son semejantes.',
+        '4x³ tiene exponente distinto (3) → no es semejante a los demás. 4y² tiene variable distinta (y) → tampoco es semejante.'
+      ],
+      result: 'Semejantes: 4x² y −9x²'
+    },
+    '4x3': {
+      steps: [
+        'Los tres términos son semejantes (mismo x³), así que se pueden combinar sumando sus coeficientes.',
+        '7 + 2 − 5 = 4.'
+      ],
+      result: 'Resultado: 4x³'
+    },
+    '-12x6': {
+      steps: [
+        'En una multiplicación NO necesitan ser semejantes. Se multiplican los coeficientes y se suman los exponentes de la misma variable.',
+        'Coeficientes: (4)(−3) = −12. Exponentes: 2 + 4 = 6.'
+      ],
+      result: 'Resultado: −12x⁶'
+    },
+    'grado4': {
+      steps: [
+        'El grado de un polinomio es el mayor exponente que aparece en cualquiera de sus términos.',
+        'Los exponentes presentes son: 4, 2, 1 y 0 (en el término constante −9). El mayor es 4.'
+      ],
+      result: 'Grado del polinomio: 4'
+    },
+    'p3-26': {
+      steps: [
+        'Sustituyo x por 3 en toda la expresión: P(3) = 3(3)² − 2(3) + 5.',
+        'Resuelvo la potencia primero: 3(9) − 2(3) + 5 = 27 − 6 + 5.',
+        '27 − 6 + 5 = 26.'
+      ],
+      result: 'P(3) = 26'
+    },
+    'suma2x2': {
+      steps: [
+        'Agrupo los términos semejantes: los de x², los de x y las constantes.',
+        'x²: (4 − 2)x² = 2x². · x: (−1 + 3)x = 2x. · constante: (2 − 1) = 1.'
+      ],
+      result: 'Resultado: 2x² + 2x + 1'
+    },
+    'resta3x3': {
+      steps: [
+        'Al restar, cambio el signo de cada término de Q(x) antes de combinar: −Q(x) = −2x³ + x − 6.',
+        'Sumo P(x) + (−Q(x)): x³: (5−2)x³ = 3x³. · x: (2+1)x = 3x. · constante: (−4−6) = −10.'
+      ],
+      result: 'Resultado: 3x³ + 3x − 10'
+    },
+    'm4-61mb': {
+      steps: [
+        'Sustituyo n por 4: M(4) = 3(4)² + 2(4) + 5.',
+        'Resuelvo la potencia: 3(16) + 2(4) + 5 = 48 + 8 + 5.',
+        '48 + 8 + 5 = 61.'
+      ],
+      result: 'M(4) = 61 MB'
+    }
+  };
+
+  function buildLockedSlot() {
+    return '<div class="solution-locked">' +
+      '<span class="lock-icon">&#128274;</span>' +
+      '<span class="lock-text">Solución disponible a partir del <strong>miércoles 24 de junio</strong>. Sigue practicando y vuelve a revisar este ejercicio ese día.</span>' +
+    '</div>';
+  }
+
+  function buildUnlockedSlot(key) {
+    const sol = solutions[key];
+    if (!sol) return '';
+    const stepsHTML = sol.steps.map(function (s, i) {
+      return '<li><span class="step-n">' + (i + 1) + '</span><span class="step-text">' + s + '</span></li>';
+    }).join('');
+    return (
+      '<details>' +
+        '<summary>Ver solución</summary>' +
+        '<div class="solution-body">' +
+          '<ul class="step-list">' + stepsHTML + '</ul>' +
+          '<div class="result-line">' + sol.result + '</div>' +
+        '</div>' +
+      '</details>'
+    );
+  }
+
+  function renderSlots(unlocked) {
+    document.querySelectorAll('.solution-slot').forEach(function (el) {
+      const key = el.getAttribute('data-answer');
+      el.innerHTML = unlocked ? buildUnlockedSlot(key) : buildLockedSlot();
+    });
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  let lastUnlockedState = null; // null = aún no se ha renderizado ninguna vez
+
+  function updateBanner() {
+    const now = new Date();
+    const banner = document.getElementById('unlock-banner');
+    const msg = document.getElementById('unlock-message');
+    const countdownEl = document.getElementById('countdown');
+    const titleEl = banner.querySelector('.ub-title');
+    const isUnlocked = now >= UNLOCK_DATE;
+
+    if (isUnlocked) {
+      banner.classList.remove('pending');
+      banner.classList.add('ready');
+      titleEl.textContent = 'Soluciones disponibles';
+      msg.textContent = 'Las soluciones ya están habilitadas. Revisa cada ejercicio, compara tu procedimiento y refuerza lo necesario antes de la evaluación del sábado 27 de junio.';
+      countdownEl.textContent = '';
+    } else {
+      const diff = UNLOCK_DATE - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+      countdownEl.textContent =
+        'Disponibles en: ' + days + 'd ' + pad(hours) + 'h ' + pad(mins) + 'm ' + pad(secs) + 's';
+    }
+
+    // renderSlots solo se ejecuta cuando el estado de bloqueo cambia realmente,
+    // no en cada tick del reloj. Así un <details> que el estudiante abrió
+    // manualmente no se reconstruye y cierra cada segundo.
+    if (isUnlocked !== lastUnlockedState) {
+      renderSlots(isUnlocked);
+      lastUnlockedState = isUnlocked;
+    }
+  }
+
+  updateBanner();
+  setInterval(updateBanner, 1000);
+</script>
+
+</body>
+</html>
