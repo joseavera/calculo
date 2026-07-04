@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Límites — Concepto Intuitivo | Cálculo Diferencial | IEDEP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+
+  <style>
+    /* ── Analogía visual ───────────────────────────────── */
+    .analogy-box {
+      background: var(--guinda-light);
+      border-left: 4px solid var(--guinda);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .analogy-label {
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--guinda);
+      display: block;
+      margin-bottom: .5rem;
+    }
+    .analogy-box p { margin-bottom: .4rem; font-size: .97rem; }
+    .analogy-box p:last-child { margin-bottom: 0; }
+
+    /* ── Tabla de valores numéricos ────────────────────── */
+    .num-table { width: 100%; border-collapse: collapse; font-size: .95rem; margin: 1rem 0; }
+    .num-table th {
+      background: var(--guinda);
+      color: var(--white);
+      padding: .55rem .9rem;
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      text-align: center;
+    }
+    .num-table td { padding: .55rem .9rem; text-align: center; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .93rem; }
+    .num-table tr:nth-child(even) td { background: var(--surface); }
+    .num-table tr.highlight td { background: var(--guinda-light); color: var(--guinda-dark); font-weight: 600; }
+    .num-table tr:last-child td { border-bottom: none; }
+
+    /* ── Pasos de solución ─────────────────────────────── */
+    .step-list { list-style: none; padding: 0; margin: 0; }
+    .step-list li { display: flex; gap: .85rem; margin-bottom: .85rem; align-items: flex-start; }
+    .step-n {
+      min-width: 28px; height: 28px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-ui); font-size: .78rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-text { font-size: .97rem; line-height: 1.65; }
+
+    /* ── Ejemplo de clase ──────────────────────────────── */
+    .example-block { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 1.5rem 0; }
+    .example-header {
+      background: var(--guinda);
+      color: var(--white);
+      padding: .65rem 1.4rem;
+      font-family: var(--font-ui);
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    .example-body { padding: 1.25rem 1.5rem; background: var(--off-white); }
+    .example-statement {
+      background: var(--surface);
+      border-left: 3px solid var(--guinda-rule);
+      padding: .8rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: .97rem;
+      margin-bottom: 1rem;
+      line-height: 1.65;
+    }
+    .result-line {
+      background: var(--guinda-light);
+      border: 1px solid #D8A8BA;
+      border-radius: var(--radius-sm);
+      padding: .6rem 1rem;
+      font-family: var(--font-mono);
+      font-size: .92rem;
+      color: var(--guinda-dark);
+      margin-top: .85rem;
+      font-weight: 500;
+    }
+
+    /* ── Caja de "recuerda" ────────────────────────────── */
+    .remember-box {
+      border: 1.5px solid var(--guinda);
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.35rem;
+      margin: 1.25rem 0;
+    }
+    .remember-label {
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--guinda);
+      display: block;
+      margin-bottom: .5rem;
+    }
+    .remember-box p { margin-bottom: .4rem; font-size: .97rem; }
+    .remember-box p:last-child { margin-bottom: 0; }
+
+    /* ── Desmos ────────────────────────────────────────── */
+    .desmos-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-top: .65rem;
+      flex-wrap: wrap;
+    }
+    .desmos-label {
+      font-family: var(--font-ui);
+      font-size: .75rem;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+    .desmos-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--guinda);
+      text-decoration: none;
+      padding: .28rem .75rem;
+      border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm);
+      background: var(--guinda-light);
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+    .desmos-link:hover { background: var(--guinda); color: var(--white); text-decoration: none; }
+    .desmos-link::before {
+      content: '';
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ── Ref list ──────────────────────────────────────── */
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: .95rem; padding: .6rem 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .ref-list li:last-child { border-bottom: none; }
+    .ref-year { font-family: var(--font-mono); font-size: .82rem; color: var(--guinda); font-weight: 500; margin-right: .35rem; }
+
+    /* ── Conclusión ────────────────────────────────────── */
+    .conclusion-list { list-style: none; padding: 0; }
+    .conclusion-list li {
+      padding: .75rem 0 .75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .98rem;
+      position: relative;
+      line-height: 1.65;
+    }
+    .conclusion-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 1.05rem;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--guinda);
+    }
+    .conclusion-list li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<!-- CABECERA -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP" style="height:88px; width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Material de clase</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="class-hero">
+  <div style="max-width:900px; margin:0 auto; padding:0 2rem;">
+    <span class="class-label">Unidad 2 &nbsp;·&nbsp; Clase 1 &nbsp;·&nbsp; Límites y Continuidad</span>
+    <h1>¿Qué es un Límite?</h1>
+    <span class="class-subtitle">
+      Concepto intuitivo del límite — la idea central de todo el cálculo diferencial
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">Fecha<span>4 de julio de 2026</span></div>
+      <div class="meta-item">Duración<span>60 minutos</span></div>
+      <div class="meta-item">Asesor<span>Mtro. José Armando Vera Rodríguez</span></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-wrapper">
+
+  <!-- ── COMPETENCIAS ─────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Propósito de la sesión</span>
+    <h2 class="section-title">Competencias a desarrollar</h2>
+
+    <div class="competency-card">
+      <span class="comp-num">01</span>
+      <span class="comp-text">
+        <strong>Comprender qué es un límite de forma intuitiva:</strong> explicar con palabras propias
+        qué significa que una función "se acerca" a un valor sin necesariamente llegar a él.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">02</span>
+      <span class="comp-text">
+        <strong>Leer y escribir la notación de límite:</strong> interpretar correctamente la expresión
+        lím f(x) = L y traducirla a lenguaje cotidiano.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">03</span>
+      <span class="comp-text">
+        <strong>Estimar límites mediante tablas de valores:</strong> construir una tabla sustituyendo
+        valores cada vez más cercanos a un punto y observar hacia dónde se dirige la función.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">04</span>
+      <span class="comp-text">
+        <strong>Calcular límites directos por sustitución:</strong> identificar cuándo es suficiente
+        sustituir el valor directamente en la función para obtener el límite.
+      </span>
+    </div>
+
+    <div class="callout mt-1">
+      <p>
+        El límite es la herramienta que hace posible toda la Unidad 3 (derivadas).
+        Sin entender qué significa "acercarse a un valor", la derivada no tiene sentido.
+        Esta clase es el puente entre lo que ya sabes de funciones y el cálculo diferencial real.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 1: ¿QUÉ PROBLEMA RESUELVE EL LÍMITE? ──────── -->
+  <section class="section">
+    <span class="section-label">Motivación</span>
+    <h2 class="section-title">¿Por qué necesitamos el límite?</h2>
+
+    <p>
+      Antes de definir nada, mira este problema concreto. Imagina que tienes la función
+      f(x) = (x² &#8722; 1) / (x &#8722; 1) y alguien te pide calcular f(1).
+    </p>
+
+    <div class="example-block">
+      <div class="example-header">Intento: calcular f(1) directamente</div>
+      <div class="example-body">
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Sustituyo x = 1 en la fórmula:<br>
+              f(1) = (1² &#8722; 1) / (1 &#8722; 1) = (1 &#8722; 1) / (1 &#8722; 1) = <strong>0 / 0</strong>
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              0/0 no está definido en matemáticas. No es cero, no es infinito: simplemente
+              <strong>no existe</strong> como resultado. La función tiene un hueco en x = 1.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              Pero, ¿la función desaparece completamente cerca de x = 1? ¿O se acerca
+              a algún valor razonable? Para responder eso existe el límite.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">f(1) = 0/0 — no está definida, pero eso no significa que no haya un límite</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <span class="analogy-label">Analogía — el elevador con falla en el piso 5</span>
+      <p>
+        Piensa en un elevador que sube por un edificio. En el piso 5 hay una falla y la puerta
+        no abre: el elevador no puede detenerse ahí. Pero eso no impide que el elevador
+        <em>pase por ese nivel</em> mientras sube del 4 al 6. El límite pregunta: ¿a qué
+        altura estaba el elevador cuando estaba justo en el nivel del piso 5, aunque no
+        pudiera detenerse?
+      </p>
+      <p>
+        En matemáticas: el límite de f(x) cuando x se acerca a 1 pregunta cuál es el valor
+        al que se acerca f(x), aunque f(1) no exista.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 2: DEFINICIÓN INTUITIVA ───────────────────── -->
+  <section class="section">
+    <span class="section-label">Concepto central</span>
+    <h2 class="section-title">¿Qué es un límite?</h2>
+
+    <p>
+      El <strong>límite</strong> de una función f(x) cuando x se acerca a un valor c es el
+      número L al que se va acercando f(x) conforme x se acerca a c por ambos lados,
+      sin importar si f(c) existe o no.
+    </p>
+
+    <div class="card">
+      <span class="card-title">Notación oficial</span>
+      <code class="formula">lím f(x) = L
+x → c</code>
+      <p style="font-size:.95rem; margin-top:.75rem; margin-bottom:0;">
+        Se lee: <em>"el límite de f de x cuando x tiende a c es igual a L".</em><br>
+        La flecha (→) significa "se acerca a", no "llega a". Esa diferencia es todo.
+      </p>
+    </div>
+
+    <div class="remember-box">
+      <span class="remember-label">La idea más importante de esta clase</span>
+      <p>
+        El límite describe lo que <strong>le pasa a f(x) mientras nos acercamos a c</strong>,
+        no lo que vale f(c). Son dos preguntas distintas y pueden tener respuestas distintas.
+      </p>
+      <p>
+        Puede ocurrir que: f(c) exista y sea igual al límite, f(c) exista pero sea
+        diferente al límite, o f(c) directamente no exista aunque el límite sí exista.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 3: MÉTODO DE LA TABLA ─────────────────────── -->
+  <section class="section">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <span class="section-label">Primer método</span>
+        <h2 class="section-title">Estimar un límite con una tabla de valores</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP" style="height:44px; width:auto; opacity:.6; flex-shrink:0; margin-top:.25rem;">
+    </div>
+
+    <p>
+      La forma más visual de entender un límite es construir una tabla: sustituyes valores de x
+      cada vez más cercanos a c —por la izquierda y por la derecha— y observas hacia dónde
+      va f(x). No es el método más rápido, pero es el que más claridad da.
+    </p>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo 1 — Estimación por tabla: f(x) = (x² &#8722; 1) / (x &#8722; 1), ¿cuál es el límite cuando x → 1?</div>
+      <div class="example-body">
+        <div class="example-statement">
+          f(1) no está definida (da 0/0), pero construyamos la tabla con valores de x cada
+          vez más cercanos a 1 desde ambos lados.
+        </div>
+
+        <p style="font-size:.9rem; color:var(--ink-muted); font-family:var(--font-ui); margin-bottom:.4rem;">Valores que se acercan a 1 por la IZQUIERDA (x &lt; 1):</p>
+        <table class="num-table">
+          <thead>
+            <tr><th>x</th><th>x² &#8722; 1</th><th>x &#8722; 1</th><th>f(x) = (x²&#8722;1)/(x&#8722;1)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0.5</td><td>&#8722;0.75</td><td>&#8722;0.5</td><td>1.5</td></tr>
+            <tr><td>0.9</td><td>&#8722;0.19</td><td>&#8722;0.1</td><td>1.9</td></tr>
+            <tr><td>0.99</td><td>&#8722;0.0199</td><td>&#8722;0.01</td><td>1.99</td></tr>
+            <tr><td>0.999</td><td>&#8722;0.001999</td><td>&#8722;0.001</td><td>1.999</td></tr>
+            <tr class="highlight"><td>→ 1</td><td>→ 0</td><td>→ 0</td><td>→ <strong>2</strong></td></tr>
+          </tbody>
+        </table>
+
+        <p style="font-size:.9rem; color:var(--ink-muted); font-family:var(--font-ui); margin:.85rem 0 .4rem;">Valores que se acercan a 1 por la DERECHA (x &gt; 1):</p>
+        <table class="num-table">
+          <thead>
+            <tr><th>x</th><th>x² &#8722; 1</th><th>x &#8722; 1</th><th>f(x) = (x²&#8722;1)/(x&#8722;1)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1.5</td><td>1.25</td><td>0.5</td><td>2.5</td></tr>
+            <tr><td>1.1</td><td>0.21</td><td>0.1</td><td>2.1</td></tr>
+            <tr><td>1.01</td><td>0.0201</td><td>0.01</td><td>2.01</td></tr>
+            <tr><td>1.001</td><td>0.002001</td><td>0.001</td><td>2.001</td></tr>
+            <tr class="highlight"><td>→ 1</td><td>→ 0</td><td>→ 0</td><td>→ <strong>2</strong></td></tr>
+          </tbody>
+        </table>
+
+        <ul class="step-list" style="margin-top:1rem;">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Por la izquierda: f(x) se acerca a 2 (1.5 → 1.9 → 1.99 → 1.999…).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              Por la derecha: f(x) también se acerca a 2 (2.5 → 2.1 → 2.01 → 2.001…).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              Como ambos lados se acercan al mismo valor, el límite existe y es 2.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">lím (x²&#8722;1)/(x&#8722;1) = 2, aunque f(1) no exista</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver la gráfica con el hueco en x = 1 y el valor al que se acerca:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-1,xmax:4,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\frac{x^2-1}{x-1}',color:'#7B1034',label:'f(x)=(x²-1)/(x-1)'},{id:'2',type:'expression',latex:'(1,2)',color:'#550B23',showLabel:true,label:'hueco en (1, 2)'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 4: MÉTODO DE SUSTITUCIÓN DIRECTA ──────────── -->
+  <section class="section">
+    <span class="section-label">Segundo método — el más rápido</span>
+    <h2 class="section-title">Calcular un límite por sustitución directa</h2>
+
+    <p>
+      Cuando la función es continua en el punto c —es decir, no tiene hueco, no hay división
+      entre cero ni raíz de negativo— el límite se calcula de forma inmediata: simplemente
+      sustituyes x por c y calculas el resultado.
+    </p>
+
+    <div class="remember-box">
+      <span class="remember-label">Regla de sustitución directa</span>
+      <p>
+        Si f(c) existe (no da 0/0 ni algo indefinido), entonces:
+      </p>
+      <code class="formula" style="margin:.5rem 0; display:block;">lím f(x) = f(c)
+x → c</code>
+      <p>
+        Es el método más rápido. Siempre intenta primero la sustitución directa antes de
+        usar tablas u otras técnicas.
+      </p>
+    </div>
+
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo 2 — Sustitución directa: lím (3x + 5) cuando x → 2</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Calcula lím (3x + 5) cuando x → 2.
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Intento la sustitución directa: f(2) = 3(2) + 5 = 6 + 5 = 11.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              El resultado es un número definido (no hay 0/0 ni nada indefinido).
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              Por lo tanto el límite existe y es igual a ese valor.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">lím (3x + 5) = 11
+x → 2</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver la función lineal y el punto (2, 11):</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-2,xmax:6,ymax:25}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x+5',color:'#7B1034',label:'f(x)=3x+5'},{id:'2',type:'expression',latex:'(2,11)',color:'#550B23',showLabel:true,label:'(2, 11) — límite = 11'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo 3 — Sustitución directa: lím (x² &#8722; 3x + 2) cuando x → 4</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Calcula lím (x² &#8722; 3x + 2) cuando x → 4.
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Sustituyo x = 4: f(4) = (4)² &#8722; 3(4) + 2 = 16 &#8722; 12 + 2 = 6.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              El resultado es 6, que es un número definido.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              El límite existe y es igual a 6.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">lím (x² &#8722; 3x + 2) = 6
+x → 4</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver la parábola y confirmar el punto (4, 6):</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-3,xmax:7,ymax:12}},expressions:{list:[{id:'1',type:'expression',latex:'y=x^2-3x+2',color:'#7B1034',label:'f(x)=x²-3x+2'},{id:'2',type:'expression',latex:'(4,6)',color:'#550B23',showLabel:true,label:'(4, 6) — límite = 6'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo 4 — Contexto informático: velocidad de descarga</div>
+      <div class="example-body">
+        <div class="example-statement">
+          La velocidad de descarga (en MB/s) de un archivo a lo largo del tiempo se modela con
+          V(t) = 2t + 1, donde t es el tiempo en segundos. ¿Cuál es el límite de la velocidad
+          cuando t se acerca a 3 segundos?
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Escribo la expresión del límite: lím V(t) = lím (2t + 1) cuando t → 3.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              Intento sustitución directa: V(3) = 2(3) + 1 = 6 + 1 = 7.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              El resultado es 7, definido. El límite existe.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-text">
+              Interpretación real: cuando la descarga lleva 3 segundos, la velocidad se
+              acerca a 7 MB/s. Si la descarga se interrumpe justo en t = 3, ese era el
+              valor instantáneo al que iba llegando.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">lím V(t) = 7 MB/s cuando t → 3</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver V(t) = 2t + 1 y el punto de límite:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:8,ymax:18}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x+1',color:'#7B1034',label:'V(t)=2t+1'},{id:'2',type:'expression',latex:'(3,7)',color:'#550B23',showLabel:true,label:'lím = 7 MB/s'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 5: CUÁNDO NO FUNCIONA LA SUSTITUCIÓN ──────── -->
+  <section class="section">
+    <span class="section-label">Atención</span>
+    <h2 class="section-title">¿Cuándo NO funciona la sustitución directa?</h2>
+
+    <p>
+      La sustitución directa falla cuando al sustituir x por c se obtiene una forma
+      <strong>indeterminada</strong>. La más común es 0/0. En ese caso el límite puede
+      existir o no, pero hay que usar otro método para saberlo.
+    </p>
+
+    <div class="grid-2">
+      <div class="card">
+        <span class="card-title">Formas indeterminadas comunes</span>
+        <table style="width:100%; font-size:.9rem; border-collapse:collapse; margin-top:.5rem;">
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:.4rem .5rem; font-family:var(--font-mono);">0/0</td>
+            <td style="padding:.4rem .5rem; color:var(--ink-muted);">La más frecuente. Puede existir el límite.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:.4rem .5rem; font-family:var(--font-mono);">∞/∞</td>
+            <td style="padding:.4rem .5rem; color:var(--ink-muted);">Aparece en límites al infinito.</td>
+          </tr>
+          <tr>
+            <td style="padding:.4rem .5rem; font-family:var(--font-mono);">0 · ∞</td>
+            <td style="padding:.4rem .5rem; color:var(--ink-muted);">Requiere reacomodo algebraico.</td>
+          </tr>
+        </table>
+      </div>
+      <div class="card">
+        <span class="card-title">Qué hacer cuando aparece 0/0</span>
+        <ul style="font-size:.95rem; padding-left:1.2rem; margin:.5rem 0 0;">
+          <li style="margin-bottom:.4rem;">Intentar <strong>factorizar</strong> el numerador y el denominador.</li>
+          <li style="margin-bottom:.4rem;">Cancelar el factor que genera el cero.</li>
+          <li>Volver a intentar la sustitución directa en la expresión simplificada.</li>
+        </ul>
+        <p style="font-size:.88rem; color:var(--ink-muted); margin-top:.75rem; margin-bottom:0;">
+          Esto se verá en detalle en la próxima clase.
+        </p>
+      </div>
+    </div>
+
+    <div class="example-block">
+      <div class="example-header">Ejemplo 5 — Identificar cuándo la sustitución falla</div>
+      <div class="example-body">
+        <div class="example-statement">
+          Calcula lím (x² &#8722; 4) / (x &#8722; 2) cuando x → 2.
+        </div>
+        <ul class="step-list">
+          <li>
+            <span class="step-n">1</span>
+            <span class="step-text">
+              Intento sustitución directa con x = 2:<br>
+              f(2) = (4 &#8722; 4) / (2 &#8722; 2) = 0 / 0.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">2</span>
+            <span class="step-text">
+              Salió 0/0 → la sustitución directa no funciona aquí.
+            </span>
+          </li>
+          <li>
+            <span class="step-n">3</span>
+            <span class="step-text">
+              Para este ejemplo construyo la tabla para ver qué pasa cerca de x = 2:
+            </span>
+          </li>
+        </ul>
+
+        <table class="num-table">
+          <thead>
+            <tr><th>x</th><th>1.5</th><th>1.9</th><th>1.99</th><th>→ 2 ←</th><th>2.01</th><th>2.1</th><th>2.5</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-ui); font-weight:600; text-align:left; padding-left:.9rem;">f(x)</td>
+              <td>3.5</td><td>3.9</td><td>3.99</td>
+              <td style="background:var(--guinda-light); color:var(--guinda-dark); font-weight:600;">→ 4</td>
+              <td>4.01</td><td>4.1</td><td>4.5</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul class="step-list" style="margin-top:1rem;">
+          <li>
+            <span class="step-n">4</span>
+            <span class="step-text">
+              La tabla muestra que f(x) se acerca a 4 desde ambos lados.
+              El límite sí existe aunque f(2) no exista.
+            </span>
+          </li>
+        </ul>
+        <div class="result-line">lím (x²&#8722;4)/(x&#8722;2) = 4 cuando x → 2 &nbsp;·&nbsp; (la sustitución falla, la tabla confirma el límite)</div>
+        <div class="desmos-row">
+          <span class="desmos-label">Ver la gráfica con el hueco en x = 2:</span>
+          <a class="desmos-link"
+             href="https://www.desmos.com/calculator?lang=es"
+             target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#' + btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:6,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\\\frac{x^2-4}{x-2}',color:'#7B1034',label:'f(x)=(x²-4)/(x-2)'},{id:'2',type:'expression',latex:'(2,4)',color:'#550B23',showLabel:true,label:'hueco en (2, 4) — límite = 4'}]}}))))">
+            Abrir en Desmos
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── BLOQUE 6: EJERCICIOS DE PRÁCTICA ─────────────────── -->
+  <section class="section">
+    <span class="section-label">Práctica en clase</span>
+    <h2 class="section-title">Ejercicios para resolver ahora</h2>
+
+    <p>
+      Resuelve cada uno en tu cuaderno. Primero intenta siempre la sustitución directa.
+      Si sale 0/0, construye una tabla con valores cercanos.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>N.°</th>
+          <th>Calcula el límite</th>
+          <th>Pista</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>lím (5x &#8722; 3) cuando x → 2</td>
+          <td>Sustitución directa. Sustituye x = 2.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>lím (x² + 2x) cuando x → 3</td>
+          <td>Sustitución directa con x = 3.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>lím (x² &#8722; 9) / (x &#8722; 3) cuando x → 3</td>
+          <td>La sustitución dará 0/0. Construye una tabla con x = 2.9, 2.99, 3.01, 3.1.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>lím (2x² &#8722; 1) cuando x → 0</td>
+          <td>Sustitución directa con x = 0.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Un proceso usa M(n) = n² + 3 MB de memoria. ¿Cuál es el límite de M(n) cuando n → 2 procesos?</td>
+          <td>Sustituye n = 2 directamente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── CONCLUSIÓN ────────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Cierre de la sesión</span>
+    <h2 class="section-title">Conclusión</h2>
+
+    <ul class="conclusion-list">
+      <li>
+        <strong>El límite pregunta hacia dónde se dirige f(x), no dónde está.</strong>
+        Esa distinción es la base de toda la Unidad 2. Una función puede tener un límite
+        perfectamente definido en un punto aunque en ese punto exacto no esté definida.
+      </li>
+      <li>
+        <strong>La notación lím f(x) = L cuando x → c tiene un significado preciso.</strong>
+        La flecha no significa "llega a c", significa "se acerca a c sin tocarlo
+        necesariamente". El valor L es el destino de f(x), no el de x.
+      </li>
+      <li>
+        <strong>La sustitución directa es el primer intento siempre.</strong>
+        Si f(c) existe y es un número definido, ese número es el límite. Solo cuando
+        la sustitución falla (da 0/0 u otra forma indeterminada) se usan otros métodos.
+      </li>
+      <li>
+        <strong>La tabla de valores es la forma más visual de estimar un límite.</strong>
+        Construir la tabla desde ambos lados permite ver con claridad si f(x) converge
+        a un mismo valor o si se comporta diferente por cada lado.
+      </li>
+      <li>
+        <strong>El límite es el fundamento de la derivada.</strong>
+        En la Unidad 3 verás que la derivada de una función en un punto se define exactamente
+        como un límite. Todo lo que aprendiste hoy es la base de esa definición.
+      </li>
+    </ul>
+
+    <div class="callout mt-1">
+      <p>
+        <strong>Próxima clase:</strong> Unidad 2, Clase 2 — Técnicas algebraicas para calcular
+        límites cuando la sustitución directa falla: factorización, cancelación y racionalización.
+        Trae resuelto el ejercicio 3 de la tabla de práctica de hoy.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ── REFERENCIAS ───────────────────────────────────────── -->
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="section-title">Referencias bibliográficas</h2>
+
+    <p class="text-muted">Formato APA 7.ª edición. Fuentes del programa LSC626374, Unidad 2.</p>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin:1rem 0 .75rem;">Básica</h4>
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2022</span>
+        Martínez, R. (2022). <em>El rigor del límite: Perspectivas formales y pedagógicas en el cálculo diferencial.</em> Universidad de Buenos Aires (UBA).
+      </li>
+      <li>
+        <span class="ref-year">2021</span>
+        Ruiz, A. (2021). Estrategias para el cálculo de límites al infinito en ciencias computacionales. <em>Revista de Educación en Ingeniería, México.</em>
+      </li>
+      <li>
+        <span class="ref-year">2025</span>
+        Castro, S. (2025). Estudio de asíntotas y comportamiento local de funciones racionales complejas. <em>Revista Colombiana de Matemáticas.</em>
+      </li>
+      <li>
+        <span class="ref-year">2023</span>
+        López, F. (2023). <em>Análisis de continuidad y estabilidad en modelos dinámicos lineales y no lineales.</em> Universidad de Santiago de Chile.
+      </li>
+    </ul>
+
+    <h4 style="color:var(--guinda); font-family:var(--font-ui); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin:1.5rem 0 .75rem;">Complementaria</h4>
+    <ul class="ref-list">
+      <li>
+        <span class="ref-year">2016</span>
+        Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning. Capítulo 2: Límites y derivadas.
+      </li>
+      <li>
+        <span class="ref-year">2017</span>
+        Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.
+      </li>
+      <li>
+        Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> https://www.desmos.com/calculator
+      </li>
+      <li>
+        GeoGebra. (s.f.). <em>Applets de funciones con parámetros ajustables.</em> https://www.geogebra.org/
+      </li>
+    </ul>
+  </section>
+
+</div><!-- /page-wrapper -->
+
+<footer class="site-footer">
+  <span>
+    <strong>Instituto de Educación Digital del Estado de Puebla</strong>
+    &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales
+  </span>
+  <span>Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez</span>
+</footer>
+
+</body>
+</html>
