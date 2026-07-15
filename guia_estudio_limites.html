@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Estudio — Límites | Cálculo Diferencial | IEDEP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <style>
+    .block-title { font-family: var(--font-display); font-size: 1.45rem; color: var(--guinda); border-bottom: 1.5px solid var(--guinda-rule); padding-bottom: .35rem; margin-bottom: 1.1rem; }
+    .analogy { background: var(--guinda-light); border-left: 4px solid var(--guinda); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; padding: 1.1rem 1.4rem; margin: 1.2rem 0; }
+    .analogy-tag { font-family: var(--font-ui); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--guinda); display: block; margin-bottom: .45rem; }
+    .analogy p { font-size: .97rem; margin-bottom: .4rem; }
+    .analogy p:last-child { margin-bottom: 0; }
+    .graph-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: .75rem; margin: 1.1rem 0; overflow: hidden; }
+    .graph-caption { font-family: var(--font-ui); font-size: .78rem; color: var(--ink-muted); text-align: center; margin-top: .5rem; font-style: italic; }
+    .num-table { width: 100%; border-collapse: collapse; font-size: .93rem; margin: .85rem 0; }
+    .num-table th { background: var(--guinda); color: var(--white); padding: .5rem .8rem; font-family: var(--font-ui); font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+    .num-table td { padding: .48rem .8rem; text-align: center; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .9rem; }
+    .num-table tr:nth-child(even) td { background: var(--surface); }
+    .num-table tr.hl td { background: var(--guinda-light); color: var(--guinda-dark); font-weight: 700; }
+    .num-table tr:last-child td { border-bottom: none; }
+    .steps { list-style: none; padding: 0; margin: .75rem 0; }
+    .steps li { display: flex; gap: .8rem; margin-bottom: .75rem; align-items: flex-start; }
+    .sn { min-width: 26px; height: 26px; border-radius: 50%; background: var(--guinda); color: var(--white); font-family: var(--font-ui); font-size: .72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .st { font-size: .97rem; line-height: 1.65; }
+    .ex { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 1.4rem 0; box-shadow: var(--shadow-sm); }
+    .ex-head { background: var(--guinda); color: var(--white); padding: .6rem 1.3rem; font-family: var(--font-ui); font-size: .84rem; font-weight: 600; }
+    .ex-body { padding: 1.1rem 1.4rem; background: var(--off-white); }
+    .ex-q { background: var(--surface); border-left: 3px solid var(--guinda-rule); padding: .75rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: .97rem; margin-bottom: .9rem; line-height: 1.65; }
+    .result { background: var(--guinda-light); border: 1px solid #D8A8BA; border-radius: var(--radius-sm); padding: .55rem .95rem; font-family: var(--font-mono); font-size: .9rem; color: var(--guinda-dark); margin-top: .8rem; font-weight: 500; }
+    .desmos-row { display: flex; align-items: center; gap: .55rem; margin-top: .6rem; flex-wrap: wrap; }
+    .desmos-lbl { font-family: var(--font-ui); font-size: .74rem; color: var(--ink-muted); font-style: italic; }
+    .desmos-btn { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-ui); font-size: .76rem; font-weight: 600; color: var(--guinda); text-decoration: none; padding: .25rem .7rem; border: 1px solid var(--guinda-rule); border-radius: var(--radius-sm); background: var(--guinda-light); transition: background .15s, color .15s; white-space: nowrap; }
+    .desmos-btn:hover { background: var(--guinda); color: var(--white); text-decoration: none; }
+    .desmos-btn::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .unlock-banner { border-radius: var(--radius-md); padding: 1rem 1.3rem; margin-bottom: 1.75rem; font-size: .95rem; line-height: 1.6; }
+    .unlock-banner.pending { background: var(--guinda-light); border: 1.5px solid var(--guinda); }
+    .unlock-banner.pending .ub-t { font-family: var(--font-ui); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--guinda-dark); display: block; margin-bottom: .4rem; }
+    .unlock-banner.ready { background: #E8F5E8; border: 1.5px solid #8FBF8F; }
+    .unlock-banner.ready .ub-t { font-family: var(--font-ui); font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: #2A5C2A; display: block; margin-bottom: .4rem; }
+    .countdown { font-family: var(--font-mono); font-size: 1rem; color: var(--guinda-dark); font-weight: 600; margin-top: .45rem; display: block; }
+    .sol-locked { margin-top: .85rem; padding: .8rem 1rem; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); display: flex; align-items: center; gap: .65rem; }
+    .sol-locked span { font-family: var(--font-ui); font-size: .82rem; color: var(--ink-muted); line-height: 1.5; }
+    .sol-locked span strong { color: var(--guinda); }
+    details { margin-top: .85rem; }
+    details summary { font-family: var(--font-ui); font-size: .79rem; font-weight: 600; color: var(--guinda); cursor: pointer; padding: .38rem .72rem; border: 1px solid var(--guinda-rule); border-radius: var(--radius-sm); background: var(--guinda-light); display: inline-block; letter-spacing: .02em; user-select: none; }
+    details summary:hover { background: var(--guinda); color: var(--white); }
+    details[open] summary { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .sol-body { border: 1px solid var(--border); border-top: none; border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm); padding: .95rem 1.1rem; background: var(--white); }
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: .94rem; padding: .55rem 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .ref-list li:last-child { border-bottom: none; }
+    .ry { font-family: var(--font-mono); font-size: .8rem; color: var(--guinda); font-weight: 500; margin-right: .3rem; }
+    .concl-list { list-style: none; padding: 0; }
+    .concl-list li { padding: .7rem 0 .7rem 1rem; border-bottom: 1px solid var(--border); font-size: .97rem; position: relative; line-height: 1.65; }
+    .concl-list li::before { content: ''; position: absolute; left: 0; top: 1rem; width: 5px; height: 5px; border-radius: 50%; background: var(--guinda); }
+    .concl-list li:last-child { border-bottom: none; }
+    @media print { .unlock-banner, .desmos-row { display: none; } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo-wrap"><img src="Imagen1.png" alt="Logotipo IEDEP" style="height:88px;width:auto;"></div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Guía de estudio</span>
+  </div>
+</header>
+
+<div class="class-hero">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <span class="class-label">Unidad 2 &nbsp;·&nbsp; Límites y Continuidad &nbsp;·&nbsp; Guía de estudio previa a la evaluación</span>
+    <h1>Límites — Del concepto al cálculo</h1>
+    <span class="class-subtitle">Repaso completo con explicaciones, ejemplos resueltos y aplicaciones en sistemas computacionales. Las soluciones de práctica se habilitan el jueves 16 de julio a primera hora.</span>
+    <div class="meta-row">
+      <div class="meta-item">Evaluación<span>Sábado 19 de julio de 2026</span></div>
+      <div class="meta-item">Soluciones<span>Jueves 16 de julio, 00:00</span></div>
+      <div class="meta-item">Asesor<span>Mtro. José Armando Vera Rodríguez</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <div class="unlock-banner pending" id="unlock-banner">
+    <span class="ub-t">Soluciones bloqueadas hasta el jueves 16 de julio a primera hora</span>
+    <span id="ub-msg">Estudia cada tema y resuelve los ejercicios de práctica en tu cuaderno. Las soluciones se habilitarán automáticamente el jueves 16 de julio a las 00:00 para que puedas verificar tus respuestas antes de la evaluación del sábado.</span>
+    <span class="countdown" id="countdown"></span>
+  </div>
+
+  <div class="callout">
+    <p><strong>Cómo usar esta guía:</strong> lee cada bloque con calma, estudia los ejemplos paso a paso y luego cierra las explicaciones e intenta resolver los ejercicios de práctica en tu cuaderno. El jueves abre la guía de nuevo y compara tu procedimiento con las soluciones.</p>
+  </div>
+
+  <!-- BLOQUE 1 -->
+  <section class="section">
+    <span class="section-label">Bloque 1 — Concepto central</span>
+    <h2 class="block-title">¿Qué es un límite y por qué existe?</h2>
+    <p>El <strong>límite</strong> es la respuesta a esta pregunta: <em>¿hacia qué valor se dirige f(x) cuando x se acerca a un punto c?</em> No importa si f(c) existe o no. Lo que importa es el comportamiento de la función en los alrededores de ese punto.</p>
+    <div class="analogy">
+      <span class="analogy-tag">Analogía — el GPS y el semáforo en rojo</span>
+      <p>Imagina que vas conduciendo hacia un cruce y el semáforo está en rojo. Tu GPS calcula tu velocidad en ese instante aunque tú aún no hayas llegado al cruce. Eso es el límite: mide lo que <em>estaba pasando</em> mientras te acercabas, no lo que ocurre cuando ya estás detenido ahí.</p>
+      <p>En matemáticas: el límite de f(x) cuando x → c mide hacia dónde va la función mientras x se acerca a c. Lo que valga f(c) exactamente es una pregunta aparte.</p>
+    </div>
+    <!-- SVG concepto de límite -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <line x1="40" y1="170" x2="480" y2="170" stroke="#CCCCCC" stroke-width="1.2"/>
+        <line x1="40" y1="10"  x2="40"  y2="175" stroke="#CCCCCC" stroke-width="1.2"/>
+        <polygon points="480,166 488,170 480,174" fill="#CCCCCC"/>
+        <polygon points="36,10 40,2 44,10" fill="#CCCCCC"/>
+        <text x="490" y="174" font-family="Inter,sans-serif" font-size="12" fill="#999">x</text>
+        <text x="28"  y="8"  font-family="Inter,sans-serif" font-size="12" fill="#999">f(x)</text>
+        <path d="M55,165 Q110,158 170,138 Q220,118 252,104" stroke="#7B1034" stroke-width="2.4" fill="none"/>
+        <path d="M278,104 Q310,118 360,138 Q420,158 465,165" stroke="#7B1034" stroke-width="2.4" fill="none"/>
+        <circle cx="265" cy="104" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <circle cx="265" cy="104" r="3" fill="#C85070"/>
+        <path d="M228,108 L256,104" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#a1)"/>
+        <path d="M302,108 L274,104" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#a1)"/>
+        <defs><marker id="a1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+        <line x1="40" y1="104" x2="257" y2="104" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="18" y="108" font-family="JetBrains Mono,monospace" font-size="10" fill="#C85070">L</text>
+        <text x="258" y="126" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">c</text>
+        <text x="62"  y="92"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c⁻</text>
+        <text x="348" y="92"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c⁺</text>
+        <text x="180" y="55"  font-family="Inter,sans-serif" font-size="12" fill="#7B1034" font-weight="600">lím f(x) = L</text>
+        <text x="185" y="70"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c</text>
+      </svg>
+      <p class="graph-caption">Figura 1. Desde ambos lados, f(x) converge al mismo valor L cuando x → c, aunque f(c) no exista (hueco en la curva).</p>
+    </div>
+    <div class="card">
+      <span class="card-title">Notación oficial</span>
+      <code class="formula">lím f(x) = L
+x → c</code>
+      <p style="font-size:.95rem;margin-top:.7rem;margin-bottom:0;">Se lee: <em>"el límite de f de x cuando x tiende a c es L".</em> La flecha → significa «se acerca», no «llega».</p>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- BLOQUE 2 -->
+  <section class="section">
+    <span class="section-label">Bloque 2 — Métodos de cálculo</span>
+    <h2 class="block-title">¿Cómo se calcula un límite? Dos métodos</h2>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.6rem;font-family:var(--font-ui);font-size:1rem;font-weight:600;color:var(--guinda);">Método 1 — Sustitución directa</h3>
+    <p>Si al sustituir x = c en f(x) el resultado es un número definido (no hay 0/0), ese número ES el límite.</p>
+    <div class="card" style="margin-bottom:.75rem;">
+      <span class="card-title">Cuándo usarlo</span>
+      <p style="font-size:.95rem;margin-bottom:0;">Siempre que f(c) exista y sea un número real. Funciona en polinomios y funciones lineales.</p>
+    </div>
+    <!-- SVG método 1 -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 440 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <line x1="35" y1="135" x2="410" y2="135" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="35" y1="8"   x2="35"  y2="139" stroke="#CCCCCC" stroke-width="1"/>
+        <polygon points="410,131 418,135 410,139" fill="#CCCCCC"/>
+        <text x="420" y="139" font-family="Inter,sans-serif" font-size="11" fill="#999">x</text>
+        <text x="24"  y="8"  font-family="Inter,sans-serif" font-size="11" fill="#999">f(x)</text>
+        <line x1="55" y1="123" x2="390" y2="28" stroke="#7B1034" stroke-width="2.2"/>
+        <!-- x=2 → px≈175, y=11 → py≈78 (escalado) -->
+        <circle cx="175" cy="79" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+        <line x1="35"  y1="79" x2="175" y2="79"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="175" y1="79" x2="175" y2="135" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="10"  y="83"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">11</text>
+        <text x="169" y="148" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">2</text>
+        <text x="260" y="48"  font-family="Inter,sans-serif" font-size="12" fill="#7B1034">f(x) = 3x + 5</text>
+        <text x="48"  y="42"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940" font-style="italic">lím = f(2) = 11 ✓</text>
+      </svg>
+      <p class="graph-caption">Figura 2. Función continua: la sustitución directa en x = 2 da f(2) = 11, que es exactamente el límite.</p>
+    </div>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.6rem;font-family:var(--font-ui);font-size:1rem;font-weight:600;color:var(--guinda);">Método 2 — Tabla de valores numéricos</h3>
+    <p>Cuando la sustitución da 0/0, se evalúa f(x) con valores cada vez más cercanos a c desde ambos lados y se observa hacia dónde converge.</p>
+    <div class="card" style="margin-bottom:.75rem;">
+      <span class="card-title">Cuándo usarlo</span>
+      <p style="font-size:.95rem;margin-bottom:0;">Cuando aparece 0/0. Usa valores: c − 0.1, c − 0.01, c − 0.001 y c + 0.001, c + 0.01, c + 0.1.</p>
+    </div>
+    <!-- SVG método 2 -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 440 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <line x1="35" y1="145" x2="410" y2="145" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="35" y1="8"   x2="35"  y2="149" stroke="#CCCCCC" stroke-width="1"/>
+        <polygon points="410,141 418,145 410,149" fill="#CCCCCC"/>
+        <text x="420" y="149" font-family="Inter,sans-serif" font-size="11" fill="#999">x</text>
+        <path d="M55,143 Q120,136 180,115 Q210,100 215,90" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <path d="M225,90 Q230,86 265,72 Q320,52 385,32" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <circle cx="220" cy="90" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <line x1="35"  y1="90" x2="213" y2="90" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="220" y1="90" x2="220" y2="145" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="10"  y="94"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">6</text>
+        <text x="215" y="158" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">3</text>
+        <path d="M188,94 L210,90" stroke="#9C1940" stroke-width="1.3" stroke-dasharray="3 2" marker-end="url(#a2)"/>
+        <path d="M252,87 L230,90" stroke="#9C1940" stroke-width="1.3" stroke-dasharray="3 2" marker-end="url(#a2)"/>
+        <defs><marker id="a2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+        <text x="280" y="46" font-family="Inter,sans-serif" font-size="12" fill="#7B1034">f(x)=(x²−9)/(x−3)</text>
+        <text x="52"  y="36" font-family="Inter,sans-serif" font-size="11" fill="#9C1940" font-style="italic">f(3)=0/0 pero lím = 6</text>
+      </svg>
+      <p class="graph-caption">Figura 3. f(x) = (x² − 9)/(x − 3) tiene hueco en x = 3, pero la tabla confirma que el límite vale 6.</p>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- BLOQUE 3 -->
+  <section class="section">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <span class="section-label">Bloque 3 — Ejemplos resueltos</span>
+        <h2 class="block-title">Los cinco ejercicios de clase, resueltos paso a paso</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP" style="height:44px;width:auto;opacity:.6;flex-shrink:0;margin-top:.25rem;">
+    </div>
+
+    <!-- EJ 1 -->
+    <div class="ex">
+      <div class="ex-head">Ejercicio 1 — lím (5x − 3) cuando x → 2</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = 5x − 3. ¿Cuál es el límite cuando x → 2?</div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Sustitución directa: f(2) = 5(2) − 3 = 10 − 3 = 7. Resultado definido.</span></li>
+          <li><span class="sn">2</span><span class="st">El límite existe y vale 7.</span></li>
+        </ul>
+        <div class="result">lím (5x − 3) = 7 cuando x → 2</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 380 135" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="115" x2="355" y2="115" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="119" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="355,111 362,115 355,119" fill="#CCCCCC"/>
+            <!-- 5x-3: x=1→2, x=2→7, x=4→17. mapeo: px=30+x*64; py=115-(y+3)*4.2 -->
+            <!-- x=0.6 y=0 px=68 py=115 -->
+            <!-- x=1   y=2 px=94 py=106.6 -->
+            <!-- x=2   y=7 px=158 py=85.6 -->
+            <!-- x=3   y=12 px=222 py=64.6 -->
+            <!-- x=4.5 y=19.5 px=318 py=32 -->
+            <line x1="68" y1="115" x2="318" y2="32" stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="158" cy="86" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="30"  y1="86" x2="158" y2="86"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="158" y1="86" x2="158" y2="115" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="90"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">7</text>
+            <text x="152" y="127" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">2</text>
+            <text x="230" y="44"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x) = 5x − 3</text>
+            <text x="36"  y="26"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">lím = 7</text>
+          </svg>
+          <p class="graph-caption">Figura 4. f(x) = 5x − 3 pasa por (2, 7). Función continua: límite = valor de la función.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener" onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-5,xmax:5,ymax:15}},expressions:{list:[{id:'1',type:'expression',latex:'y=5x-3',color:'#7B1034',label:'f(x)=5x-3'},{id:'2',type:'expression',latex:'(2,7)',color:'#550B23',showLabel:true,label:'(2,7)'}]}}))))">f(x) = 5x − 3, punto (2, 7)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EJ 2 -->
+    <div class="ex">
+      <div class="ex-head">Ejercicio 2 — lím (x² + 2x) cuando x → 3</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = x² + 2x. ¿Cuál es el límite cuando x → 3?</div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Sustitución directa: f(3) = (3)² + 2(3) = 9 + 6 = 15. Resultado definido.</span></li>
+          <li><span class="sn">2</span><span class="st">El límite existe y vale 15.</span></li>
+        </ul>
+        <div class="result">lím (x² + 2x) = 15 cuando x → 3</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 380 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="125" x2="355" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="129" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="355,121 362,125 355,129" fill="#CCCCCC"/>
+            <!-- x²+2x: mapeo x∈[0,4] px=30+x*72; y→py=125-y*5.2 -->
+            <!-- x=0 y=0   px=30  py=125 -->
+            <!-- x=1 y=3   px=102 py=109.4 -->
+            <!-- x=2 y=8   px=174 py=83.4 -->
+            <!-- x=3 y=15  px=246 py=47 -->
+            <!-- x=3.5 y=19.25 px=282 py=25 -->
+            <path d="M30,125 Q102,109 174,83 Q210,65 246,47" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <circle cx="246" cy="47" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="30"  y1="47" x2="246" y2="47"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="246" y1="47" x2="246" y2="125" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="51"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">15</text>
+            <text x="240" y="138" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">3</text>
+            <text x="170" y="26"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x) = x² + 2x</text>
+          </svg>
+          <p class="graph-caption">Figura 5. La parábola f(x) = x² + 2x en x = 3 vale 15. Límite = 15.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener" onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-5,xmax:6,ymax:25}},expressions:{list:[{id:'1',type:'expression',latex:'y=x^2+2x',color:'#7B1034',label:'f(x)=x²+2x'},{id:'2',type:'expression',latex:'(3,15)',color:'#550B23',showLabel:true,label:'(3,15)'}]}}))))">f(x) = x² + 2x, punto (3, 15)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EJ 3 -->
+    <div class="ex">
+      <div class="ex-head">Ejercicio 3 — lím (x² − 9)/(x − 3) cuando x → 3</div>
+      <div class="ex-body">
+        <div class="ex-q">Este es el ejercicio clave. Sustitución directa da 0/0. Se usa la tabla.</div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Sustitución: f(3) = (9−9)/(3−3) = 0/0. La sustitución directa falla.</span></li>
+          <li><span class="sn">2</span><span class="st">Construyo la tabla con valores cercanos a x = 3 desde ambos lados.</span></li>
+        </ul>
+        <table class="num-table">
+          <thead><tr><th>x</th><th>2.5</th><th>2.9</th><th>2.99</th><th>→ 3 ←</th><th>3.01</th><th>3.1</th><th>3.5</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-ui);font-weight:600;text-align:left;padding-left:.8rem;">f(x)</td>
+              <td>5.5</td><td>5.9</td><td>5.99</td>
+              <td class="hl">→ <strong>6</strong></td>
+              <td>6.01</td><td>6.1</td><td>6.5</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul class="steps">
+          <li><span class="sn">3</span><span class="st">Por la izquierda: 5.5 → 5.9 → 5.99 → se acerca a 6.</span></li>
+          <li><span class="sn">4</span><span class="st">Por la derecha: 6.5 → 6.1 → 6.01 → también se acerca a 6.</span></li>
+          <li><span class="sn">5</span><span class="st">Ambos lados convergen a 6. El límite existe y vale 6. f(3) no existe pero el límite sí.</span></li>
+        </ul>
+        <div class="result">lím (x² − 9)/(x − 3) = 6 cuando x → 3  ·  f(3) = 0/0, no existe</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 380 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="125" x2="355" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="129" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="355,121 362,125 355,129" fill="#CCCCCC"/>
+            <!-- (x²-9)/(x-3)=x+3 para x≠3: recta. mapeo x∈[0,5] px=30+x*60; y∈[0,10] py=125-y*9 -->
+            <!-- x=0 y=3 px=30  py=98  -->
+            <!-- x=2 y=5 px=150 py=80  -->
+            <!-- x=3 y=6 px=210 py=71 (hueco) -->
+            <!-- x=4 y=7 px=270 py=62 -->
+            <!-- x=5 y=8 px=330 py=53 -->
+            <line x1="30" y1="98" x2="206" y2="71" stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="214" y1="71" x2="330" y2="53" stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="210" cy="71" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="30"  y1="71" x2="203" y2="71" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="210" y1="71" x2="210" y2="125" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="75"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">6</text>
+            <text x="205" y="138" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">3</text>
+            <text x="248" y="56"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x)=(x²−9)/(x−3)</text>
+            <text x="36"  y="26"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">hueco en x=3, lím = 6</text>
+          </svg>
+          <p class="graph-caption">Figura 6. f(x) = (x² − 9)/(x − 3) es igual a y = x + 3 para todo x ≠ 3. Hueco en (3, 6), límite = 6.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener" onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:7,ymax:12}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-9}{x-3}',color:'#7B1034',label:'f(x)=(x²-9)/(x-3)'},{id:'2',type:'expression',latex:'(3,6)',color:'#550B23',showLabel:true,label:'hueco (3,6) — lím=6'}]}}))))">Hueco en (3, 6) — lím = 6</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EJ 4 -->
+    <div class="ex">
+      <div class="ex-head">Ejercicio 4 — lím (2x² − 1) cuando x → 0</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = 2x² − 1. ¿Cuál es el límite cuando x → 0?</div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Sustitución directa: f(0) = 2(0)² − 1 = 0 − 1 = −1. Resultado definido.</span></li>
+          <li><span class="sn">2</span><span class="st">El límite existe y vale −1.</span></li>
+        </ul>
+        <div class="result">lím (2x² − 1) = −1 cuando x → 0</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="85"  x2="360" y2="85"  stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="195" y1="8"  x2="195" y2="144" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="360,81 367,85 360,89" fill="#CCCCCC"/>
+            <polygon points="191,8 195,1 199,8" fill="#CCCCCC"/>
+            <text x="365" y="89" font-family="Inter,sans-serif" font-size="11" fill="#999">x</text>
+            <text x="183" y="6"  font-family="Inter,sans-serif" font-size="11" fill="#999">f(x)</text>
+            <!-- 2x²-1: vértice (0,-1) → px=195, py=85+1*4=89. Escala y: 1u=4px -->
+            <!-- x=−3: y=17 → py=85−17*4=17   px=195−3*54=33 -->
+            <!-- x=−2: y=7  → py=85−7*4=57    px=195−2*54=87 -->
+            <!-- x=−1: y=1  → py=85−1*4=81    px=195−1*54=141 -->
+            <!-- x= 0: y=−1 → py=85+1*4=89    px=195 -->
+            <!-- x= 1: y=1  → py=81            px=249 -->
+            <!-- x= 2: y=7  → py=57            px=303 -->
+            <!-- x= 3: y=17 → py=17            px=357 -->
+            <path d="M33,17 Q87,57 141,81 Q195,89 249,81 Q303,57 357,17" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <circle cx="195" cy="89" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="30"  y1="89" x2="195" y2="89" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="4"   y="93" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">−1</text>
+            <text x="198" y="100" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">0</text>
+            <text x="250" y="24" font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x) = 2x² − 1</text>
+            <text x="36"  y="30" font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">vértice: lím = −1</text>
+          </svg>
+          <p class="graph-caption">Figura 7. La parábola f(x) = 2x² − 1 tiene su vértice en (0, −1). El límite cuando x → 0 es −1.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener" onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-3,xmax:4,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x^2-1',color:'#7B1034',label:'f(x)=2x²-1'},{id:'2',type:'expression',latex:'(0,-1)',color:'#550B23',showLabel:true,label:'(0,−1) — lím = −1'}]}}))))">Vértice (0, −1) — lím = −1</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EJ 5 -->
+    <div class="ex">
+      <div class="ex-head">Ejercicio 5 — Aplicación informática: lím M(n) = n² + 3 cuando n → 2</div>
+      <div class="ex-body">
+        <div class="ex-q">M(n) = n² + 3 MB de memoria (n = número de procesos). ¿Cuál es el límite cuando n → 2?</div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Identifico: M(n) = n² + 3. Límite cuando n → 2.</span></li>
+          <li><span class="sn">2</span><span class="st">Sustitución: M(2) = (2)² + 3 = 4 + 3 = 7. Resultado definido.</span></li>
+          <li><span class="sn">3</span><span class="st">El límite existe y vale 7 MB.</span></li>
+          <li><span class="sn">4</span><span class="st"><strong>Interpretación:</strong> cuando el sistema se acerca a 2 procesos simultáneos, el consumo de memoria converge a 7 MB.</span></li>
+        </ul>
+        <div class="result">lím M(n) = 7 MB cuando n → 2</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 380 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="125" x2="355" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="129" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="355,121 362,125 355,129" fill="#CCCCCC"/>
+            <!-- M(n)=n²+3: n∈[0,5] px=30+n*60; y∈[0,28] py=125-y*4 -->
+            <path d="M30,113 Q90,109 150,97 Q210,77 270,49 Q320,28 330,12" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <circle cx="150" cy="97" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="30"  y1="97" x2="150" y2="97"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="150" y1="97" x2="150" y2="125" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="101" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">7</text>
+            <text x="145" y="138" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">2</text>
+            <text x="218" y="38"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">M(n) = n² + 3 MB</text>
+            <text x="155" y="87"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">lím = 7 MB</text>
+            <!-- etiqueta eje n -->
+            <text x="358" y="129" font-family="Inter,sans-serif" font-size="11" fill="#999">n</text>
+            <text x="18"  y="7"   font-family="Inter,sans-serif" font-size="11" fill="#999">M</text>
+          </svg>
+          <p class="graph-caption">Figura 8. M(n) = n² + 3 es continua. Cuando n → 2, el consumo de memoria converge suavemente a 7 MB.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener" onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:6,ymax:30}},expressions:{list:[{id:'1',type:'expression',latex:'y=x^2+3',color:'#7B1034',label:'M(n)=n²+3 MB'},{id:'2',type:'expression',latex:'(2,7)',color:'#550B23',showLabel:true,label:'(2, 7 MB) — lím = 7'}]}}))))">M(n) = n² + 3, punto (2, 7 MB)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- BLOQUE 4 PRÁCTICA CON CANDADO -->
+  <section class="section">
+    <span class="section-label">Bloque 4 — Practica antes del jueves</span>
+    <h2 class="block-title">Ejercicios de práctica — Soluciones disponibles el jueves 16 de julio</h2>
+    <p>Resuelve cada ejercicio en tu cuaderno. Indica siempre: (1) qué método usas, (2) los pasos intermedios y (3) el resultado con la notación correcta de límite.</p>
+
+    <div class="ex">
+      <div class="ex-head">Práctica 1 — Calcula: lím (4x − 1) cuando x → 3</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = 4x − 1. ¿Cuál es el límite cuando x → 3?</div>
+        <div class="solution-slot" data-key="p1"></div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-head">Práctica 2 — Calcula: lím (x² − 4x + 3) cuando x → 2</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = x² − 4x + 3. ¿Cuál es el límite cuando x → 2?</div>
+        <div class="solution-slot" data-key="p2"></div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-head">Práctica 3 — Calcula: lím (x² − 16)/(x − 4) cuando x → 4</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = (x² − 16)/(x − 4). Advertencia: prueba primero la sustitución directa y decide qué método usar.</div>
+        <div class="solution-slot" data-key="p3"></div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-head">Práctica 4 — Calcula: lím (3x² + 2) cuando x → 1</div>
+      <div class="ex-body">
+        <div class="ex-q">f(x) = 3x² + 2. ¿Cuál es el límite cuando x → 1?</div>
+        <div class="solution-slot" data-key="p4"></div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="ex-head">Práctica 5 — Aplicación informática: latencia de red</div>
+      <div class="ex-body">
+        <div class="ex-q">La latencia (en ms) de un servidor al atender n peticiones simultáneas sigue L(n) = 2n² + n + 5. ¿Cuál es el límite de la latencia cuando n → 3 peticiones? ¿Qué significa ese valor en términos reales?</div>
+        <div class="solution-slot" data-key="p5"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section class="section">
+    <span class="section-label">Para recordar</span>
+    <h2 class="block-title">Puntos clave de la evaluación</h2>
+    <ul class="concl-list">
+      <li><strong>El límite describe hacia dónde se dirige f(x), no dónde está.</strong> La diferencia entre el límite y el valor de la función es la distinción más importante de esta unidad.</li>
+      <li><strong>Intenta siempre la sustitución directa primero.</strong> Si f(c) da un número definido, ese es el límite. Solo si sale 0/0 cambias de método.</li>
+      <li><strong>La tabla se construye desde ambos lados.</strong> Si por la izquierda y por la derecha convergen al mismo valor, el límite existe.</li>
+      <li><strong>La notación importa.</strong> Escribe siempre "lím f(x) =" con "cuando x → c". No basta con el número solo.</li>
+      <li><strong>El contexto informático es parte de la evaluación.</strong> Interpreta el resultado en términos reales, no solo matemáticos.</li>
+    </ul>
+    <div class="callout mt-1">
+      <p><strong>El jueves 16 de julio a primera hora</strong> abre esta página de nuevo y revisa tus soluciones de práctica. El sábado 19 de julio es la evaluación.</p>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="block-title">Referencias bibliográficas</h2>
+    <p class="text-muted">Formato APA 7.ª edición — Unidad 2, Límites y Continuidad.</p>
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1rem 0 .75rem;">Básica</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2022</span>Martínez, R. (2022). <em>El rigor del límite: Perspectivas formales y pedagógicas en el cálculo diferencial.</em> Universidad de Buenos Aires (UBA).</li>
+      <li><span class="ry">2021</span>Ruiz, A. (2021). Estrategias para el cálculo de límites al infinito en ciencias computacionales. <em>Revista de Educación en Ingeniería, México.</em></li>
+      <li><span class="ry">2025</span>Castro, S. (2025). Estudio de asíntotas y comportamiento local de funciones racionales complejas. <em>Revista Colombiana de Matemáticas.</em></li>
+      <li><span class="ry">2023</span>López, F. (2023). <em>Análisis de continuidad y estabilidad en modelos dinámicos lineales y no lineales.</em> Universidad de Santiago de Chile.</li>
+    </ul>
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;">Complementaria</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2016</span>Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning. Capítulo 2.</li>
+      <li><span class="ry">2017</span>Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.</li>
+      <li>Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> https://www.desmos.com/calculator</li>
+    </ul>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <span><strong>Instituto de Educación Digital del Estado de Puebla</strong> &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales</span>
+  <span>Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez</span>
+</footer>
+
+<script>
+  const UNLOCK = new Date('2026-07-16T00:00:00');
+  const SOLUTIONS = {
+    p1:{steps:['Intento sustitución directa: f(3) = 4(3) − 1 = 12 − 1 = 11. Resultado definido.','No hay forma indeterminada. El límite existe y vale 11.'],result:'lím (4x − 1) = 11 cuando x → 3',desmos:JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-5,xmax:6,ymax:20}},expressions:{list:[{id:'1',type:'expression',latex:'y=4x-1',color:'#7B1034',label:'f(x)=4x−1'},{id:'2',type:'expression',latex:'(3,11)',color:'#550B23',showLabel:true,label:'(3, 11) — lím = 11'}]}})},
+    p2:{steps:['Sustitución directa: f(2) = (2)² − 4(2) + 3 = 4 − 8 + 3 = −1. Resultado definido.','El límite existe y vale −1.'],result:'lím (x² − 4x + 3) = −1 cuando x → 2',desmos:JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-3,xmax:6,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=x^2-4x+3',color:'#7B1034',label:'f(x)=x²−4x+3'},{id:'2',type:'expression',latex:'(2,-1)',color:'#550B23',showLabel:true,label:'(2, −1) — lím = −1'}]}})},
+    p3:{steps:['Sustitución directa: f(4) = (16−16)/(4−4) = 0/0. La sustitución directa falla. Uso tabla.','Valores por la izquierda: f(3.5)=7.5, f(3.9)=7.9, f(3.99)=7.99 → se acerca a 8.','Valores por la derecha: f(4.5)=8.5, f(4.1)=8.1, f(4.01)=8.01 → también se acerca a 8.','Ambos lados convergen a 8. El límite existe y vale 8. Nota: (x²−16)/(x−4) = x+4 para x ≠ 4.'],result:'lím (x² − 16)/(x − 4) = 8 cuando x → 4  ·  hueco en (4, 8)',desmos:JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:8,ymax:14}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-16}{x-4}',color:'#7B1034',label:'f(x)=(x²-16)/(x-4)'},{id:'2',type:'expression',latex:'(4,8)',color:'#550B23',showLabel:true,label:'hueco (4, 8) — lím = 8'}]}})},
+    p4:{steps:['Sustitución directa: f(1) = 3(1)² + 2 = 3 + 2 = 5. Resultado definido.','El límite existe y vale 5.'],result:'lím (3x² + 2) = 5 cuando x → 1',desmos:JSON.stringify({version:9,graph:{viewport:{xmin:-3,ymin:-1,xmax:3,ymax:20}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x^2+2',color:'#7B1034',label:'f(x)=3x²+2'},{id:'2',type:'expression',latex:'(1,5)',color:'#550B23',showLabel:true,label:'(1, 5) — lím = 5'}]}})},
+    p5:{steps:['Función: L(n) = 2n² + n + 5. Límite cuando n → 3.','Sustitución directa: L(3) = 2(9) + 3 + 5 = 18 + 3 + 5 = 26. Resultado definido.','El límite existe y vale 26 ms.','Interpretación real: cuando el sistema se acerca a 3 peticiones simultáneas, la latencia converge a 26 ms. Ese es el umbral de rendimiento cerca de n = 3.'],result:'lím L(n) = 26 ms cuando n → 3',desmos:JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:6,ymax:80}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x^2+x+5',color:'#7B1034',label:'L(n)=2n²+n+5'},{id:'2',type:'expression',latex:'(3,26)',color:'#550B23',showLabel:true,label:'(3, 26 ms) — lím = 26'}]}})}
+  };
+  function makeLockedSlot(){return '<div class="sol-locked"><span style="font-size:1.1rem;">&#128274;</span><span>Solución disponible el <strong>jueves 16 de julio a primera hora</strong>. Resuelve el ejercicio en tu cuaderno y regresa ese día a verificar.</span></div>';}
+  function makeUnlockedSlot(key){const s=SOLUTIONS[key];if(!s)return'';const sh=s.steps.map(function(t,i){return'<li><span class="sn">'+(i+1)+'</span><span class="st">'+t+'</span></li>';}).join('');const du='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(s.desmos)));return'<details><summary>Ver solución</summary><div class="sol-body"><ul class="steps">'+sh+'</ul><div class="result">'+s.result+'</div><div class="desmos-row" style="margin-top:.7rem;"><span class="desmos-lbl">Ver en Desmos:</span><a class="desmos-btn" href="'+du+'" target="_blank" rel="noopener">Abrir gráfica</a></div></div></details>';}
+  function pad(n){return String(n).padStart(2,'0');}
+  let lastState=null;
+  function tick(){
+    const now=new Date();const open=now>=UNLOCK;
+    const banner=document.getElementById('unlock-banner');
+    const msg=document.getElementById('ub-msg');
+    const timer=document.getElementById('countdown');
+    const titleEl=banner.querySelector('.ub-t');
+    if(open){banner.className='unlock-banner ready';titleEl.textContent='Soluciones habilitadas';msg.textContent='Ya puedes consultar las soluciones de práctica. Revisa cada ejercicio y refuerza lo que necesites antes del sábado 19 de julio.';timer.textContent='';}
+    else{const diff=UNLOCK-now;const d=Math.floor(diff/86400000);const h=Math.floor(diff/3600000%24);const m=Math.floor(diff/60000%60);const s=Math.floor(diff/1000%60);timer.textContent='Disponibles en: '+d+'d '+pad(h)+'h '+pad(m)+'m '+pad(s)+'s';}
+    if(open!==lastState){document.querySelectorAll('.solution-slot').forEach(function(el){el.innerHTML=open?makeUnlockedSlot(el.dataset.key):makeLockedSlot();});lastState=open;}
+  }
+  tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
