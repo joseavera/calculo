@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación — Límites | Cálculo Diferencial | IEDEP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <style>
+    html,body { -webkit-user-select:none; -moz-user-select:none; user-select:none; }
+    input,textarea { -webkit-user-select:text; user-select:text; }
+    @media print {
+      body::before { content:"DOCUMENTO PROTEGIDO — NO DISPONIBLE PARA IMPRESIÓN"; position:fixed; top:50%; left:0; right:0; text-align:center; font-size:24px; color:#000; z-index:999999; }
+      .page-wrapper,.site-header,.class-hero,.site-footer,.integrity-notice { display:none!important; }
+    }
+    /* ── Overlay ─────────────────────────────────── */
+    #overlay { display:none; position:fixed; inset:0; background:rgba(26,12,21,.96); z-index:999999; align-items:center; justify-content:center; text-align:center; padding:2rem; }
+    .ov-box { background:#fff; border-radius:12px; padding:2.5rem; max-width:420px; box-shadow:0 12px 48px rgba(0,0,0,.5); }
+    .ov-box h2 { color:#7B1034; font-family:'Cormorant Garamond',serif; font-size:1.6rem; margin-bottom:.75rem; }
+    .ov-box p { font-family:'Inter',sans-serif; font-size:.9rem; color:#555; margin-bottom:1.25rem; line-height:1.55; }
+    .ov-box button { background:#7B1034; color:#fff; border:none; padding:.6rem 1.6rem; border-radius:6px; font-family:'Inter',sans-serif; font-weight:600; font-size:.9rem; cursor:pointer; }
+    /* ── Barra superior ──────────────────────────── */
+    .top-bar { background:#550B23; color:#fff; text-align:center; padding:.55rem 1rem; font-family:'Inter',sans-serif; font-size:.78rem; letter-spacing:.03em; }
+    /* ── Datos del alumno ────────────────────────── */
+    .student-data { background:#FAFAFA; border:1px solid #E2D8DA; border-radius:10px; padding:1.4rem 1.6rem; margin-bottom:2rem; }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+    .fields label { display:block; font-family:'Inter',sans-serif; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:#8C7880; margin-bottom:.3rem; }
+    .fields input { width:100%; padding:.5rem .7rem; border:1px solid #C8B4BA; border-radius:4px; font-family:'Source Serif 4',serif; font-size:.95rem; background:#fff; }
+    .fields input:focus { outline:2px solid #7B1034; outline-offset:1px; }
+    /* ── Declaración ─────────────────────────────── */
+    .integrity-notice { border:1.5px solid #7B1034; background:#F5E8EE; border-radius:8px; padding:1.1rem 1.4rem; margin-bottom:2rem; }
+    .int-title { font-family:'Inter',sans-serif; font-weight:700; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:#550B23; display:block; margin-bottom:.5rem; }
+    .int-row { display:flex; align-items:flex-start; gap:.6rem; margin-top:.9rem; padding-top:.9rem; border-top:1px solid #D8A8BA; }
+    .int-row label { font-size:.88rem; font-family:'Inter',sans-serif; color:#1A1215; cursor:pointer; }
+    /* ── Repaso previo ───────────────────────────── */
+    .review-section { background:#FAFAFA; border:1px solid #E2D8DA; border-radius:12px; padding:1.5rem 1.75rem; margin-bottom:2.5rem; }
+    .review-section h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#7B1034; margin-bottom:.9rem; }
+    .svg-wrap { background:#fff; border:1px solid #E2D8DA; border-radius:10px; padding:.65rem; margin:.85rem 0; }
+    .svg-caption { font-family:'Inter',sans-serif; font-size:.76rem; color:#8C7880; text-align:center; margin-top:.4rem; font-style:italic; }
+    /* ── Preguntas ───────────────────────────────── */
+    .qblock { border:1px solid #E2D8DA; border-radius:10px; margin-bottom:1.4rem; overflow:hidden; transition:opacity .2s; }
+    .qblock.locked { opacity:.42; pointer-events:none; }
+    .qh { background:#7B1034; color:#fff; padding:.6rem 1.3rem; font-family:'Inter',sans-serif; font-size:.83rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+    .qh .pts { font-size:.73rem; background:rgba(255,255,255,.2); padding:.12rem .55rem; border-radius:99px; }
+    .qbody { padding:1.1rem 1.4rem; background:#FAFAFA; }
+    .qstmt { font-size:.98rem; line-height:1.65; margin-bottom:.9rem; }
+    .qstmt code { font-family:'JetBrains Mono',monospace; font-size:.9rem; background:#F6F4F4; padding:.03rem .32rem; border-radius:3px; border:1px solid #E2D8DA; color:#550B23; }
+    /* ── Opciones bloqueables ────────────────────── */
+    .opts { list-style:none; padding:0; margin:0; }
+    .opts li { margin-bottom:.55rem; }
+    .opt-label { display:flex; align-items:center; gap:.65rem; padding:.55rem .85rem; border:1px solid #E2D8DA; border-radius:8px; background:#fff; cursor:pointer; font-size:.94rem; transition:border-color .15s, background .15s; }
+    .opt-label:hover:not(.disabled-opt) { border-color:#C85070; background:#F5E8EE; }
+    .opt-label.selected { border-color:#7B1034; background:#F5E8EE; font-weight:600; }
+    .opt-label.disabled-opt { cursor:default; }
+    .opt-label input[type=radio] { accent-color:#7B1034; width:15px; height:15px; flex-shrink:0; }
+    .opt-let { font-family:'JetBrains Mono',monospace; font-weight:600; color:#7B1034; min-width:17px; }
+    /* ── Input abierto ───────────────────────────── */
+    .ans-input { width:100%; max-width:340px; padding:.58rem .82rem; font-size:.98rem; font-family:'JetBrains Mono',monospace; border:1px solid #C8B4BA; border-radius:8px; background:#fff; }
+    .ans-input:focus { outline:2px solid #7B1034; outline-offset:1px; }
+    /* ── Botón de envío ──────────────────────────── */
+    .submit-wrap { text-align:center; margin:2.5rem 0; }
+    .btn-sub { background:#7B1034; color:#fff; border:none; padding:.85rem 2.5rem; font-size:1rem; font-family:'Inter',sans-serif; font-weight:600; border-radius:8px; cursor:pointer; letter-spacing:.02em; }
+    .btn-sub:disabled { background:#C8B4BA; cursor:not-allowed; }
+    /* ── Resultados ──────────────────────────────── */
+    .results { display:none; margin-top:2rem; }
+    .alumno-card { background:#FAFAFA; border:1px solid #E2D8DA; border-radius:10px; padding:1.2rem 1.5rem; margin-bottom:1.25rem; display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+    .alumno-card .field { font-family:'Inter',sans-serif; font-size:.85rem; color:#5C4850; }
+    .alumno-card .field strong { display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:#8C7880; font-weight:600; margin-bottom:.1rem; }
+    .score-card { text-align:center; padding:2.2rem; background:#F5E8EE; border:1px solid #D8A8BA; border-radius:12px; margin-bottom:1.5rem; }
+    .score-big { font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:600; color:#7B1034; display:block; line-height:1; }
+    .score-sub { font-family:'Inter',sans-serif; font-size:.88rem; color:#5C4850; margin-top:.4rem; display:block; }
+    .infractions-card { background:#fff8f0; border:1px solid #e8c8a0; border-radius:8px; padding:.9rem 1.2rem; margin-bottom:1.25rem; }
+    .infractions-card .inf-title { font-family:'Inter',sans-serif; font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#8B5000; display:block; margin-bottom:.5rem; }
+    .infractions-card .inf-row { font-family:'Inter',sans-serif; font-size:.88rem; color:#5C3800; margin-bottom:.2rem; }
+    .infractions-card .inf-row:last-child { margin-bottom:0; }
+    .res-row { display:flex; gap:.8rem; padding:.8rem 0; border-bottom:1px solid #E2D8DA; align-items:flex-start; }
+    .res-row:last-child { border-bottom:none; }
+    .rm { font-family:'Inter',sans-serif; font-weight:700; font-size:.83rem; min-width:20px; flex-shrink:0; margin-top:.15rem; }
+    .rm.ok { color:#2A5C2A; } .rm.err { color:#7A2020; }
+    .rd { font-size:.9rem; line-height:1.55; }
+    .rd .rc { color:#8C7880; font-size:.82rem; margin-top:.18rem; }
+    /* ── Exportar Markdown ───────────────────────── */
+    .md-section { margin-top:2rem; }
+    .md-output { background:#F6F4F4; border:1px solid #E2D8DA; border-radius:8px; padding:1.1rem; font-family:'JetBrains Mono',monospace; font-size:.78rem; line-height:1.8; white-space:pre-wrap; word-break:break-word; max-height:380px; overflow-y:auto; color:#1A1215; }
+    .md-actions { display:flex; gap:.5rem; margin-top:.65rem; flex-wrap:wrap; }
+    .btn-md { font-family:'Inter',sans-serif; font-size:.8rem; font-weight:600; color:#7B1034; background:#fff; border:1px solid #C85070; padding:.45rem 1rem; border-radius:6px; cursor:pointer; }
+    .btn-md:hover { background:#7B1034; color:#fff; }
+    @media(max-width:540px) { .fields { grid-template-columns:1fr; } .alumno-card { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+<!-- Overlay anti-IA -->
+<div id="overlay">
+  <div class="ov-box">
+    <h2>Acción no permitida</h2>
+    <p>Esta evaluación está protegida. No se permite copiar texto, abrir herramientas de desarrollador ni usar asistentes de inteligencia artificial.</p>
+    <button onclick="document.getElementById('overlay').style.display='none'">Entendido, continuar</button>
+  </div>
+</div>
+
+<div class="top-bar">EVALUACIÓN INDIVIDUAL &nbsp;·&nbsp; PROHIBIDO EL USO DE INTELIGENCIA ARTIFICIAL O AYUDA EXTERNA &nbsp;·&nbsp; COPIAR Y PEGAR DESHABILITADO</div>
+
+<header class="site-header">
+  <div class="logo-wrap"><img src="Imagen1.png" alt="Logotipo IEDEP" style="height:88px;width:auto;"></div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Evaluación Unidad 2</span>
+  </div>
+</header>
+
+<div class="class-hero">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <span class="class-label">Unidad 2 &nbsp;·&nbsp; Evaluación</span>
+    <h1>Límites — Evaluación</h1>
+    <span class="class-subtitle">Evaluación individual de nivel básico — 10 preguntas — 10 puntos</span>
+    <div class="meta-row">
+      <div class="meta-item">Fecha<span>Sábado 19 de julio de 2026</span></div>
+      <div class="meta-item">Duración<span>30 minutos</span></div>
+      <div class="meta-item">Asesor<span>Mtro. José Armando Vera Rodríguez</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- Repaso previo -->
+  <div class="review-section">
+    <h3>Repaso antes de comenzar</h3>
+    <p style="font-size:.97rem;margin-bottom:.85rem;">Lee con atención. Estos conceptos aparecen directamente en las preguntas.</p>
+    <h4 style="font-family:'Inter',sans-serif;font-size:.92rem;color:#7B1034;margin-bottom:.4rem;">¿Qué es un límite?</h4>
+    <p style="font-size:.95rem;margin-bottom:.75rem;">El límite de f(x) cuando x → c es el valor <strong>L</strong> al que se acerca f(x) conforme x se aproxima a c desde ambos lados. No importa si f(c) existe: el límite describe el comportamiento <em>cercano</em>, no el valor exacto en c.</p>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <line x1="38" y1="138" x2="470" y2="138" stroke="#CCCCCC" stroke-width="1.2"/>
+        <line x1="38" y1="12"  x2="38"  y2="142" stroke="#CCCCCC" stroke-width="1.2"/>
+        <polygon points="470,134 478,138 470,142" fill="#CCCCCC"/>
+        <polygon points="34,12 38,4 42,12" fill="#CCCCCC"/>
+        <text x="480" y="142" font-family="Inter,sans-serif" font-size="12" fill="#999">x</text>
+        <text x="22"  y="10"  font-family="Inter,sans-serif" font-size="12" fill="#999">f(x)</text>
+        <path d="M55,136 Q120,128 185,104 Q220,88 248,72" stroke="#7B1034" stroke-width="2.4" fill="none"/>
+        <path d="M272,72 Q300,72 360,96 Q410,116 455,134" stroke="#7B1034" stroke-width="2.4" fill="none"/>
+        <circle cx="260" cy="72" r="8" fill="white" stroke="#7B1034" stroke-width="2.2"/>
+        <line x1="38"  y1="72" x2="252" y2="72" stroke="#D8A8BA" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="14"  y="76"  font-family="JetBrains Mono,monospace" font-size="11" fill="#C85070">L</text>
+        <text x="254" y="152" font-family="JetBrains Mono,monospace" font-size="11" fill="#7B1034">c</text>
+        <path d="M218,76 L250,72" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arw)"/>
+        <path d="M302,72 L270,72" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arw)"/>
+        <defs><marker id="arw" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+        <text x="60"  y="58"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c⁻</text>
+        <text x="315" y="58"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c⁺</text>
+        <text x="162" y="32"  font-family="Inter,sans-serif" font-size="12" fill="#7B1034" font-weight="600">lím f(x) = L (hueco: f(c) no existe)</text>
+        <text x="166" y="48"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">x → c</text>
+      </svg>
+      <p class="svg-caption">El límite L es el valor al que converge f(x) desde ambos lados, aunque la función tenga un hueco en x = c.</p>
+    </div>
+    <div class="grid-2" style="margin:.75rem 0 0;">
+      <div class="card">
+        <span class="card-title">Sustitución directa</span>
+        <p style="font-size:.9rem;margin-bottom:0;">Sustituye x = c. Si el resultado es un número definido (no 0/0), ese número ES el límite.</p>
+      </div>
+      <div class="card">
+        <span class="card-title">Tabla de valores</span>
+        <p style="font-size:.9rem;margin-bottom:0;">Cuando aparece 0/0, evalúa f(x) con valores cada vez más cercanos a c por ambos lados y observa hacia dónde converge.</p>
+      </div>
+    </div>
+    <div class="callout note mt-1">
+      <p><strong>Recuerda escribir siempre la notación completa:</strong> &nbsp; lím f(x) = L &nbsp; cuando x → c.</p>
+    </div>
+  </div>
+
+  <!-- Datos del estudiante -->
+  <div class="student-data">
+    <span class="card-title" style="margin-bottom:1rem;display:block;">Datos del estudiante</span>
+    <div class="fields">
+      <div><label for="s-nom">Nombre completo</label><input type="text" id="s-nom" placeholder="Apellido(s) y nombre(s)" autocomplete="off"></div>
+      <div><label for="s-mat">Matrícula</label><input type="text" id="s-mat" placeholder="Número de matrícula" autocomplete="off"></div>
+    </div>
+    <div class="fields" style="margin-bottom:0;">
+      <div><label for="s-grp">Grupo</label><input type="text" id="s-grp" placeholder="Grupo" autocomplete="off"></div>
+      <div><label for="s-fec">Fecha</label><input type="text" id="s-fec" placeholder="dd/mm/aaaa" autocomplete="off"></div>
+    </div>
+  </div>
+
+  <!-- Declaración de honestidad -->
+  <div class="integrity-notice">
+    <span class="int-title">Declaración de honestidad académica</span>
+    <p style="font-size:.92rem;margin-bottom:0;">Resuelve esta evaluación de forma individual. No está permitido usar inteligencia artificial, buscadores, calculadoras simbólicas ni ayuda de terceros. La responsabilidad de actuar con honestidad es tuya.</p>
+    <div class="int-row">
+      <input type="checkbox" id="ichk">
+      <label for="ichk">Confirmo que resolveré esta evaluación sin ayuda externa ni inteligencia artificial.</label>
+    </div>
+  </div>
+
+  <!-- Preguntas (el JS las inyecta aquí en orden aleatorio) -->
+  <div id="questions-container"></div>
+
+  <div class="submit-wrap">
+    <button type="button" class="btn-sub" id="btn-sub" onclick="finish()" disabled>Entregar evaluación</button>
+    <p style="font-family:'Inter',sans-serif;font-size:.76rem;color:#8C7880;margin-top:.55rem;">Acepta la declaración de honestidad para habilitar la entrega.</p>
+  </div>
+
+  <!-- Panel de resultados -->
+  <div class="results" id="results">
+    <hr class="section-rule">
+    <h2 class="section-title">Resultado de la evaluación</h2>
+
+    <!-- Datos del alumno en resultados -->
+    <div class="alumno-card" id="alumno-result"></div>
+
+    <!-- Calificación -->
+    <div class="score-card">
+      <span class="score-big" id="sc-big">0 / 10</span>
+      <span class="score-sub" id="sc-sub"></span>
+    </div>
+
+    <!-- Infracciones detectadas -->
+    <div class="infractions-card" id="infractions-card" style="display:none;">
+      <span class="inf-title">Actividad fuera de la evaluación detectada</span>
+      <div id="infractions-list"></div>
+    </div>
+
+    <!-- Detalle por pregunta -->
+    <div id="sc-detail"></div>
+
+    <!-- Exportar Markdown -->
+    <div class="md-section">
+      <hr class="section-rule">
+      <h2 class="section-title">Exportar resultados</h2>
+      <p style="font-size:.95rem;color:#5C4850;margin-bottom:.75rem;">Copia este bloque y pégalo en un archivo <code style="font-family:'JetBrains Mono',monospace;font-size:.85rem;background:#F6F4F4;padding:1px 5px;border-radius:3px;border:1px solid #E2D8DA;">.md</code> dentro de tu repositorio de GitHub.</p>
+      <div class="md-output" id="md-output"></div>
+      <div class="md-actions">
+        <button class="btn-md" onclick="copyMd()" id="btn-copy">Copiar</button>
+        <button class="btn-md" onclick="downloadMd()">Descargar .md</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span><strong>Instituto de Educación Digital del Estado de Puebla</strong> &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales</span>
+  <span>Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez</span>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════
+   CANDADOS ANTI-IA
+   ══════════════════════════════════════════════ */
+let infractions = [];
+function logInfraction(reason) {
+  infractions.push({ time: new Date().toLocaleTimeString('es-MX'), reason: reason });
+  showLock();
+}
+function showLock() { document.getElementById('overlay').style.display = 'flex'; }
+
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); logInfraction('Menú contextual (clic derecho)'); });
+document.addEventListener('copy', function(e) { if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); logInfraction('Intento de copiar texto'); } });
+document.addEventListener('cut', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) {
+  const k = e.key.toLowerCase();
+  const blocked = (e.ctrlKey || e.metaKey) && ['c','v','x','p','s','u','f','a'].includes(k);
+  const dev = k === 'f12' || ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i','j','c'].includes(k));
+  if (blocked) { e.preventDefault(); logInfraction('Atajo de teclado bloqueado (Ctrl+' + k.toUpperCase() + ')'); }
+  if (dev) { e.preventDefault(); logInfraction('Intento de abrir herramientas de desarrollador'); }
+});
+let blurTimer = null;
+window.addEventListener('blur', function() { blurTimer = setTimeout(function() { logInfraction('Cambio de ventana prolongado (más de 8 segundos)'); }, 8000); });
+window.addEventListener('focus', function() { if (blurTimer) clearTimeout(blurTimer); });
+let devWarn = false;
+setInterval(function() {
+  if ((window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) && !devWarn) {
+    devWarn = true; logInfraction('Posible apertura de DevTools (diferencia de tamaño de ventana)');
+  }
+}, 1500);
+
+/* ══════════════════════════════════════════════
+   BANCO DE PREGUNTAS
+   ══════════════════════════════════════════════ */
+const QUESTIONS = [
+  {
+    id: 'q1', type: 'mc',
+    text: '¿Cuál es el significado correcto de la expresión <code>lím f(x) = L cuando x → c</code>?',
+    opts: [
+      { val: 'a', text: 'f(c) = L siempre que c exista.' },
+      { val: 'b', text: 'f(x) se acerca a L cuando x se acerca a c, sin importar si f(c) existe.' },
+      { val: 'c', text: 'f(x) llega exactamente a L en el punto c.' },
+      { val: 'd', text: 'x nunca puede valer c.' }
+    ],
+    correct: 'b',
+    correctLabel: 'B',
+    explain: 'El límite describe hacia dónde se dirige f(x) mientras x se acerca a c, sin importar el valor de f(c) ni si existe.'
+  },
+  {
+    id: 'q2', type: 'text',
+    text: 'Calcula: <code>lím (5x − 3)</code> cuando <code>x → 2</code>.',
+    correct: ['7'],
+    explain: 'Sustitución directa: f(2) = 5(2) − 3 = 10 − 3 = 7.'
+  },
+  {
+    id: 'q3', type: 'text',
+    text: 'Calcula: <code>lím (x² + 2x)</code> cuando <code>x → 3</code>.',
+    correct: ['15'],
+    explain: 'Sustitución directa: f(3) = (3)² + 2(3) = 9 + 6 = 15.'
+  },
+  {
+    id: 'q4', type: 'mc',
+    text: 'Para <code>f(x) = (x² − 9) / (x − 3)</code>, ¿qué ocurre cuando se intenta calcular <code>f(3)</code> por sustitución directa?',
+    opts: [
+      { val: 'a', text: 'f(3) = 6 directamente.' },
+      { val: 'b', text: 'f(3) = 0.' },
+      { val: 'c', text: 'La sustitución da 0/0, que es una forma indeterminada.' },
+      { val: 'd', text: 'La sustitución da infinito.' }
+    ],
+    correct: 'c',
+    correctLabel: 'C',
+    explain: 'f(3) = (9 − 9)/(3 − 3) = 0/0. Es una forma indeterminada; la sustitución directa falla y se debe usar la tabla de valores.'
+  },
+  {
+    id: 'q5', type: 'mc',
+    text: 'Usando la tabla de valores de clase, ¿cuál es el valor de <code>lím (x² − 9)/(x − 3)</code> cuando <code>x → 3</code>?',
+    opts: [
+      { val: 'a', text: '0' },
+      { val: 'b', text: '3' },
+      { val: 'c', text: '6' },
+      { val: 'd', text: 'No existe.' }
+    ],
+    correct: 'c',
+    correctLabel: 'C',
+    explain: 'La tabla de clase muestra que desde ambos lados f(x) → 6. El límite es 6, aunque f(3) no exista.'
+  },
+  {
+    id: 'q6', type: 'text',
+    text: 'Calcula: <code>lím (2x² − 1)</code> cuando <code>x → 0</code>.',
+    correct: ['-1', '−1'],
+    explain: 'Sustitución directa: f(0) = 2(0)² − 1 = 0 − 1 = −1.'
+  },
+  {
+    id: 'q7', type: 'text',
+    text: 'La memoria usada por un sistema es <code>M(n) = n² + 3</code> MB, donde n es el número de procesos. ¿Cuál es el límite de M(n) cuando <code>n → 2</code>?',
+    correct: ['7'],
+    explain: 'M(2) = (2)² + 3 = 4 + 3 = 7 MB. Sustitución directa.'
+  },
+  {
+    id: 'q8', type: 'mc',
+    text: '¿Cuándo es correcto usar la sustitución directa para calcular un límite?',
+    opts: [
+      { val: 'a', text: 'Siempre, para cualquier función.' },
+      { val: 'b', text: 'Solo cuando la función es un logaritmo.' },
+      { val: 'c', text: 'Cuando al sustituir x = c se obtiene un número definido, sin formas del tipo 0/0.' },
+      { val: 'd', text: 'Solo cuando x = 0.' }
+    ],
+    correct: 'c',
+    correctLabel: 'C',
+    explain: 'La sustitución directa es válida cuando al sustituir x = c el resultado es un número real definido, sin formas del tipo 0/0.'
+  },
+  {
+    id: 'q9', type: 'text',
+    text: 'Calcula: <code>lím (x² − 25)/(x − 5)</code> cuando <code>x → 5</code>. Indica el método que usaste.',
+    correct: ['10'],
+    explain: 'f(5) = 0/0 → se usa tabla. (x² − 25)/(x − 5) = x + 5 para x ≠ 5, y 5 + 5 = 10. Límite = 10.'
+  },
+  {
+    id: 'q10', type: 'text',
+    text: 'Un programa calcula tiempos de respuesta según <code>R(t) = 3t + 4</code> ms, donde t es el número de tareas activas. ¿Cuál es el límite del tiempo de respuesta cuando <code>t → 2</code>?',
+    correct: ['10', '10 ms'],
+    explain: 'Sustitución directa: R(2) = 3(2) + 4 = 6 + 4 = 10 ms.'
+  }
+];
+
+/* ══════════════════════════════════════════════
+   ORDEN ALEATORIO
+   ══════════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Mezclamos las preguntas y guardamos el orden resultante
+const shuffledQ = shuffle(QUESTIONS);
+// Para cada pregunta de opción múltiple, también mezclamos sus opciones
+shuffledQ.forEach(function(q) {
+  if (q.type === 'mc') q.shuffledOpts = shuffle(q.opts);
+});
+
+/* ══════════════════════════════════════════════
+   RENDERIZAR PREGUNTAS
+   ══════════════════════════════════════════════ */
+const selectedAnswers = {}; // { qid: value }
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  shuffledQ.forEach(function(q, idx) {
+    const div = document.createElement('div');
+    div.className = 'qblock locked';
+    div.id = 'block-' + q.id;
+
+    let bodyHTML = '<div class="qstmt">' + q.text + '</div>';
+
+    if (q.type === 'mc') {
+      bodyHTML += '<ul class="opts" id="opts-' + q.id + '">';
+      q.shuffledOpts.forEach(function(opt) {
+        bodyHTML += '<li>' +
+          '<label class="opt-label" id="lbl-' + q.id + '-' + opt.val + '">' +
+            '<input type="radio" name="' + q.id + '" value="' + opt.val + '" ' +
+              'onchange="selectOption(\'' + q.id + '\', \'' + opt.val + '\')">' +
+            '<span class="opt-let">' + opt.val.toUpperCase() + ')</span>' +
+            opt.text +
+          '</label>' +
+        '</li>';
+      });
+      bodyHTML += '</ul>';
+    } else {
+      bodyHTML += '<input class="ans-input" type="text" id="ans-' + q.id + '" ' +
+        'placeholder="Escribe tu respuesta..." autocomplete="off">';
+    }
+
+    div.innerHTML =
+      '<div class="qh"><span>Pregunta ' + (idx + 1) + '</span><span class="pts">1 punto</span></div>' +
+      '<div class="qbody">' + bodyHTML + '</div>';
+    container.appendChild(div);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   BLOQUEAR OPCIÓN AL ELEGIR
+   ══════════════════════════════════════════════ */
+function selectOption(qid, val) {
+  if (selectedAnswers[qid]) return; // ya eligió, no permite cambio
+  selectedAnswers[qid] = val;
+
+  // Deshabilitar todas las opciones de esta pregunta
+  const opts = document.querySelectorAll('input[name="' + qid + '"]');
+  opts.forEach(function(inp) {
+    inp.disabled = true;
+    inp.parentElement.classList.add('disabled-opt');
+  });
+
+  // Resaltar la seleccionada
+  const chosen = document.getElementById('lbl-' + qid + '-' + val);
+  if (chosen) chosen.classList.add('selected');
+}
+
+/* ══════════════════════════════════════════════
+   HABILITAR EXAMEN TRAS CHECKBOX
+   ══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function() {
+  renderQuestions();
+  const ichk = document.getElementById('ichk');
+  const btnSub = document.getElementById('btn-sub');
+  ichk.addEventListener('change', function() {
+    const on = this.checked;
+    document.querySelectorAll('.qblock').forEach(function(b) { b.classList.toggle('locked', !on); });
+    btnSub.disabled = !on;
+  });
+});
+
+/* ══════════════════════════════════════════════
+   CALIFICAR Y MOSTRAR RESULTADOS
+   ══════════════════════════════════════════════ */
+function norm(s) { return String(s).trim().toLowerCase().replace(/\s+/g, '').replace(',', '.'); }
+
+function finish() {
+  let correct = 0;
+  const rows = [];
+  const mdRows = [];
+
+  shuffledQ.forEach(function(q, idx) {
+    let userVal = '';
+    let isCorrect = false;
+
+    if (q.type === 'mc') {
+      userVal = selectedAnswers[q.id] ? selectedAnswers[q.id].toUpperCase() : '(sin respuesta)';
+      isCorrect = selectedAnswers[q.id] === q.correct;
+    } else {
+      const inp = document.getElementById('ans-' + q.id);
+      userVal = inp ? inp.value.trim() || '(sin respuesta)' : '(sin respuesta)';
+      isCorrect = q.correct.some(function(c) { return norm(c) === norm(userVal); });
+    }
+
+    if (isCorrect) correct++;
+
+    rows.push(
+      '<div class="res-row">' +
+        '<span class="rm ' + (isCorrect ? 'ok' : 'err') + '">' + (isCorrect ? '✓' : '✗') + '</span>' +
+        '<div class="rd">' +
+          '<strong>Pregunta ' + (idx + 1) + '.</strong> Tu respuesta: <strong>' + userVal + '</strong>' +
+          (q.type === 'mc' ? '' : '') +
+          '<div class="rc">' + q.explain + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+
+    mdRows.push('| ' + (idx + 1) + ' | ' + q.text.replace(/<[^>]+>/g, '') + ' | ' + userVal + ' | ' + (isCorrect ? 'Correcto' : 'Incorrecto') + ' |');
+  });
+
+  const pct = Math.round(correct / 10 * 100);
+
+  // Datos del alumno en resultados
+  const nom = document.getElementById('s-nom').value || '—';
+  const mat = document.getElementById('s-mat').value || '—';
+  const grp = document.getElementById('s-grp').value || '—';
+  const fec = document.getElementById('s-fec').value || new Date().toLocaleDateString('es-MX');
+
+  document.getElementById('alumno-result').innerHTML =
+    '<div class="field"><strong>Nombre</strong>' + nom + '</div>' +
+    '<div class="field"><strong>Matrícula</strong>' + mat + '</div>' +
+    '<div class="field"><strong>Grupo</strong>' + grp + '</div>' +
+    '<div class="field"><strong>Fecha</strong>' + fec + '</div>';
+
+  document.getElementById('sc-big').textContent = correct + ' / 10';
+  document.getElementById('sc-sub').textContent =
+    'Calificación: ' + pct + '%' +
+    (pct >= 80 ? ' — Excelente dominio del tema' :
+     pct >= 60 ? ' — Aprobatorio, sigue repasando' :
+                 ' — Se recomienda reforzar los conceptos');
+
+  // Infracciones
+  if (infractions.length > 0) {
+    const card = document.getElementById('infractions-card');
+    card.style.display = 'block';
+    document.getElementById('infractions-list').innerHTML =
+      infractions.map(function(inf) {
+        return '<div class="inf-row">' + inf.time + ' — ' + inf.reason + '</div>';
+      }).join('');
+  }
+
+  document.getElementById('sc-detail').innerHTML = rows.join('');
+
+  // Generar Markdown
+  const md = buildMarkdown(nom, mat, grp, fec, correct, pct, mdRows);
+  document.getElementById('md-output').textContent = md;
+
+  // Mostrar resultados y ocultar form
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('questions-container').style.display = 'none';
+  document.querySelector('.submit-wrap').style.display = 'none';
+  document.querySelector('.integrity-notice').style.display = 'none';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   GENERAR MARKDOWN
+   ══════════════════════════════════════════════ */
+function buildMarkdown(nom, mat, grp, fec, correct, pct, mdRows) {
+  const lines = [];
+  lines.push('# Resultados — Evaluación de Límites');
+  lines.push('');
+  lines.push('## Datos del estudiante');
+  lines.push('');
+  lines.push('| Campo | Valor |');
+  lines.push('|-------|-------|');
+  lines.push('| **Nombre** | ' + nom + ' |');
+  lines.push('| **Matrícula** | ' + mat + ' |');
+  lines.push('| **Grupo** | ' + grp + ' |');
+  lines.push('| **Fecha** | ' + fec + ' |');
+  lines.push('| **Asignatura** | Cálculo Diferencial |');
+  lines.push('| **Unidad** | 2 — Límites y Continuidad |');
+  lines.push('| **Puntaje** | ' + correct + ' / 10 (' + pct + '%) |');
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push('## Resumen de respuestas');
+  lines.push('');
+  lines.push('| # | Pregunta | Tu respuesta | Estado |');
+  lines.push('|---|----------|-------------|--------|');
+  mdRows.forEach(function(r) { lines.push(r); });
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push('## Detalle con explicaciones');
+  lines.push('');
+  shuffledQ.forEach(function(q, idx) {
+    const inp = q.type === 'mc'
+      ? (selectedAnswers[q.id] ? selectedAnswers[q.id].toUpperCase() : '(sin respuesta)')
+      : (document.getElementById('ans-' + q.id) ? document.getElementById('ans-' + q.id).value || '(sin respuesta)' : '(sin respuesta)');
+    const isOk = q.type === 'mc'
+      ? selectedAnswers[q.id] === q.correct
+      : q.correct.some(function(c) { return norm(c) === norm(inp); });
+    lines.push('### Pregunta ' + (idx + 1) + (isOk ? ' ✅' : ' ❌'));
+    lines.push('');
+    lines.push('> ' + q.text.replace(/<[^>]+>/g, ''));
+    lines.push('');
+    lines.push('**Tu respuesta:** ' + inp + '  ');
+    if (q.type === 'mc') lines.push('**Respuesta correcta:** ' + q.correct.toUpperCase() + '  ');
+    else lines.push('**Respuesta correcta:** ' + q.correct[0] + '  ');
+    lines.push('**Explicación:** ' + q.explain);
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+  });
+  lines.push('## Conceptos clave — Unidad 2');
+  lines.push('');
+  lines.push('- **Límite:** lím f(x) = L cuando x → c — f(x) se acerca a L sin importar si f(c) existe.');
+  lines.push('- **Sustitución directa:** si f(c) es un número definido, ese es el límite.');
+  lines.push('- **Tabla de valores:** cuando aparece 0/0, se evalúa f(x) con valores cercanos a c por ambos lados.');
+  lines.push('- **Forma indeterminada 0/0:** la sustitución falla; el límite puede existir de todas formas.');
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push('*Generado automáticamente — Cálculo Diferencial, IEDEP — Mtro. José Armando Vera Rodríguez*');
+  return lines.join('\n');
+}
+
+/* ══════════════════════════════════════════════
+   COPIAR Y DESCARGAR MARKDOWN
+   ══════════════════════════════════════════════ */
+function copyMd() {
+  const text = document.getElementById('md-output').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = 'Copiado ✓';
+    setTimeout(function() { btn.textContent = 'Copiar'; }, 2500);
+  });
+}
+function downloadMd() {
+  const nom = document.getElementById('s-nom').value.replace(/\s+/g, '_') || 'alumno';
+  const text = document.getElementById('md-output').textContent;
+  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'evaluacion_limites_' + nom + '.md';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
