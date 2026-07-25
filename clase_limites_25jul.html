@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Límites Algebraicos — Cálculo Diferencial | IEDEP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <style>
+    /* ── Elementos específicos de este documento ───── */
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--guinda);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-right: .65rem;
+      vertical-align: middle;
+    }
+    .section-heading {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1.5px solid var(--guinda-rule);
+      padding-bottom: .5rem;
+    }
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      color: var(--guinda);
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+
+    /* ── Gráficas SVG ───────────────────────────────── */
+    .graph-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: .75rem .75rem .3rem;
+      margin: 1.1rem 0;
+    }
+    .graph-caption {
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      color: var(--ink-muted);
+      text-align: center;
+      margin-top: .35rem;
+      font-style: italic;
+      padding-bottom: .4rem;
+    }
+
+    /* ── Pasos de resolución ────────────────────────── */
+    .steps { list-style: none; padding: 0; margin: .75rem 0; }
+    .steps li { display: flex; gap: .85rem; margin-bottom: .9rem; align-items: flex-start; }
+    .sn {
+      min-width: 28px; height: 28px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-ui); font-size: .76rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .st { font-size: .97rem; line-height: 1.7; }
+    .st code {
+      font-family: var(--font-mono); font-size: .88rem;
+      background: var(--surface); padding: .02rem .32rem;
+      border-radius: 3px; border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+
+    /* ── Bloque de ejemplo ──────────────────────────── */
+    .ex { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 1.5rem 0; box-shadow: var(--shadow-sm); }
+    .ex-head { background: var(--guinda); color: var(--white); padding: .65rem 1.4rem; font-family: var(--font-ui); font-size: .85rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .ex-tag { font-size: .72rem; background: rgba(255,255,255,.18); padding: .12rem .6rem; border-radius: 99px; letter-spacing: .04em; }
+    .ex-body { padding: 1.2rem 1.5rem; background: var(--off-white); }
+    .ex-q { background: var(--surface); border-left: 3px solid var(--guinda-rule); padding: .8rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: .98rem; margin-bottom: 1rem; line-height: 1.65; }
+    .result {
+      background: var(--guinda-light); border: 1px solid #D8A8BA;
+      border-radius: var(--radius-sm); padding: .6rem 1rem;
+      font-family: var(--font-mono); font-size: .92rem;
+      color: var(--guinda-dark); margin-top: .85rem; font-weight: 500;
+    }
+
+    /* ── Caja de proceso algebraico ─────────────────── */
+    .algebra-box {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.3rem;
+      margin: .9rem 0;
+      font-family: var(--font-mono);
+      font-size: .92rem;
+      line-height: 2.1;
+    }
+    .algebra-box .alg-step { display: flex; align-items: baseline; gap: .5rem; }
+    .algebra-box .alg-note { font-family: var(--font-ui); font-size: .8rem; color: var(--guinda-mid); font-style: italic; }
+    .algebra-box .alg-eq { color: var(--ink); }
+    .algebra-box .alg-cancel { text-decoration: line-through; color: var(--ink-muted); }
+    .algebra-box .alg-result { color: var(--guinda-dark); font-weight: 600; }
+
+    /* ── Analogía ───────────────────────────────────── */
+    .analogy {
+      background: var(--guinda-light);
+      border-left: 4px solid var(--guinda);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: 1.1rem 1.4rem; margin: 1.25rem 0;
+    }
+    .analogy-tag {
+      font-family: var(--font-ui); font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--guinda); display: block; margin-bottom: .45rem;
+    }
+
+    /* ── Tabla de valores ───────────────────────────── */
+    .num-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .85rem 0; }
+    .num-table th { background: var(--guinda); color: var(--white); padding: .5rem .8rem; font-family: var(--font-ui); font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+    .num-table td { padding: .48rem .8rem; text-align: center; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .9rem; }
+    .num-table tr:nth-child(even) td { background: var(--surface); }
+    .num-table tr.hl td { background: var(--guinda-light); color: var(--guinda-dark); font-weight: 700; }
+    .num-table tr:last-child td { border-bottom: none; }
+
+    /* ── Desmos ─────────────────────────────────────── */
+    .desmos-row { display: flex; align-items: center; gap: .55rem; margin-top: .65rem; flex-wrap: wrap; }
+    .desmos-lbl { font-family: var(--font-ui); font-size: .74rem; color: var(--ink-muted); font-style: italic; }
+    .desmos-btn {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-family: var(--font-ui); font-size: .76rem; font-weight: 600;
+      color: var(--guinda); text-decoration: none;
+      padding: .26rem .7rem; border: 1px solid var(--guinda-rule);
+      border-radius: var(--radius-sm); background: var(--guinda-light);
+      transition: background .15s, color .15s; white-space: nowrap;
+    }
+    .desmos-btn:hover { background: var(--guinda); color: var(--white); text-decoration: none; }
+    .desmos-btn::before { content:''; display:inline-block; width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+    /* ── Advertencia / Regla ────────────────────────── */
+    .rule-box {
+      border: 1.5px solid var(--guinda);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.35rem; margin: 1.25rem 0;
+    }
+    .rule-label {
+      font-family: var(--font-ui); font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--guinda); display: block; margin-bottom: .5rem;
+    }
+
+    /* ── Tarjeta de técnica ─────────────────────────── */
+    .technique-card {
+      display: flex; gap: 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.3rem;
+      margin-bottom: .9rem;
+      background: var(--off-white);
+      align-items: flex-start;
+    }
+    .tech-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .tech-body .tech-title { font-family: var(--font-ui); font-size: .95rem; font-weight: 600; color: var(--guinda); margin-bottom: .3rem; }
+    .tech-body p { font-size: .95rem; line-height: 1.6; margin: 0; }
+    .tech-body code { font-family: var(--font-mono); font-size: .88rem; background: var(--surface); padding: .02rem .32rem; border-radius: 3px; border: 1px solid var(--border); color: var(--guinda-dark); }
+
+    /* ── Refs / Conclusión ──────────────────────────── */
+    .concl-list { list-style: none; padding: 0; }
+    .concl-list li { padding: .7rem 0 .7rem 1rem; border-bottom: 1px solid var(--border); font-size: .97rem; position: relative; line-height: 1.65; }
+    .concl-list li::before { content:''; position:absolute; left:0; top:1rem; width:5px; height:5px; border-radius:50%; background:var(--guinda); }
+    .concl-list li:last-child { border-bottom: none; }
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: .94rem; padding: .55rem 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .ref-list li:last-child { border-bottom: none; }
+    .ry { font-family: var(--font-mono); font-size: .8rem; color: var(--guinda); font-weight: 500; margin-right: .3rem; }
+  </style>
+</head>
+<body>
+
+<!-- CABECERA -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP" style="height:88px;width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Material de clase</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="class-hero">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <span class="class-label">Unidad 2 &nbsp;·&nbsp; Clase 2 &nbsp;·&nbsp; Límites y Continuidad</span>
+    <h1>Límites Algebraicos</h1>
+    <span class="class-subtitle">
+      Cómo resolver límites cuando la sustitución directa falla — factorización,
+      cancelación y racionalización con aplicaciones en sistemas computacionales
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">Fecha<span>25 de julio de 2026</span></div>
+      <div class="meta-item">Duración<span>60 minutos</span></div>
+      <div class="meta-item">Asesor<span>Mtro. José Armando Vera Rodríguez</span></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-wrapper">
+
+  <!-- ══════════ COMPETENCIAS ══════════ -->
+  <section class="section">
+    <span class="section-label">Propósito de la sesión</span>
+    <h2 class="section-title">Competencias a desarrollar</h2>
+
+    <div class="competency-card">
+      <span class="comp-num">01</span>
+      <span class="comp-text">
+        <strong>Reconocer cuándo la sustitución directa falla</strong> e identificar la forma
+        indeterminada que aparece (0/0) como señal de que se requiere un método algebraico.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">02</span>
+      <span class="comp-text">
+        <strong>Aplicar factorización y cancelación de factores</strong> para simplificar
+        expresiones racionales antes de evaluar el límite.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">03</span>
+      <span class="comp-text">
+        <strong>Distinguir entre el hueco de una función y su límite</strong> — entender que
+        eliminar un factor no cambia la función, solo elimina la restricción en ese punto.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">04</span>
+      <span class="comp-text">
+        <strong>Conectar los límites algebraicos con sistemas computacionales</strong> —
+        interpretar el resultado en términos de comportamiento real de sistemas, algoritmos
+        y modelos de recursos.
+      </span>
+    </div>
+
+    <div class="callout mt-1">
+      <p>
+        La clase del 4 de julio estableció qué es un límite y cómo estimarlo con tablas.
+        Hoy aprendemos a <em>calcularlo exactamente</em> cuando la sustitución directa
+        produce 0/0. Ese es el salto de "estimar" a "resolver".
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 1: RECORDATORIO ══════════ -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-num">1</span>
+      <h2>¿Dónde quedamos? El problema de 0/0</h2>
+    </div>
+
+    <p>
+      En la clase anterior calculamos cinco límites. Cuatro se resolvieron por sustitución directa.
+      El quinto — <strong>lím (x² − 9)/(x − 3) cuando x → 3</strong> — produjo 0/0 y tuvimos
+      que estimarlo con la tabla. Hoy aprendemos a resolverlo exactamente, sin tabla.
+    </p>
+
+    <!-- SVG del problema 0/0 -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 560 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- Ejes -->
+        <line x1="40" y1="148" x2="520" y2="148" stroke="#CCCCCC" stroke-width="1.2"/>
+        <line x1="40" y1="12"  x2="40"  y2="152" stroke="#CCCCCC" stroke-width="1.2"/>
+        <polygon points="520,144 528,148 520,152" fill="#CCCCCC"/>
+        <polygon points="36,12 40,4 44,12" fill="#CCCCCC"/>
+        <text x="530" y="152" font-family="Inter,sans-serif" font-size="12" fill="#999">x</text>
+        <text x="24"  y="10"  font-family="Inter,sans-serif" font-size="12" fill="#999">f</text>
+        <!-- f(x)=(x²-9)/(x-3)=x+3 para x≠3: recta y=x+3 -->
+        <!-- mapeo: x∈[-1,7] → px=40+x*62.5; y∈[0,12] → py=148-y*11 -->
+        <!-- x=-1 y=2  px=-22.5 → fuera -->
+        <!-- x=0  y=3  px=40    py=115 -->
+        <!-- x=2  y=5  px=165   py=93 -->
+        <!-- x=3  y=6  px=227.5 py=82 (hueco) -->
+        <!-- x=5  y=8  px=352.5 py=60 -->
+        <!-- x=7  y=10 px=477.5 py=38 -->
+        <line x1="40"   y1="115" x2="220"  y2="82"  stroke="#7B1034" stroke-width="2.4"/>
+        <line x1="236"  y1="82"  x2="478"  y2="38"  stroke="#7B1034" stroke-width="2.4"/>
+        <!-- Hueco en (3,6) -->
+        <circle cx="228" cy="82" r="8" fill="white" stroke="#7B1034" stroke-width="2.2"/>
+        <!-- Línea punteada al eje y -->
+        <line x1="40"  y1="82" x2="220" y2="82" stroke="#D8A8BA" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <line x1="228" y1="82" x2="228" y2="148" stroke="#D8A8BA" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <!-- Etiquetas -->
+        <text x="14"  y="86"  font-family="JetBrains Mono,monospace" font-size="11" fill="#7B1034">6</text>
+        <text x="222" y="162" font-family="JetBrains Mono,monospace" font-size="11" fill="#7B1034">3</text>
+        <!-- Flecha izquierda -->
+        <path d="M175,88 L218,83" stroke="#9C1940" stroke-width="1.6" stroke-dasharray="4 2" marker-end="url(#ar1)"/>
+        <!-- Flecha derecha -->
+        <path d="M282,78 L238,82" stroke="#9C1940" stroke-width="1.6" stroke-dasharray="4 2" marker-end="url(#ar1)"/>
+        <defs><marker id="ar1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+        <!-- Texto explicativo -->
+        <text x="290" y="60"  font-family="Inter,sans-serif" font-size="12" fill="#7B1034" font-weight="600">f(x) = (x²−9)/(x−3)</text>
+        <text x="290" y="78"  font-family="Inter,sans-serif" font-size="11" fill="#9C1940">≡ x + 3 para x ≠ 3</text>
+        <text x="290" y="98"  font-family="Inter,sans-serif" font-size="11" fill="#550B23">hueco en (3, 6)</text>
+        <text x="290" y="116" font-family="Inter,sans-serif" font-size="11" fill="#7B1034" font-weight="600">lím = 6</text>
+        <!-- Punto (0,3) visible -->
+        <circle cx="40" cy="115" r="3" fill="#9C1940"/>
+        <text x="44" y="112" font-family="JetBrains Mono,monospace" font-size="10" fill="#9C1940">(0, 3)</text>
+      </svg>
+      <p class="graph-caption">
+        Figura 1. f(x) = (x² − 9)/(x − 3) es idéntica a la recta y = x + 3, excepto en x = 3 donde tiene un hueco.
+        El límite cuando x → 3 es 6. La tabla de la clase anterior nos dijo eso; hoy lo demostramos algebraicamente.
+      </p>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">La idea central de hoy</span>
+      <p>
+        Cuando aparece 0/0 es porque hay un <strong>factor que se repite en el numerador
+        y en el denominador</strong>. Ese factor compartido es el culpable del hueco.
+        Si lo identificamos y lo cancelamos, la expresión se simplifica a algo que sí
+        podemos evaluar directamente.
+      </p>
+      <p>
+        Es como simplificar una fracción: 6/8 = 3/4 porque los dos comparten el factor 2.
+        El resultado es diferente de escribir, pero representa la misma cantidad.
+        Con límites ocurre lo mismo, pero en lugar de dividir entre 2, cancelamos el factor
+        que produce el 0/0.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 2: TÉCNICAS ══════════ -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-num">2</span>
+      <h2>Las tres técnicas algebraicas para resolver 0/0</h2>
+    </div>
+
+    <div class="technique-card">
+      <div class="tech-num">A</div>
+      <div class="tech-body">
+        <p class="tech-title">Factorización de diferencia de cuadrados</p>
+        <p>
+          Cuando el numerador tiene la forma <code>x² − a²</code>, se factoriza como
+          <code>(x + a)(x − a)</code>. Si el denominador contiene <code>(x − a)</code>,
+          ese factor se cancela y desaparece el 0/0.
+        </p>
+        <p style="margin-top:.5rem;font-size:.88rem;color:var(--ink-muted);">
+          Ejemplo: x² − 9 = (x + 3)(x − 3) &nbsp;·&nbsp; x² − 25 = (x + 5)(x − 5)
+        </p>
+      </div>
+    </div>
+
+    <div class="technique-card">
+      <div class="tech-num">B</div>
+      <div class="tech-body">
+        <p class="tech-title">Factorización de trinomio cuadrático</p>
+        <p>
+          Cuando el numerador tiene la forma <code>x² + bx + c</code>, se buscan dos
+          números que multiplicados den c y sumados den b. La expresión se reescribe como
+          <code>(x + r)(x + s)</code> y el factor común con el denominador se cancela.
+        </p>
+        <p style="margin-top:.5rem;font-size:.88rem;color:var(--ink-muted);">
+          Ejemplo: x² − 5x + 6 = (x − 2)(x − 3) &nbsp;porque (−2)(−3)=6 y (−2)+(−3)=−5
+        </p>
+      </div>
+    </div>
+
+    <div class="technique-card">
+      <div class="tech-num">C</div>
+      <div class="tech-body">
+        <p class="tech-title">Factor común en el numerador</p>
+        <p>
+          Cuando todos los términos del numerador comparten un factor con el denominador,
+          se extrae ese factor al frente y se cancela. Útil cuando el numerador es una
+          expresión simple como <code>ax² + bx</code>.
+        </p>
+        <p style="margin-top:.5rem;font-size:.88rem;color:var(--ink-muted);">
+          Ejemplo: (x² + 2x)/(x) = x(x + 2)/(x) = (x + 2)
+        </p>
+      </div>
+    </div>
+
+    <div class="rule-box">
+      <span class="rule-label">Procedimiento general — aplica siempre en este orden</span>
+      <ol style="padding-left:1.2rem;font-size:.97rem;line-height:2;">
+        <li><strong>Intenta sustitución directa.</strong> Si da un número definido, terminaste.</li>
+        <li><strong>Si da 0/0,</strong> factoriza el numerador y el denominador por separado.</li>
+        <li><strong>Cancela</strong> el factor que se repite en ambos lados.</li>
+        <li><strong>Aplica sustitución directa</strong> a la expresión simplificada.</li>
+        <li><strong>Verifica</strong> que el resultado tiene sentido con los valores de la tabla.</li>
+      </ol>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 3: EJEMPLOS ══════════ -->
+  <section class="section">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div class="section-heading" style="flex:1;">
+        <span class="section-num">3</span>
+        <h2>Ejemplos resueltos paso a paso</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP" style="height:44px;width:auto;opacity:.6;flex-shrink:0;margin-top:.2rem;">
+    </div>
+
+    <!-- ───── EJEMPLO 1 ───── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 1 — Diferencia de cuadrados: lím (x² − 9)/(x − 3) cuando x → 3</span>
+        <span class="ex-tag">Técnica A</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          Este es el ejercicio pendiente de la clase anterior. Ya sabíamos por la tabla que el límite
+          era 6. Ahora lo demostramos algebraicamente.
+        </div>
+        <ul class="steps">
+          <li>
+            <span class="sn">1</span>
+            <span class="st">
+              <strong>Intento sustitución directa:</strong>
+              f(3) = (9 − 9)/(3 − 3) = 0/0. Falla. Necesito factorizar.
+            </span>
+          </li>
+          <li>
+            <span class="sn">2</span>
+            <span class="st">
+              <strong>Factorizo el numerador</strong> usando diferencia de cuadrados:<br>
+              x² − 9 = x² − 3² = <code>(x + 3)(x − 3)</code>
+            </span>
+          </li>
+          <li>
+            <span class="sn">3</span>
+            <span class="st">
+              <strong>Reescribo la fracción</strong> con el numerador factorizado:
+            </span>
+          </li>
+        </ul>
+        <div class="algebra-box">
+          <div class="alg-step">
+            <span class="alg-eq">(x² − 9) / (x − 3)</span>
+            <span class="alg-note">expresión original</span>
+          </div>
+          <div class="alg-step">
+            <span class="alg-eq">= (x + 3)(x − 3) / (x − 3)</span>
+            <span class="alg-note">factorizo el numerador</span>
+          </div>
+          <div class="alg-step">
+            <span class="alg-eq">= (x + 3) · <span class="alg-cancel">(x − 3)</span> / <span class="alg-cancel">(x − 3)</span></span>
+            <span class="alg-note">cancelo el factor (x − 3)</span>
+          </div>
+          <div class="alg-step">
+            <span class="alg-result">= x + 3 &nbsp; para todo x ≠ 3</span>
+            <span class="alg-note">expresión simplificada</span>
+          </div>
+        </div>
+        <ul class="steps">
+          <li>
+            <span class="sn">4</span>
+            <span class="st">
+              <strong>Aplico sustitución directa</strong> a la expresión simplificada:<br>
+              lím (x + 3) cuando x → 3 = 3 + 3 = <strong>6</strong>
+            </span>
+          </li>
+          <li>
+            <span class="sn">5</span>
+            <span class="st">
+              <strong>Verifico:</strong> la tabla de clase mostraba que f(x) → 6. Coincide. ✓
+            </span>
+          </li>
+        </ul>
+        <div class="result">lím (x² − 9)/(x − 3) = 6 &nbsp; cuando x → 3</div>
+
+        <!-- SVG ejemplo 1 -->
+        <div class="graph-wrap" style="margin-top:1rem;">
+          <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="35" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="35" y1="8"   x2="35"  y2="132" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <!-- y=x+3: x=0→3, x=2→5, x=3→6(hueco), x=5→8, x=7→10 -->
+            <!-- px=35+x*48; py=128-y*11 -->
+            <line x1="35"  y1="95"  x2="187" y2="62"  stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="203" y1="62"  x2="371" y2="18"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="195" cy="62" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="35"  y1="62" x2="188" y2="62"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="195" y1="62" x2="195" y2="128" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <text x="12"  y="66"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">6</text>
+            <text x="190" y="141" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">3</text>
+            <text x="270" y="32"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">y = x + 3 &nbsp;(para x ≠ 3)</text>
+            <text x="44"  y="30"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">lím = 6</text>
+          </svg>
+          <p class="graph-caption">Figura 2. Después de cancelar (x − 3), la función se convierte en y = x + 3, una recta con un hueco en (3, 6).</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Verificar en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:8,ymax:12}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-9}{x-3}',color:'#7B1034',label:'f(x)=(x²-9)/(x-3)'},{id:'2',type:'expression',latex:'(3,6)',color:'#550B23',showLabel:true,label:'hueco (3,6) — lím = 6'}]}}))))">
+            Abrir gráfica
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ───── EJEMPLO 2 ───── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 2 — Diferencia de cuadrados: lím (x² − 25)/(x − 5) cuando x → 5</span>
+        <span class="ex-tag">Técnica A</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          Mismo patrón que el Ejemplo 1 pero con a = 5. Practica reconocer la diferencia de cuadrados.
+        </div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st"><strong>Sustitución directa:</strong> f(5) = (25 − 25)/(5 − 5) = 0/0. Falla.</span></li>
+          <li><span class="sn">2</span><span class="st"><strong>Factorizo:</strong> x² − 25 = (x + 5)(x − 5).</span></li>
+        </ul>
+        <div class="algebra-box">
+          <div class="alg-step"><span class="alg-eq">(x² − 25) / (x − 5)</span><span class="alg-note">expresión original</span></div>
+          <div class="alg-step"><span class="alg-eq">= (x + 5)(x − 5) / (x − 5)</span><span class="alg-note">factorizo el numerador</span></div>
+          <div class="alg-step"><span class="alg-eq">= (x + 5) · <span class="alg-cancel">(x − 5)</span> / <span class="alg-cancel">(x − 5)</span></span><span class="alg-note">cancelo</span></div>
+          <div class="alg-step"><span class="alg-result">= x + 5 &nbsp; para todo x ≠ 5</span></div>
+        </div>
+        <ul class="steps">
+          <li><span class="sn">3</span><span class="st"><strong>Sustitución directa:</strong> lím (x + 5) = 5 + 5 = <strong>10</strong> cuando x → 5.</span></li>
+        </ul>
+        <div class="result">lím (x² − 25)/(x − 5) = 10 &nbsp; cuando x → 5</div>
+
+        <!-- SVG ejemplo 2 -->
+        <div class="graph-wrap" style="margin-top:1rem;">
+          <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="35" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="35" y1="8"   x2="35"  y2="132" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <!-- y=x+5: x=0→5, x=2→7, x=5→10(hueco), x=7→12 -->
+            <!-- px=35+x*47; py=128-y*9 -->
+            <!-- x=0 px=35  py=83 -->
+            <!-- x=2 px=129 py=65 -->
+            <!-- x=5 px=270 py=38 (hueco) -->
+            <!-- x=7 px=364 py=20 -->
+            <line x1="35"  y1="83"  x2="261" y2="38"  stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="279" y1="38"  x2="364" y2="20"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="270" cy="38" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="35"  y1="38" x2="263" y2="38"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="270" y1="38" x2="270" y2="128" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <text x="6"   y="42"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">10</text>
+            <text x="264" y="141" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">5</text>
+            <text x="60"  y="28"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">y = x + 5 (x ≠ 5) &nbsp;·&nbsp; lím = 10</text>
+          </svg>
+          <p class="graph-caption">Figura 3. f(x) = (x² − 25)/(x − 5) se simplifica a y = x + 5 con un hueco en (5, 10).</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Verificar en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:9,ymax:15}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-25}{x-5}',color:'#7B1034',label:'f(x)=(x²-25)/(x-5)'},{id:'2',type:'expression',latex:'(5,10)',color:'#550B23',showLabel:true,label:'hueco (5, 10) — lím = 10'}]}}))))">
+            Abrir gráfica
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ───── EJEMPLO 3 ───── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 3 — Trinomio cuadrático: lím (x² − 5x + 6)/(x − 2) cuando x → 2</span>
+        <span class="ex-tag">Técnica B</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          Aquí el numerador no es una diferencia de cuadrados: hay que factorizar un trinomio.
+          Buscamos dos números que multiplicados den 6 y sumados den −5.
+        </div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st"><strong>Sustitución directa:</strong> f(2) = (4 − 10 + 6)/(2 − 2) = 0/0. Falla.</span></li>
+          <li>
+            <span class="sn">2</span>
+            <span class="st">
+              <strong>Factorizo el trinomio</strong> x² − 5x + 6:<br>
+              Busco r y s tal que r · s = 6 y r + s = −5.<br>
+              r = −2, s = −3 &nbsp;→ (−2)(−3) = 6 ✓ &nbsp;y (−2) + (−3) = −5 ✓<br>
+              Entonces: x² − 5x + 6 = <code>(x − 2)(x − 3)</code>
+            </span>
+          </li>
+        </ul>
+        <div class="algebra-box">
+          <div class="alg-step"><span class="alg-eq">(x² − 5x + 6) / (x − 2)</span><span class="alg-note">expresión original</span></div>
+          <div class="alg-step"><span class="alg-eq">= (x − 2)(x − 3) / (x − 2)</span><span class="alg-note">factorizo el trinomio</span></div>
+          <div class="alg-step"><span class="alg-eq">= <span class="alg-cancel">(x − 2)</span>(x − 3) / <span class="alg-cancel">(x − 2)</span></span><span class="alg-note">cancelo</span></div>
+          <div class="alg-step"><span class="alg-result">= x − 3 &nbsp; para todo x ≠ 2</span></div>
+        </div>
+        <ul class="steps">
+          <li><span class="sn">3</span><span class="st"><strong>Sustitución directa:</strong> lím (x − 3) = 2 − 3 = <strong>−1</strong> cuando x → 2.</span></li>
+        </ul>
+        <div class="result">lím (x² − 5x + 6)/(x − 2) = −1 &nbsp; cuando x → 2</div>
+
+        <!-- SVG ejemplo 3 -->
+        <div class="graph-wrap" style="margin-top:1rem;">
+          <svg viewBox="0 0 420 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="35"  y1="100" x2="390" y2="100" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="35"  y1="8"   x2="35"  y2="155" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,96 397,100 390,104" fill="#CCCCCC"/>
+            <!-- y=x-3: x=0→-3, x=2→-1(hueco), x=3→0, x=6→3, x=8→5 -->
+            <!-- px=35+x*42; py=100-y*18 -->
+            <!-- x=0  px=35  py=154 -->
+            <!-- x=2  px=119 py=118 (hueco) -->
+            <!-- x=3  px=161 py=100 -->
+            <!-- x=6  px=287 py=46 -->
+            <!-- x=8  px=371 py=10 -->
+            <line x1="35"  y1="154" x2="111" y2="118" stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="127" y1="118" x2="371" y2="10"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="119" cy="118" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="35"  y1="118" x2="112" y2="118" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="119" y1="118" x2="119" y2="100" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <!-- eje y pasa por x=3 → px=161, y=0 → py=100 -->
+            <text x="6"   y="122" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">−1</text>
+            <text x="114" y="155" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">2</text>
+            <text x="155" y="97"  font-family="JetBrains Mono,monospace" font-size="9"  fill="#9C1940">0</text>
+            <text x="195" y="36"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">y = x − 3 (x ≠ 2) · lím = −1</text>
+          </svg>
+          <p class="graph-caption">Figura 4. f(x) = (x² − 5x + 6)/(x − 2) = x − 3 con hueco en (2, −1). La función cruza el eje x en x = 3.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Verificar en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-5,xmax:7,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-5x+6}{x-2}',color:'#7B1034',label:'f(x)=(x²-5x+6)/(x-2)'},{id:'2',type:'expression',latex:'(2,-1)',color:'#550B23',showLabel:true,label:'hueco (2,−1) — lím = −1'}]}}))))">
+            Abrir gráfica
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ───── EJEMPLO 4: INFORMÁTICO ───── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 4 — Aplicación informática: eficiencia de un algoritmo</span>
+        <span class="ex-tag">Técnica C + A</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          El tiempo promedio de ejecución por tarea de un algoritmo está modelado por:
+          <strong>T(n) = (n² − n) / n</strong>, donde n es el número de tareas.
+          Calcula el límite cuando n → 0 e interpreta el resultado.
+        </div>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st"><strong>Sustitución directa:</strong> T(0) = (0 − 0)/0 = 0/0. Falla.</span></li>
+          <li>
+            <span class="sn">2</span>
+            <span class="st">
+              <strong>Factor común en el numerador:</strong><br>
+              n² − n = n(n − 1) &nbsp;→ extrae el factor n.
+            </span>
+          </li>
+        </ul>
+        <div class="algebra-box">
+          <div class="alg-step"><span class="alg-eq">(n² − n) / n</span><span class="alg-note">expresión original</span></div>
+          <div class="alg-step"><span class="alg-eq">= n(n − 1) / n</span><span class="alg-note">factor común en numerador</span></div>
+          <div class="alg-step"><span class="alg-eq">= <span class="alg-cancel">n</span>(n − 1) / <span class="alg-cancel">n</span></span><span class="alg-note">cancelo n</span></div>
+          <div class="alg-step"><span class="alg-result">= n − 1 &nbsp; para todo n ≠ 0</span></div>
+        </div>
+        <ul class="steps">
+          <li><span class="sn">3</span><span class="st"><strong>Sustitución directa:</strong> lím (n − 1) = 0 − 1 = <strong>−1</strong> cuando n → 0.</span></li>
+          <li>
+            <span class="sn">4</span>
+            <span class="st">
+              <strong>Interpretación en sistemas:</strong> cuando el número de tareas
+              se acerca a cero, el tiempo promedio por tarea tiende a −1. En un contexto
+              real, un tiempo negativo indica que el modelo no es válido para n = 0
+              (no puede haber cero tareas en ejecución). El límite matemático existe, pero
+              el ingeniero debe verificar que el dominio práctico es n ≥ 1.
+            </span>
+          </li>
+        </ul>
+        <div class="result">lím (n² − n)/n = −1 cuando n → 0 &nbsp;·&nbsp; el modelo es válido solo para n ≥ 1</div>
+
+        <div class="graph-wrap" style="margin-top:1rem;">
+          <svg viewBox="0 0 420 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="35"  y1="95"  x2="390" y2="95"  stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="155" y1="8"   x2="155" y2="150" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,91 397,95 390,99" fill="#CCCCCC"/>
+            <text x="396" y="99" font-family="Inter,sans-serif" font-size="11" fill="#999">n</text>
+            <!-- y=n-1: n=-2→-3, n=0→-1(hueco), n=1→0, n=3→2, n=5→4 -->
+            <!-- centro en px=155(n=0), py=95(y=0). escala: 1u_x=42px, 1u_y=22px -->
+            <!-- n=-3 px=155-3*42=29  py=95+3*22=161 (fuera) -->
+            <!-- n=-2 px=155-2*42=71  py=95+2*22=139 -->
+            <!-- n=0  px=155           py=95+1*22=117 (hueco, y=-1) -->
+            <!-- n=1  px=197           py=95 (y=0) -->
+            <!-- n=3  px=281           py=95-2*22=51 -->
+            <!-- n=5  px=365           py=95-4*22=7  -->
+            <line x1="71"  y1="139" x2="147" y2="117" stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="163" y1="117" x2="365" y2="7"   stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="155" cy="117" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="35"  y1="117" x2="148" y2="117" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 2"/>
+            <text x="6"   y="121" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">−1</text>
+            <text x="152" y="145" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">0</text>
+            <!-- n=1 cruce eje x -->
+            <circle cx="197" cy="95" r="3" fill="#9C1940"/>
+            <text x="200" y="92"  font-family="JetBrains Mono,monospace" font-size="9" fill="#9C1940">n=1</text>
+            <text x="220" y="26"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">T(n) = (n²−n)/n = n−1 (n ≠ 0)</text>
+            <text x="40"  y="40"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940" font-style="italic">lím = −1 (n → 0)</text>
+            <!-- Zona válida -->
+            <rect x="197" y="8" width="168" height="140" fill="#7B1034" fill-opacity=".04" rx="3"/>
+            <text x="240" y="148" font-family="Inter,sans-serif" font-size="9" fill="#7B1034">dominio válido (n ≥ 1)</text>
+          </svg>
+          <p class="graph-caption">Figura 5. T(n) = n − 1 con hueco en n = 0. La zona sombreada muestra el dominio real del modelo (n ≥ 1 tarea activa).</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Verificar en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-3,ymin:-4,xmax:6,ymax:5}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-x}{x}',color:'#7B1034',label:'T(n)=(n²-n)/n'},{id:'2',type:'expression',latex:'(0,-1)',color:'#550B23',showLabel:true,label:'hueco (0,−1) — lím=−1'},{id:'3',type:'expression',latex:'x=1',color:'#9C1940',style:'DASHED',label:'n=1 (dominio mín.)'}]}}))))">
+            Abrir gráfica
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ───── EJEMPLO 5: LÍMITE CON TABLA + ÁLGEBRA ───── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 5 — Trinomio + verificación: lím (x² + x − 6)/(x − 2) cuando x → 2</span>
+        <span class="ex-tag">Técnica B</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          Ejercicio completo: se usa álgebra y se verifica con tabla. Así se practica el flujo
+          completo que se pide en los exámenes.
+        </div>
+
+        <p style="font-family:var(--font-ui);font-size:.82rem;font-weight:600;color:var(--guinda);text-transform:uppercase;letter-spacing:.06em;margin:.5rem 0 .3rem;">Paso 1 — Álgebra</p>
+        <ul class="steps">
+          <li><span class="sn">1</span><span class="st">Sustitución directa: f(2) = (4 + 2 − 6)/(2 − 2) = 0/0. Falla.</span></li>
+          <li><span class="sn">2</span><span class="st">Factorizo x² + x − 6: busco r · s = −6 y r + s = 1. → r = 3, s = −2. Resultado: (x + 3)(x − 2).</span></li>
+        </ul>
+        <div class="algebra-box">
+          <div class="alg-step"><span class="alg-eq">(x² + x − 6) / (x − 2)</span></div>
+          <div class="alg-step"><span class="alg-eq">= (x + 3)(x − 2) / (x − 2)</span><span class="alg-note">factorizo</span></div>
+          <div class="alg-step"><span class="alg-eq">= (x + 3) · <span class="alg-cancel">(x − 2)</span> / <span class="alg-cancel">(x − 2)</span></span><span class="alg-note">cancelo</span></div>
+          <div class="alg-step"><span class="alg-result">= x + 3 &nbsp; para x ≠ 2</span></div>
+        </div>
+        <ul class="steps">
+          <li><span class="sn">3</span><span class="st">lím (x + 3) = 2 + 3 = <strong>5</strong> cuando x → 2.</span></li>
+        </ul>
+
+        <p style="font-family:var(--font-ui);font-size:.82rem;font-weight:600;color:var(--guinda);text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .3rem;">Paso 2 — Verificación con tabla</p>
+        <table class="num-table">
+          <thead>
+            <tr><th>x</th><th>1.5</th><th>1.9</th><th>1.99</th><th>→ 2 ←</th><th>2.01</th><th>2.1</th><th>2.5</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--font-ui);font-weight:600;text-align:left;padding-left:.8rem;">f(x)</td>
+              <td>4.5</td><td>4.9</td><td>4.99</td>
+              <td class="hl">→ <strong>5</strong></td>
+              <td>5.01</td><td>5.1</td><td>5.5</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">lím (x² + x − 6)/(x − 2) = 5 cuando x → 2 &nbsp;·&nbsp; álgebra y tabla coinciden ✓</div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Verificar en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-2,xmax:6,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2+x-6}{x-2}',color:'#7B1034',label:'f(x)=(x²+x-6)/(x-2)'},{id:'2',type:'expression',latex:'(2,5)',color:'#550B23',showLabel:true,label:'hueco (2, 5) — lím = 5'}]}}))))">
+            Abrir gráfica
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 4: COMPARATIVO VISUAL ══════════ -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-num">4</span>
+      <h2>¿Qué cambia al factorizar? — Comparación visual</h2>
+    </div>
+
+    <p>
+      La pregunta más frecuente es: <em>¿si cancelamos un factor, estamos cambiando la función?</em>
+      La respuesta corta es no, pero conviene verlo gráficamente.
+    </p>
+
+    <!-- SVG comparativo dos funciones -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- Mitad izquierda: f(x)=(x²-9)/(x-3) -->
+        <text x="30" y="20" font-family="Inter,sans-serif" font-size="12" fill="#7B1034" font-weight="600">f(x) = (x²−9)/(x−3)</text>
+        <text x="30" y="35" font-family="Inter,sans-serif" font-size="10" fill="#9C1940">antes de simplificar</text>
+        <line x1="30" y1="160" x2="250" y2="160" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="30" y1="48"  x2="30"  y2="163" stroke="#CCCCCC" stroke-width="1"/>
+        <!-- y=x+3, x∈[0,5]: px=30+x*40; py=160-y*10 -->
+        <!-- x=0 px=30  py=130 -->
+        <!-- x=2 px=110 py=110 -->
+        <!-- x=3 px=150 py=100 (hueco) -->
+        <!-- x=5 px=230 py=80 -->
+        <line x1="30"  y1="130" x2="142" y2="100" stroke="#7B1034" stroke-width="2.2"/>
+        <line x1="158" y1="100" x2="230" y2="80"  stroke="#7B1034" stroke-width="2.2"/>
+        <circle cx="150" cy="100" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <text x="154" y="97"  font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">(3,6)</text>
+        <text x="80"  y="148" font-family="Inter,sans-serif" font-size="10" fill="#C85070">hueco — f(3) no existe</text>
+        <!-- Mitad derecha: g(x)=x+3 -->
+        <text x="310" y="20" font-family="Inter,sans-serif" font-size="12" fill="#2A5C2A" font-weight="600">g(x) = x + 3</text>
+        <text x="310" y="35" font-family="Inter,sans-serif" font-size="10" fill="#2A5C2A">después de simplificar</text>
+        <line x1="310" y1="160" x2="530" y2="160" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="310" y1="48"  x2="310" y2="163" stroke="#CCCCCC" stroke-width="1"/>
+        <!-- misma escala: px=310+x*40 -->
+        <line x1="310" y1="130" x2="430" y2="100" stroke="#2A5C2A" stroke-width="2.2"/>
+        <line x1="430" y1="100" x2="510" y2="80"  stroke="#2A5C2A" stroke-width="2.2"/>
+        <!-- Ahora SÍ hay punto sólido en x=3 -->
+        <circle cx="430" cy="100" r="6" fill="#2A5C2A" stroke="white" stroke-width="1.5"/>
+        <text x="434" y="97"  font-family="JetBrains Mono,monospace" font-size="9" fill="#2A5C2A">(3,6)</text>
+        <text x="355" y="148" font-family="Inter,sans-serif" font-size="10" fill="#2A5C2A">g(3) = 6 — continua</text>
+        <!-- Flecha de igualdad -->
+        <text x="260" y="105" font-family="Inter,sans-serif" font-size="20" fill="#7B1034">→</text>
+        <text x="256" y="120" font-family="Inter,sans-serif" font-size="9" fill="#9C1940" font-style="italic">para x≠3</text>
+      </svg>
+      <p class="graph-caption">
+        Figura 6. f(x) y g(x) son idénticas para todo x ≠ 3. La única diferencia es el punto x = 3:
+        f tiene un hueco, g tiene un punto sólido. Para el cálculo del límite, esa diferencia no importa.
+      </p>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-tag">Por qué podemos cancelar sin problema</span>
+      <p>
+        El límite cuando x → 3 pregunta qué pasa cuando x está <em>cerca</em> de 3, no cuando
+        x es exactamente 3. Para todos los valores cercanos, f(x) = g(x). Por eso el límite
+        de f y el límite de g son idénticos: la diferencia en un solo punto no cambia el
+        comportamiento de acercamiento.
+      </p>
+      <p>
+        Cuando cancelamos (x − 3), simplemente estamos diciendo: "para calcular el límite,
+        voy a usar la versión sin hueco, que es equivalente en todos los puntos que importan".
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 5: EJERCICIOS ══════════ -->
+  <section class="section">
+    <div class="section-heading">
+      <span class="section-num">5</span>
+      <h2>Ejercicios para resolver en clase</h2>
+    </div>
+
+    <p>
+      Para cada límite: (1) intenta sustitución directa, (2) si da 0/0 identifica la técnica
+      de factorización, (3) cancela el factor común, (4) sustituye directamente, (5) escribe
+      el resultado con notación completa.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>N.°</th>
+          <th>Calcula el límite</th>
+          <th>Pista</th>
+          <th>Desmos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>lím (x² − 4)/(x − 2) cuando x → 2</td>
+          <td>Diferencia de cuadrados: x² − 4 = (x+2)(x−2)</td>
+          <td>
+            <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:6,ymax:8}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-4}{x-2}',color:'#7B1034'},{id:'2',type:'expression',latex:'(2,4)',color:'#550B23',showLabel:true,label:'hueco (2,4)'}]}}))))">
+              Ver
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>lím (x² − x − 6)/(x − 3) cuando x → 3</td>
+          <td>Factoriza el trinomio: busca r·s = −6 y r+s = −1</td>
+          <td>
+            <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-2,xmax:7,ymax:6}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-x-6}{x-3}',color:'#7B1034'},{id:'2',type:'expression',latex:'(3,5)',color:'#550B23',showLabel:true,label:'hueco (3,5)'}]}}))))">
+              Ver
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>lím (2x² − 8)/(x − 2) cuando x → 2</td>
+          <td>Extrae 2 del numerador: 2(x²−4). Luego diferencia de cuadrados</td>
+          <td>
+            <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-2,xmax:6,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{2x^2-8}{x-2}',color:'#7B1034'},{id:'2',type:'expression',latex:'(2,8)',color:'#550B23',showLabel:true,label:'hueco (2,8)'}]}}))))">
+              Ver
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>lím (x² + 3x)/(x) cuando x → 0</td>
+          <td>Factor común en numerador: x(x+3)</td>
+          <td>
+            <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-4,ymin:-2,xmax:4,ymax:6}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2+3x}{x}',color:'#7B1034'},{id:'2',type:'expression',latex:'(0,3)',color:'#550B23',showLabel:true,label:'hueco (0,3)'}]}}))))">
+              Ver
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>El consumo de un proceso es C(n) = (n² − 4n)/(n − 4) MB. ¿Cuál es el límite cuando n → 4 procesos?</td>
+          <td>Factor común: n(n−4). Cancela (n−4)</td>
+          <td>
+            <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+               onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:8,ymax:6}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-4x}{x-4}',color:'#7B1034',label:'C(n)=(n²-4n)/(n-4)'},{id:'2',type:'expression',latex:'(4,4)',color:'#550B23',showLabel:true,label:'hueco (4,4) — lím=4 MB'}]}}))))">
+              Ver
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ CONCLUSIÓN ══════════ -->
+  <section class="section">
+    <span class="section-label">Cierre de la sesión</span>
+    <h2 class="section-title">Conclusión</h2>
+
+    <ul class="concl-list">
+      <li>
+        <strong>El 0/0 no es un error: es una señal.</strong> Indica que hay un factor compartido
+        entre numerador y denominador que se puede cancelar. La aparición de 0/0 es el punto
+        de partida del trabajo algebraico, no una señal de que el límite no existe.
+      </li>
+      <li>
+        <strong>Factorizar convierte lo insoluble en trivial.</strong> Después de cancelar el
+        factor problemático, la expresión que queda siempre admite sustitución directa. El límite
+        algebraico es en esencia: factoriza, cancela, sustituye.
+      </li>
+      <li>
+        <strong>Cancelar un factor no cambia el límite.</strong> La función con hueco y la función
+        simplificada son idénticas en todos los puntos cercanos al problema. Para el límite, los
+        valores en el punto exacto no importan; solo importa lo que pasa alrededor.
+      </li>
+      <li>
+        <strong>En sistemas computacionales, los modelos tienen dominio restringido.</strong>
+        Un resultado matemáticamente válido puede carecer de sentido práctico. Siempre interpreta
+        el límite en contexto: ¿es ese valor posible en el sistema real que estás modelando?
+      </li>
+      <li>
+        <strong>El flujo correcto es: tabla → álgebra → verificar.</strong> La tabla da la
+        intuición del valor esperado. El álgebra lo demuestra exactamente. La comparación de
+        ambos resultados confirma que no hubo errores de cálculo.
+      </li>
+    </ul>
+
+    <div class="callout mt-1">
+      <p>
+        <strong>Próxima clase:</strong> Unidad 2, Clase 3 — Continuidad de una función en un punto.
+        Veremos qué significa que una función sea continua, cuáles son las condiciones que se deben
+        cumplir, y cómo identificar discontinuidades (huecos, saltos y asíntotas) tanto
+        algebraicamente como en la gráfica.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BIBLIOGRAFÍA ══════════ -->
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="section-title">Referencias bibliográficas</h2>
+    <p class="text-muted">Formato APA 7.ª edición — Unidad 2, Límites y Continuidad.</p>
+
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1rem 0 .75rem;">Básica</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2022</span>Martínez, R. (2022). <em>El rigor del límite: Perspectivas formales y pedagógicas en el cálculo diferencial.</em> Universidad de Buenos Aires (UBA).</li>
+      <li><span class="ry">2021</span>Ruiz, A. (2021). Estrategias para el cálculo de límites al infinito en ciencias computacionales. <em>Revista de Educación en Ingeniería, México.</em></li>
+      <li><span class="ry">2025</span>Castro, S. (2025). Estudio de asíntotas y comportamiento local de funciones racionales complejas. <em>Revista Colombiana de Matemáticas.</em></li>
+      <li><span class="ry">2023</span>López, F. (2023). <em>Análisis de continuidad y estabilidad en modelos dinámicos lineales y no lineales.</em> Universidad de Santiago de Chile.</li>
+    </ul>
+
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;">Complementaria</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2016</span>Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning. Capítulo 2: Límites y derivadas.</li>
+      <li><span class="ry">2017</span>Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.</li>
+      <li>Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> https://www.desmos.com/calculator</li>
+      <li>GeoGebra. (s.f.). <em>Applets de funciones con parámetros ajustables.</em> https://www.geogebra.org/</li>
+    </ul>
+  </section>
+
+</div><!-- /page-wrapper -->
+
+<footer class="site-footer">
+  <span><strong>Instituto de Educación Digital del Estado de Puebla</strong> &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales</span>
+  <span>Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez</span>
+</footer>
+
+</body>
+</html>
