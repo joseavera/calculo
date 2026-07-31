@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuidad de Funciones — Cálculo Diferencial | IEDEP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <style>
+
+    /* ── Encabezado de bloque numerado ────────────────── */
+    .bloque-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.1rem;
+      padding-bottom: .5rem;
+      border-bottom: 1.5px solid var(--guinda-rule);
+    }
+    .bloque-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .bloque-header h2 { font-family: var(--font-display); font-size: 1.55rem; color: var(--guinda); margin: 0; }
+
+    /* ── Gráfica SVG ──────────────────────────────────── */
+    .graph-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: .8rem .8rem .25rem;
+      margin: 1.1rem 0;
+    }
+    .graph-caption {
+      font-family: var(--font-ui);
+      font-size: .78rem;
+      color: var(--ink-muted);
+      text-align: center;
+      padding: .4rem 0 .5rem;
+      font-style: italic;
+    }
+
+    /* ── Condición: chip de estado ────────────────────── */
+    .conditions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .75rem;
+      margin: 1.1rem 0;
+    }
+    .cond-chip {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-align: center;
+    }
+    .cond-chip .ch {
+      background: var(--guinda);
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: .45rem .5rem;
+      display: block;
+    }
+    .cond-chip .cb {
+      padding: .65rem .6rem;
+      font-size: .87rem;
+      line-height: 1.55;
+      background: var(--off-white);
+    }
+    .cond-chip .cb code {
+      font-family: var(--font-mono);
+      font-size: .83rem;
+      background: var(--surface);
+      padding: .02rem .28rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--guinda-dark);
+    }
+    @media (max-width: 580px) { .conditions-row { grid-template-columns: 1fr; } }
+
+    /* ── Tarjeta de tipo de discontinuidad ────────────── */
+    .disc-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .disc-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .75rem 1.4rem;
+      background: var(--guinda);
+    }
+    .disc-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .disc-title { color: var(--white); font-family: var(--font-ui); font-size: .95rem; font-weight: 600; }
+    .disc-subtitle { color: rgba(255,255,255,.72); font-family: var(--font-ui); font-size: .78rem; margin-top: .1rem; }
+    .disc-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .disc-text { padding: 1.1rem 1.4rem; background: var(--off-white); font-size: .95rem; line-height: 1.7; }
+    .disc-graph { padding: .75rem; background: var(--white); border-left: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+    @media (max-width: 600px) {
+      .disc-body { grid-template-columns: 1fr; }
+      .disc-graph { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    /* ── Comprobación de continuidad ──────────────────── */
+    .check-table { width: 100%; border-collapse: collapse; font-size: .93rem; margin: .9rem 0; }
+    .check-table th { background: var(--guinda); color: var(--white); padding: .5rem .85rem; font-family: var(--font-ui); font-size: .76rem; text-transform: uppercase; letter-spacing: .05em; text-align: left; }
+    .check-table td { padding: .55rem .85rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .check-table tr:nth-child(even) td { background: var(--surface); }
+    .check-table tr:last-child td { border-bottom: none; }
+    .tick-ok  { color: #2A5C2A; font-weight: 700; }
+    .tick-err { color: #7A2020; font-weight: 700; }
+
+    /* ── Pasos ────────────────────────────────────────── */
+    .steps { list-style: none; padding: 0; margin: .75rem 0; }
+    .steps li { display: flex; gap: .85rem; margin-bottom: .85rem; align-items: flex-start; }
+    .sn {
+      min-width: 27px; height: 27px; border-radius: 50%;
+      background: var(--guinda); color: var(--white);
+      font-family: var(--font-ui); font-size: .74rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .st { font-size: .97rem; line-height: 1.68; }
+    .st code { font-family: var(--font-mono); font-size: .88rem; background: var(--surface); padding: .02rem .3rem; border-radius: 3px; border: 1px solid var(--border); color: var(--guinda-dark); }
+
+    /* ── Resultado ────────────────────────────────────── */
+    .result {
+      background: var(--guinda-light); border: 1px solid #D8A8BA;
+      border-radius: var(--radius-sm); padding: .6rem 1rem;
+      font-family: var(--font-mono); font-size: .92rem;
+      color: var(--guinda-dark); margin-top: .85rem; font-weight: 500;
+    }
+
+    /* ── Bloque de ejemplo ────────────────────────────── */
+    .ex { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin: 1.4rem 0; box-shadow: var(--shadow-sm); }
+    .ex-head { background: var(--guinda); color: var(--white); padding: .65rem 1.4rem; font-family: var(--font-ui); font-size: .84rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .ex-tag { font-size: .72rem; background: rgba(255,255,255,.18); padding: .12rem .6rem; border-radius: 99px; letter-spacing: .04em; }
+    .ex-body { padding: 1.2rem 1.5rem; background: var(--off-white); }
+    .ex-q { background: var(--surface); border-left: 3px solid var(--guinda-rule); padding: .8rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: .97rem; margin-bottom: 1rem; line-height: 1.65; }
+
+    /* ── Desmos ───────────────────────────────────────── */
+    .desmos-row { display: flex; align-items: center; gap: .55rem; margin-top: .65rem; flex-wrap: wrap; }
+    .desmos-lbl { font-family: var(--font-ui); font-size: .74rem; color: var(--ink-muted); font-style: italic; }
+    .desmos-btn { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-ui); font-size: .76rem; font-weight: 600; color: var(--guinda); text-decoration: none; padding: .26rem .7rem; border: 1px solid var(--guinda-rule); border-radius: var(--radius-sm); background: var(--guinda-light); transition: background .15s, color .15s; white-space: nowrap; }
+    .desmos-btn:hover { background: var(--guinda); color: var(--white); text-decoration: none; }
+    .desmos-btn::before { content:''; display:inline-block; width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+    /* ── Analogía ─────────────────────────────────────── */
+    .analogy { background: var(--guinda-light); border-left: 4px solid var(--guinda); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; padding: 1.1rem 1.4rem; margin: 1.25rem 0; }
+    .analogy-tag { font-family: var(--font-ui); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--guinda); display: block; margin-bottom: .45rem; }
+    .analogy p { font-size: .97rem; line-height: 1.65; margin-bottom: .4rem; }
+    .analogy p:last-child { margin-bottom: 0; }
+
+    /* ── Refs / conclusión ────────────────────────────── */
+    .concl-list { list-style: none; padding: 0; }
+    .concl-list li { padding: .7rem 0 .7rem 1rem; border-bottom: 1px solid var(--border); font-size: .97rem; position: relative; line-height: 1.65; }
+    .concl-list li::before { content:''; position:absolute; left:0; top:1rem; width:5px; height:5px; border-radius:50%; background:var(--guinda); }
+    .concl-list li:last-child { border-bottom: none; }
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-size: .94rem; padding: .55rem 0; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .ref-list li:last-child { border-bottom: none; }
+    .ry { font-family: var(--font-mono); font-size: .8rem; color: var(--guinda); font-weight: 500; margin-right: .3rem; }
+  </style>
+</head>
+<body>
+
+<!-- CABECERA -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="Imagen1.png" alt="Logotipo IEDEP" style="height:88px;width:auto;">
+  </div>
+  <div class="header-text">
+    <span class="inst-name">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="doc-title">Licenciatura en Sistemas Computacionales &nbsp;·&nbsp; Cálculo Diferencial &nbsp;·&nbsp; Material de clase</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="class-hero">
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem;">
+    <span class="class-label">Unidad 2 &nbsp;·&nbsp; Clase 3 &nbsp;·&nbsp; Límites y Continuidad</span>
+    <h1>Continuidad de Funciones</h1>
+    <span class="class-subtitle">
+      Qué significa que una función sea continua, cómo verificarlo en tres pasos,
+      y cómo identificar los tres tipos de discontinuidad con aplicaciones en sistemas
+    </span>
+    <div class="meta-row">
+      <div class="meta-item">Fecha<span>1 de agosto de 2026</span></div>
+      <div class="meta-item">Duración<span>60 minutos</span></div>
+      <div class="meta-item">Asesor<span>Mtro. José Armando Vera Rodríguez</span></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-wrapper">
+
+  <!-- ══════════ COMPETENCIAS ══════════ -->
+  <section class="section">
+    <span class="section-label">Propósito de la sesión</span>
+    <h2 class="section-title">Competencias a desarrollar</h2>
+
+    <div class="competency-card">
+      <span class="comp-num">01</span>
+      <span class="comp-text">
+        <strong>Definir continuidad en un punto:</strong> enunciar y aplicar las tres condiciones
+        que debe cumplir una función para ser continua en x = c, y verificarlas de forma sistemática.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">02</span>
+      <span class="comp-text">
+        <strong>Clasificar discontinuidades:</strong> identificar y distinguir los tres tipos —
+        removible (hueco), de salto y esencial (asíntota) — tanto en la gráfica como en la expresión algebraica.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">03</span>
+      <span class="comp-text">
+        <strong>Verificar continuidad paso a paso:</strong> aplicar el procedimiento de las tres
+        condiciones a funciones polinomiales, racionales y por partes.
+      </span>
+    </div>
+    <div class="competency-card">
+      <span class="comp-num">04</span>
+      <span class="comp-text">
+        <strong>Conectar continuidad con sistemas computacionales:</strong> reconocer la continuidad
+        como propiedad de confiabilidad y predecibilidad en modelos de recursos, latencia y tráfico de red.
+      </span>
+    </div>
+
+    <div class="callout mt-1">
+      <p>
+        Las clases anteriores desarrollaron la idea de límite y las técnicas para calcularlo.
+        Hoy usamos esos límites para responder una pregunta más profunda: <em>¿la función
+        se comporta de forma predecible cerca de un punto?</em> Eso es la continuidad.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 1: ¿QUÉ ES CONTINUIDAD? ══════════ -->
+  <section class="section">
+    <div class="bloque-header">
+      <span class="bloque-num">1</span>
+      <h2>¿Qué significa que una función sea continua?</h2>
+    </div>
+
+    <p>
+      De manera intuitiva, una función es continua en un punto si su gráfica se puede trazar
+      en ese punto <strong>sin levantar el lápiz</strong>. No hay huecos, no hay saltos,
+      no hay quiebres repentinos. La función llega al punto y sigue su camino sin interrupciones.
+    </p>
+
+    <div class="analogy">
+      <span class="analogy-tag">Analogía — la señal de internet</span>
+      <p>
+        Piensa en la velocidad de conexión de un servidor a lo largo del día. Si la gráfica
+        de velocidad es una curva suave y sin interrupciones, la conexión es continua: en
+        cualquier momento del día puedes predecir la velocidad mirando los valores cercanos.
+      </p>
+      <p>
+        Si de repente la señal cae a cero o salta de 10 Mbps a 100 Mbps sin transición,
+        hay una <strong>discontinuidad</strong>: la función no es predecible en ese instante.
+        Los sistemas que dependen de esa señal no pueden confiar en ella cerca de ese punto.
+      </p>
+    </div>
+
+    <!-- SVG comparativo continua vs discontinua -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 580 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- TÍTULO CONTINUA -->
+        <text x="30" y="18" font-family="Inter,sans-serif" font-size="12" fill="#2A5C2A" font-weight="600">Función CONTINUA en x = c</text>
+        <!-- Ejes izq -->
+        <line x1="30"  y1="170" x2="255" y2="170" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="30"  y1="28"  x2="30"  y2="173" stroke="#CCCCCC" stroke-width="1"/>
+        <!-- curva suave -->
+        <path d="M35,160 Q80,140 120,110 Q155,82 185,70 Q215,58 248,55" stroke="#2A5C2A" stroke-width="2.5" fill="none"/>
+        <!-- punto sólido en c -->
+        <circle cx="185" cy="70" r="6" fill="#2A5C2A" stroke="white" stroke-width="1.5"/>
+        <!-- líneas guía -->
+        <line x1="30"  y1="70" x2="185" y2="70"  stroke="#8FBF8F" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="185" y1="70" x2="185" y2="170" stroke="#8FBF8F" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="8"   y="74"  font-family="JetBrains Mono,monospace" font-size="10" fill="#2A5C2A">L</text>
+        <text x="180" y="183" font-family="JetBrains Mono,monospace" font-size="10" fill="#2A5C2A">c</text>
+        <text x="36"  y="45"  font-family="Inter,sans-serif" font-size="10" fill="#2A5C2A" font-style="italic">f(c) = L = lím → sin levantar el lápiz</text>
+        <polygon points="255,166 262,170 255,174" fill="#CCCCCC"/>
+
+        <!-- DIVISOR -->
+        <line x1="285" y1="20" x2="285" y2="175" stroke="#E2D8DA" stroke-width="1" stroke-dasharray="5 4"/>
+
+        <!-- TÍTULO DISCONTINUA -->
+        <text x="300" y="18" font-family="Inter,sans-serif" font-size="12" fill="#7A2020" font-weight="600">Función DISCONTINUA en x = c</text>
+        <!-- Ejes der -->
+        <line x1="300" y1="170" x2="565" y2="170" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="300" y1="28"  x2="300" y2="173" stroke="#CCCCCC" stroke-width="1"/>
+        <!-- tramo izq -->
+        <path d="M305,160 Q340,140 375,115 Q395,102 406,95" stroke="#7B1034" stroke-width="2.5" fill="none"/>
+        <!-- hueco -->
+        <circle cx="455" cy="70" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <!-- tramo der desde y diferente -->
+        <path d="M456,115 Q480,105 510,90 Q535,78 558,68" stroke="#7B1034" stroke-width="2.5" fill="none"/>
+        <!-- punto del valor real f(c) distinto -->
+        <circle cx="455" cy="115" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+        <!-- guías -->
+        <line x1="300" y1="70"  x2="449" y2="70"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="300" y1="115" x2="455" y2="115" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="455" y1="70"  x2="455" y2="170" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="277" y="74"  font-family="JetBrains Mono,monospace" font-size="10" fill="#C85070">L</text>
+        <text x="277" y="119" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">f(c)</text>
+        <text x="450" y="183" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">c</text>
+        <text x="308" y="45"  font-family="Inter,sans-serif" font-size="10" fill="#7A2020" font-style="italic">lím ≠ f(c) → hay un salto</text>
+        <polygon points="565,166 572,170 565,174" fill="#CCCCCC"/>
+      </svg>
+      <p class="graph-caption">
+        Figura 1. Izquierda: función continua en c — la curva pasa sin interrupción y f(c) coincide con el límite.
+        Derecha: función discontinua — hay un salto; el límite L y el valor real f(c) son diferentes.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 2: LAS TRES CONDICIONES ══════════ -->
+  <section class="section">
+    <div class="bloque-header">
+      <span class="bloque-num">2</span>
+      <h2>Las tres condiciones de continuidad</h2>
+    </div>
+
+    <p>
+      Para que f(x) sea <strong>continua en x = c</strong> deben cumplirse las tres condiciones
+      siguientes al mismo tiempo. Si alguna falla, hay discontinuidad.
+    </p>
+
+    <div class="conditions-row">
+      <div class="cond-chip">
+        <span class="ch">Condición 1</span>
+        <div class="cb">
+          <strong>f(c) existe</strong><br>
+          La función está definida en el punto. No hay división entre cero ni operación inválida cuando se sustituye x = c.
+          <br><br>
+          <code>f(c) = número real</code>
+        </div>
+      </div>
+      <div class="cond-chip">
+        <span class="ch">Condición 2</span>
+        <div class="cb">
+          <strong>El límite existe</strong><br>
+          Cuando x se acerca a c desde la izquierda y desde la derecha, f(x) converge al mismo valor L.
+          <br><br>
+          <code>lím f(x) = L</code><br>
+          <code>x → c</code>
+        </div>
+      </div>
+      <div class="cond-chip">
+        <span class="ch">Condición 3</span>
+        <div class="cb">
+          <strong>f(c) = lím</strong><br>
+          El valor de la función en el punto es exactamente igual al valor del límite. No basta que ambos existan por separado.
+          <br><br>
+          <code>f(c) = lím f(x)</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG de las tres condiciones visualmente -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 580 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- Caso A: las tres cumplen -->
+        <text x="20"  y="17" font-family="Inter,sans-serif" font-size="11" fill="#2A5C2A" font-weight="600">Continua ✓ — las 3 condiciones se cumplen</text>
+        <line x1="20"  y1="175" x2="175" y2="175" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="20"  y1="28"  x2="20"  y2="178" stroke="#CCCCCC" stroke-width="1"/>
+        <path d="M22,170 Q60,150 90,125 Q115,102 135,85 Q155,68 170,58" stroke="#2A5C2A" stroke-width="2.2" fill="none"/>
+        <circle cx="115" cy="102" r="5" fill="#2A5C2A" stroke="white" stroke-width="1.5"/>
+        <line x1="20" y1="102" x2="115" y2="102" stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="115" y1="102" x2="115" y2="175" stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="3"   y="106" font-family="JetBrains Mono,monospace" font-size="9" fill="#2A5C2A">L</text>
+        <text x="111" y="187" font-family="JetBrains Mono,monospace" font-size="9" fill="#2A5C2A">c</text>
+        <text x="22"  y="44"  font-family="Inter,sans-serif" font-size="9" fill="#2A5C2A">f(c) = L ✓</text>
+
+        <!-- Caso B: falla condición 1 (f(c) no existe) -->
+        <text x="205" y="17" font-family="Inter,sans-serif" font-size="11" fill="#7A2020" font-weight="600">Falla C1 — f(c) no existe (hueco)</text>
+        <line x1="205" y1="175" x2="365" y2="175" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="205" y1="28"  x2="205" y2="178" stroke="#CCCCCC" stroke-width="1"/>
+        <path d="M207,170 Q240,148 275,118 Q295,100 305,89" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <circle cx="300" cy="89" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <path d="M302,89 Q322,78 345,62 Q355,54 362,48" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <line x1="205" y1="89" x2="294" y2="89" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="300" y1="89" x2="300" y2="175" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="188"  y="93" font-family="JetBrains Mono,monospace" font-size="9" fill="#C85070">L</text>
+        <text x="296" y="187" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">c</text>
+        <text x="210"  y="44" font-family="Inter,sans-serif" font-size="9" fill="#7A2020">f(c) = ∅ ✗</text>
+
+        <!-- Caso C: falla condición 3 (f(c) ≠ lím) -->
+        <text x="390" y="17" font-family="Inter,sans-serif" font-size="11" fill="#7A2020" font-weight="600">Falla C3 — f(c) ≠ lím (salto)</text>
+        <line x1="390" y1="175" x2="575" y2="175" stroke="#CCCCCC" stroke-width="1"/>
+        <line x1="390" y1="28"  x2="390" y2="178" stroke="#CCCCCC" stroke-width="1"/>
+        <!-- tramo izq hasta hueco en lím -->
+        <path d="M392,170 Q420,148 455,118 Q470,104 482,94" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <circle cx="485" cy="94" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <!-- tramo der -->
+        <path d="M487,130 Q510,118 535,102 Q555,90 570,82" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+        <!-- punto f(c) real, diferente al lím -->
+        <circle cx="485" cy="130" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+        <!-- guías -->
+        <line x1="390" y1="94"  x2="479" y2="94"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="390" y1="130" x2="485" y2="130" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="485" y1="94"  x2="485" y2="175" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="372"  y="98"  font-family="JetBrains Mono,monospace" font-size="9" fill="#C85070">L</text>
+        <text x="368"  y="134" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">f(c)</text>
+        <text x="481" y="187" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">c</text>
+        <text x="396"  y="44"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">f(c) ≠ L ✗</text>
+      </svg>
+      <p class="graph-caption">
+        Figura 2. Los tres casos más frecuentes.
+        Izquierda: continua, las tres condiciones se cumplen.
+        Centro: f(c) no existe — discontinuidad removible (hueco).
+        Derecha: f(c) existe pero difiere del límite — discontinuidad de salto.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 3: TIPOS DE DISCONTINUIDAD ══════════ -->
+  <section class="section">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div class="bloque-header" style="flex:1;">
+        <span class="bloque-num">3</span>
+        <h2>Los tres tipos de discontinuidad</h2>
+      </div>
+      <img src="Imagen2.png" alt="Logo de apoyo IEDEP" style="height:44px;width:auto;opacity:.6;flex-shrink:0;margin-top:.2rem;">
+    </div>
+
+    <!-- TIPO 1: REMOVIBLE -->
+    <div class="disc-card">
+      <div class="disc-head">
+        <div class="disc-icon">I</div>
+        <div>
+          <div class="disc-title">Discontinuidad removible — el hueco</div>
+          <div class="disc-subtitle">El límite existe, pero f(c) no existe o es diferente al límite</div>
+        </div>
+      </div>
+      <div class="disc-body">
+        <div class="disc-text">
+          <p>
+            Es el tipo que ya conoces de las clases anteriores: la función tiene un
+            <strong>hueco</strong> en un punto, pero si rellenaras ese hueco con el valor del límite,
+            la función quedaría continua. Por eso se llama <em>removible</em>: la discontinuidad
+            se puede eliminar redefiniendo la función en ese único punto.
+          </p>
+          <p>
+            <strong>Causa típica:</strong> un factor que se cancela algebraicamente, como (x − 3)
+            en numerador y denominador.
+          </p>
+          <p>
+            <strong>En sistemas:</strong> un valor de configuración que no fue inicializado
+            para un caso específico, pero cuyo comportamiento esperado está claro por los
+            valores circundantes. El sistema puede corregirlo con un valor por defecto.
+          </p>
+        </div>
+        <div class="disc-graph">
+          <svg viewBox="0 0 180 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;display:block;">
+            <line x1="15" y1="125" x2="165" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="15" y1="8"   x2="15"  y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="165,121 172,125 165,129" fill="#CCCCCC"/>
+            <!-- y=x+3, x∈[0,5]: px=15+x*28; py=125-y*9 -->
+            <!-- x=0 px=15  py=98 -->
+            <!-- x=2 px=71  py=80 -->
+            <!-- x=3 px=99  py=71 (hueco) -->
+            <!-- x=5 px=155 py=53 -->
+            <line x1="15"  y1="98"  x2="91"  y2="71"  stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="107" y1="71"  x2="155" y2="53"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="99" cy="71" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="15"  y1="71" x2="92"  y2="71"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="99"  y1="71" x2="99"  y2="125" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="3"   y="75"  font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">L</text>
+            <text x="95"  y="136" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">c</text>
+            <text x="20"  y="26"  font-family="Inter,sans-serif" font-size="9" fill="#7B1034">Hueco en c</text>
+            <text x="20"  y="39"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">lím existe = L</text>
+            <text x="20"  y="52"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">f(c) no existe</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPO 2: SALTO -->
+    <div class="disc-card">
+      <div class="disc-head">
+        <div class="disc-icon">II</div>
+        <div>
+          <div class="disc-title">Discontinuidad de salto</div>
+          <div class="disc-subtitle">El límite por la izquierda y por la derecha existen, pero son diferentes</div>
+        </div>
+      </div>
+      <div class="disc-body">
+        <div class="disc-text">
+          <p>
+            La función <em>salta</em> abruptamente de un valor a otro. El límite por la
+            izquierda (lím x → c⁻) y el límite por la derecha (lím x → c⁺) son números
+            reales, pero distintos. Como no coinciden, el límite <strong>no existe</strong>
+            en ese punto, y la función no puede ser continua ahí.
+          </p>
+          <p>
+            <strong>Causa típica:</strong> funciones definidas por partes donde las dos
+            fórmulas producen valores diferentes exactamente en el punto de empalme.
+          </p>
+          <p>
+            <strong>En sistemas:</strong> un cambio de estado abrupto en un sistema
+            (por ejemplo, precio que cambia de nivel al cruzar un umbral). La gráfica
+            de temperatura de un CPU que sube de repente cuando se activa un proceso
+            pesado puede modelarse con esta discontinuidad.
+          </p>
+        </div>
+        <div class="disc-graph">
+          <svg viewBox="0 0 180 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;display:block;">
+            <line x1="15" y1="125" x2="165" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="15" y1="8"   x2="15"  y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="165,121 172,125 165,129" fill="#CCCCCC"/>
+            <!-- tramo izq termina en y=4 en c=3 → y alto, tramo der empieza en y=8 en c=3 → y bajo -->
+            <!-- px=15+x*28; y alto=4 py=125-4*9=89; y bajo=8 py=125-8*9=53 -->
+            <line x1="15"  y1="116" x2="91"  y2="89"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="99" cy="89" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <circle cx="99" cy="89" r="2.5" fill="#7B1034"/>
+            <line x1="99"  y1="53"  x2="155" y2="35"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="99" cy="53" r="6" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <!-- flecha de salto -->
+            <line x1="115" y1="89" x2="115" y2="60"  stroke="#9C1940" stroke-width="1.5" marker-end="url(#sal)"/>
+            <defs><marker id="sal" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+            <text x="118" y="77"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">salto</text>
+            <line x1="15"  y1="89" x2="93"  y2="89"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="15"  y1="53" x2="93"  y2="53"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="99"  y1="53" x2="99"  y2="125" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="2"   y="93"  font-family="JetBrains Mono,monospace" font-size="8" fill="#9C1940">L⁻</text>
+            <text x="2"   y="57"  font-family="JetBrains Mono,monospace" font-size="8" fill="#7B1034">L⁺</text>
+            <text x="95"  y="136" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">c</text>
+            <text x="16"  y="26"  font-family="Inter,sans-serif" font-size="9" fill="#7B1034">Salto en c</text>
+            <text x="16"  y="39"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">lím izq ≠ lím der</text>
+            <text x="16"  y="52"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">lím no existe</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPO 3: ESENCIAL / ASÍNTOTA -->
+    <div class="disc-card">
+      <div class="disc-head">
+        <div class="disc-icon">III</div>
+        <div>
+          <div class="disc-title">Discontinuidad esencial — la asíntota vertical</div>
+          <div class="disc-subtitle">La función crece o decrece sin límite al acercarse a c</div>
+        </div>
+      </div>
+      <div class="disc-body">
+        <div class="disc-text">
+          <p>
+            El caso más severo: al acercarse a c, la función tiende a +∞ o −∞ (o a ambos
+            desde lados opuestos). No es posible definir un valor en ese punto, y el límite
+            tampoco existe en el sentido usual. Se llama <em>esencial</em> porque no se puede
+            corregir redefiniendo un punto: la ruptura es estructural.
+          </p>
+          <p>
+            <strong>Causa típica:</strong> denominador que se anula sin que el numerador también
+            lo haga. La línea vertical x = c se convierte en una <strong>asíntota vertical</strong>.
+          </p>
+          <p>
+            <strong>En sistemas:</strong> una división entre cero en tiempo de ejecución.
+            Si n peticiones simultáneas y cierta variable llega a cero, el sistema colapsa.
+            Los validadores de código buscan exactamente estas discontinuidades esenciales
+            antes de liberar a producción.
+          </p>
+        </div>
+        <div class="disc-graph">
+          <svg viewBox="0 0 180 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;display:block;">
+            <line x1="15" y1="125" x2="165" y2="125" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="15" y1="8"   x2="15"  y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="165,121 172,125 165,129" fill="#CCCCCC"/>
+            <!-- asíntota vertical en c=3, px=99 -->
+            <line x1="99" y1="8" x2="99" y2="128" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text x="101" y="22" font-family="Inter,sans-serif" font-size="9" fill="#9C1940">x = c</text>
+            <!-- rama izq: y=1/(x-3) para x<3 → y → -∞ -->
+            <!-- x=0 px=15 y=1/-3=-0.33→muy cercano a 0 py≈124; x=2 px=71 y=-1 py=134(fuera); x=2.5 y=-2 ... -->
+            <!-- aproximación visual -->
+            <path d="M15,122 Q40,121 60,119 Q75,117 85,112 Q91,106 94,90 Q96,65 97,20" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <!-- rama der: y=1/(x-3) para x>3 → y → +∞ -->
+            <path d="M101,20 Q102,55 104,80 Q106,98 112,112 Q120,119 135,122 Q150,124 165,125" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <text x="16"  y="28"  font-family="Inter,sans-serif" font-size="9" fill="#7B1034">Asíntota en x=c</text>
+            <text x="16"  y="41"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">f → ±∞</text>
+            <text x="16"  y="54"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">lím no existe</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG panorámico de los tres tipos -->
+    <div class="graph-wrap">
+      <svg viewBox="0 0 580 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <text x="15"  y="14" font-family="Inter,sans-serif" font-size="11" fill="#7B1034" font-weight="600">Tipo I — Removible</text>
+        <text x="210" y="14" font-family="Inter,sans-serif" font-size="11" fill="#7B1034" font-weight="600">Tipo II — Salto</text>
+        <text x="400" y="14" font-family="Inter,sans-serif" font-size="11" fill="#7B1034" font-weight="600">Tipo III — Asíntota</text>
+        <!-- Ejes I -->
+        <line x1="15"  y1="145" x2="175" y2="145" stroke="#E2D8DA" stroke-width="1"/>
+        <line x1="15"  y1="22"  x2="15"  y2="147" stroke="#E2D8DA" stroke-width="1"/>
+        <!-- curva removible -->
+        <line x1="17"  y1="138" x2="81"  y2="110" stroke="#7B1034" stroke-width="2"/>
+        <circle cx="90" cy="105" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <line x1="99"  y1="100" x2="168" y2="72"  stroke="#7B1034" stroke-width="2"/>
+        <text x="30"  y="38"  font-family="Inter,sans-serif" font-size="9" fill="#2A5C2A">lím existe</text>
+        <text x="30"  y="50"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">f(c) no existe</text>
+        <!-- Ejes II -->
+        <line x1="210" y1="145" x2="375" y2="145" stroke="#E2D8DA" stroke-width="1"/>
+        <line x1="210" y1="22"  x2="210" y2="147" stroke="#E2D8DA" stroke-width="1"/>
+        <!-- tramo izq -->
+        <line x1="212" y1="138" x2="278" y2="110" stroke="#7B1034" stroke-width="2"/>
+        <circle cx="288" cy="105" r="5" fill="white" stroke="#7B1034" stroke-width="2"/>
+        <circle cx="288" cy="105" r="2" fill="#7B1034"/>
+        <!-- tramo der más alto -->
+        <circle cx="288" cy="75"  r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+        <line x1="292" y1="72"  x2="368" y2="44"  stroke="#7B1034" stroke-width="2"/>
+        <text x="225" y="38"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">lím izq ≠ lím der</text>
+        <text x="225" y="50"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">lím no existe</text>
+        <!-- Ejes III -->
+        <line x1="400" y1="145" x2="570" y2="145" stroke="#E2D8DA" stroke-width="1"/>
+        <line x1="400" y1="22"  x2="400" y2="147" stroke="#E2D8DA" stroke-width="1"/>
+        <!-- asíntota -->
+        <line x1="480" y1="22" x2="480" y2="148" stroke="#9C1940" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <!-- ramas -->
+        <path d="M402,140 Q430,138 450,132 Q464,124 470,108 Q474,90 476,50" stroke="#7B1034" stroke-width="2" fill="none"/>
+        <path d="M484,50 Q486,90 488,110 Q494,130 508,138 Q530,143 565,145" stroke="#7B1034" stroke-width="2" fill="none"/>
+        <text x="415" y="38"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">f → ±∞</text>
+        <text x="415" y="50"  font-family="Inter,sans-serif" font-size="9" fill="#7A2020">lím no existe</text>
+      </svg>
+      <p class="graph-caption">
+        Figura 3. Panorama de los tres tipos de discontinuidad. El tipo I es el único que puede
+        corregirse algebraicamente; los tipos II y III son rupturas estructurales de la función.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 4: VERIFICACIÓN PASO A PASO ══════════ -->
+  <section class="section">
+    <div class="bloque-header">
+      <span class="bloque-num">4</span>
+      <h2>Cómo verificar continuidad: los tres pasos</h2>
+    </div>
+
+    <p>
+      Para cualquier función y cualquier punto c, aplica siempre este procedimiento en orden.
+      Si alguna condición falla, escribe en cuál falló y clasifica la discontinuidad.
+    </p>
+
+    <!-- ── EJEMPLO 1: CONTINUA ── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 1 — f(x) = x² − 2x + 1 en x = 3</span>
+        <span class="ex-tag">Función continua</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">Determina si f(x) = x² − 2x + 1 es continua en x = 3.</div>
+        <table class="check-table">
+          <thead><tr><th>Condición</th><th>Cálculo</th><th>¿Se cumple?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>C1.</strong> f(3) existe</td>
+              <td>f(3) = 9 − 6 + 1 = <strong>4</strong></td>
+              <td><span class="tick-ok">✓ Sí</span></td>
+            </tr>
+            <tr>
+              <td><strong>C2.</strong> lím f(x) existe cuando x → 3</td>
+              <td>lím (x² − 2x + 1) = f(3) = <strong>4</strong> (polinomio, sustitución directa)</td>
+              <td><span class="tick-ok">✓ Sí, L = 4</span></td>
+            </tr>
+            <tr>
+              <td><strong>C3.</strong> f(3) = lím</td>
+              <td>f(3) = 4 = L = 4 ✓</td>
+              <td><span class="tick-ok">✓ Sí</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">f(x) = x² − 2x + 1 es CONTINUA en x = 3</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="131" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <!-- x²-2x+1=(x-1)²; vértice en (1,0); x∈[-0.5,4.5] -->
+            <!-- px=30+(x+0.5)*72; py=128-y*14 -->
+            <!-- x=0   y=1   px=66  py=114 -->
+            <!-- x=1   y=0   px=138 py=128 (vértice) -->
+            <!-- x=2   y=1   px=210 py=114 -->
+            <!-- x=3   y=4   px=282 py=72 -->
+            <!-- x=4   y=9   px=354 py=2  -->
+            <path d="M52,128 Q138,128 138,128 Q210,114 282,72 Q320,46 354,2" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <path d="M52,128 Q66,114 138,128" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <!-- simplificación: dibujo la parábola completa -->
+            <path d="M30,170 Q138,128 282,72 Q354,2 390,2" stroke="#7B1034" stroke-width="2.2" fill="none"/>
+            <circle cx="282" cy="72" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="30"  y1="72" x2="282" y2="72"  stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="282" y1="72" x2="282" y2="128" stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="10"  y="76"  font-family="JetBrains Mono,monospace" font-size="10" fill="#2A5C2A">4</text>
+            <text x="277" y="141" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">3</text>
+            <text x="36"  y="28"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x) = x² − 2x + 1</text>
+            <text x="36"  y="44"  font-family="Inter,sans-serif" font-size="10" fill="#2A5C2A">Punto sólido en (3, 4) — continua ✓</text>
+          </svg>
+          <p class="graph-caption">Figura 4. La parábola (x − 1)² pasa por (3, 4) sin interrupción. Las tres condiciones se cumplen.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:5,ymax:12}},expressions:{list:[{id:'1',type:'expression',latex:'y=x^2-2x+1',color:'#7B1034',label:'f(x)=x²-2x+1'},{id:'2',type:'expression',latex:'(3,4)',color:'#2A5C2A',showLabel:true,label:'(3,4) — continua'}]}}))))">Abrir gráfica</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── EJEMPLO 2: DISCONTINUIDAD REMOVIBLE ── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 2 — f(x) = (x² − 4)/(x − 2) en x = 2</span>
+        <span class="ex-tag">Discontinuidad removible</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">Determina si f(x) = (x² − 4)/(x − 2) es continua en x = 2 y clasifica la discontinuidad si la hay.</div>
+        <table class="check-table">
+          <thead><tr><th>Condición</th><th>Cálculo</th><th>¿Se cumple?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>C1.</strong> f(2) existe</td>
+              <td>f(2) = (4 − 4)/(2 − 2) = 0/0 — no está definida</td>
+              <td><span class="tick-err">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>C2.</strong> lím f(x) existe cuando x → 2</td>
+              <td>(x²−4)/(x−2) = (x+2)(x−2)/(x−2) = x+2 → lím = 2+2 = <strong>4</strong></td>
+              <td><span class="tick-ok">✓ Sí, L = 4</span></td>
+            </tr>
+            <tr>
+              <td><strong>C3.</strong> f(2) = lím</td>
+              <td>No aplica — C1 ya falló</td>
+              <td><span class="tick-err">✗ No aplica</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">Discontinuidad REMOVIBLE en x = 2 — hueco en (2, 4). El límite existe y vale 4.</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 420 148" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="131" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <!-- y=x+2; x∈[0,6]: px=30+x*56; py=128-y*12 -->
+            <!-- x=0 px=30  py=104 -->
+            <!-- x=2 px=142 py=80 (hueco) -->
+            <!-- x=4 px=254 py=56 -->
+            <!-- x=6 px=366 py=32 -->
+            <line x1="30"  y1="104" x2="134" y2="80" stroke="#7B1034" stroke-width="2.2"/>
+            <line x1="150" y1="80"  x2="366" y2="32" stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="142" cy="80" r="7" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <line x1="30"  y1="80" x2="135" y2="80"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="142" y1="80" x2="142" y2="128" stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="10"  y="84"  font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">4</text>
+            <text x="138" y="141" font-family="JetBrains Mono,monospace" font-size="10" fill="#7B1034">2</text>
+            <text x="200" y="26"  font-family="Inter,sans-serif" font-size="11" fill="#7B1034">f(x) = (x²−4)/(x−2) = x+2 (x≠2)</text>
+            <text x="36"  y="44"  font-family="Inter,sans-serif" font-size="10" fill="#9C1940">Hueco removible en (2, 4)</text>
+          </svg>
+          <p class="graph-caption">Figura 5. Hueco en x = 2. Si definiéramos f(2) = 4, la función quedaría completamente continua.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:7,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{x^2-4}{x-2}',color:'#7B1034',label:'f(x)=(x²-4)/(x-2)'},{id:'2',type:'expression',latex:'(2,4)',color:'#C85070',showLabel:true,label:'hueco (2,4) — lím=4'}]}}))))">Abrir gráfica</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── EJEMPLO 3: DISCONTINUIDAD DE SALTO (función por partes) ── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 3 — Función por partes en x = 1</span>
+        <span class="ex-tag">Discontinuidad de salto</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          Sea la función definida por partes:<br>
+          f(x) = 2x + 1 &nbsp; si x &lt; 1<br>
+          f(x) = 5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; si x = 1<br>
+          f(x) = x + 4 &nbsp;&nbsp; si x &gt; 1<br>
+          ¿Es continua en x = 1?
+        </div>
+        <table class="check-table">
+          <thead><tr><th>Condición</th><th>Cálculo</th><th>¿Se cumple?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>C1.</strong> f(1) existe</td>
+              <td>f(1) = 5 (dado directamente en la definición)</td>
+              <td><span class="tick-ok">✓ Sí, f(1) = 5</span></td>
+            </tr>
+            <tr>
+              <td><strong>C2.</strong> lím existe cuando x → 1</td>
+              <td>
+                lím izq (x → 1⁻): f(x) = 2x+1 → 2(1)+1 = <strong>3</strong><br>
+                lím der (x → 1⁺): f(x) = x+4 → 1+4 = <strong>5</strong><br>
+                lím izq (3) ≠ lím der (5)
+              </td>
+              <td><span class="tick-err">✗ No — el lím no existe</span></td>
+            </tr>
+            <tr>
+              <td><strong>C3.</strong> f(1) = lím</td>
+              <td>No aplica — C2 ya falló</td>
+              <td><span class="tick-err">✗ No aplica</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">Discontinuidad de SALTO en x = 1 — lím izq (3) ≠ lím der (5). El límite no existe.</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 420 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="131" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <!-- 2x+1 para x<1: x=0→1(py=118), x=1→3(py=94) con hueco -->
+            <!-- x+4 para x>1: x=1→5(py=70) con hueco, x=3→7(py=46) -->
+            <!-- px=30+x*90; py=128-y*14 -->
+            <!-- x=0 2x+1=1  px=30  py=114 -->
+            <!-- x=1 2x+1=3  px=120 py=86 (hueco fin izq) -->
+            <!-- x=1 x+4=5   px=120 py=58 (hueco inicio der) -->
+            <!-- x=1 f(1)=5  punto sólido en py=58 -->
+            <!-- x=3 x+4=7   px=300 py=30 -->
+            <!-- x=0.5 2x+1=2 px=75 py=100 -->
+            <line x1="30"  y1="114" x2="112" y2="86"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="120" cy="86" r="6" fill="white" stroke="#7B1034" stroke-width="2"/>
+            <!-- punto sólido f(1)=5 -->
+            <circle cx="120" cy="58" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <!-- tramo der con hueco en inicio -->
+            <circle cx="120" cy="58" r="6" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="128"  y1="54"  x2="300" y2="30" stroke="#7B1034" stroke-width="2.2"/>
+            <!-- guías -->
+            <line x1="30"  y1="86" x2="114" y2="86"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="30"  y1="58" x2="114" y2="58"  stroke="#D8A8BA" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="120" y1="58" x2="120" y2="128" stroke="#D8A8DA" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="90"  font-family="JetBrains Mono,monospace" font-size="9" fill="#9C1940">3</text>
+            <text x="6"   y="62"  font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">5</text>
+            <text x="116" y="141" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">1</text>
+            <!-- flecha salto -->
+            <line x1="138" y1="86" x2="138" y2="64" stroke="#9C1940" stroke-width="1.5" marker-end="url(#sal2)"/>
+            <defs><marker id="sal2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9C1940"/></marker></defs>
+            <text x="142" y="78"  font-family="Inter,sans-serif" font-size="9" fill="#9C1940">salto = 2</text>
+            <text x="40"  y="26"  font-family="Inter,sans-serif" font-size="10" fill="#7B1034">2x+1 (x&lt;1)</text>
+            <text x="200" y="26"  font-family="Inter,sans-serif" font-size="10" fill="#7B1034">x+4 (x&gt;1)</text>
+          </svg>
+          <p class="graph-caption">Figura 6. El tramo izquierdo (2x+1) llega a 3, el derecho (x+4) empieza en 5, y f(1)=5. El salto entre 3 y 5 confirma la discontinuidad.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:5,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=2x+1\\left\\{x<1\\right\\}',color:'#7B1034',label:'2x+1 (x<1)'},{id:'2',type:'expression',latex:'y=5\\left\\{x=1\\right\\}',color:'#9C1940',label:'f(1)=5'},{id:'3',type:'expression',latex:'y=x+4\\left\\{x>1\\right\\}',color:'#550B23',label:'x+4 (x>1)'}]}}))))">Abrir gráfica</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── EJEMPLO 4: ESENCIAL / ASÍNTOTA ── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 4 — f(x) = 1/(x − 2) en x = 2</span>
+        <span class="ex-tag">Discontinuidad esencial</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">Determina si f(x) = 1/(x − 2) es continua en x = 2.</div>
+        <table class="check-table">
+          <thead><tr><th>Condición</th><th>Cálculo</th><th>¿Se cumple?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>C1.</strong> f(2) existe</td>
+              <td>f(2) = 1/(2 − 2) = 1/0 — división entre cero</td>
+              <td><span class="tick-err">✗ No</span></td>
+            </tr>
+            <tr>
+              <td><strong>C2.</strong> lím existe cuando x → 2</td>
+              <td>
+                x → 2⁻: denominador → 0⁻, f(x) → −∞<br>
+                x → 2⁺: denominador → 0⁺, f(x) → +∞<br>
+                La función crece sin límite — no converge
+              </td>
+              <td><span class="tick-err">✗ No — tiende a ±∞</span></td>
+            </tr>
+            <tr>
+              <td><strong>C3.</strong> f(2) = lím</td>
+              <td>No aplica — C1 y C2 fallaron</td>
+              <td><span class="tick-err">✗ No aplica</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="result">Discontinuidad ESENCIAL en x = 2 — asíntota vertical. La función tiende a ±∞.</div>
+        <div class="desmos-row" style="margin-top:.7rem;">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-2,ymin:-10,xmax:6,ymax:10}},expressions:{list:[{id:'1',type:'expression',latex:'y=\\frac{1}{x-2}',color:'#7B1034',label:'f(x)=1/(x-2)'},{id:'2',type:'expression',latex:'x=2',color:'#9C1940',style:'DASHED',label:'asíntota x=2'}]}}))))">Abrir gráfica</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── EJEMPLO 5: INFORMÁTICO ── -->
+    <div class="ex">
+      <div class="ex-head">
+        <span>Ejemplo 5 — Continuidad en un modelo de latencia de red</span>
+        <span class="ex-tag">Aplicación informática</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-q">
+          La latencia de un servidor está modelada por la función por partes:<br>
+          L(t) = 3t + 2 &nbsp;&nbsp; si t &lt; 4 &nbsp;&nbsp;(carga normal)<br>
+          L(t) = 2t + 6 &nbsp;&nbsp; si t ≥ 4 &nbsp;&nbsp;(carga alta)<br>
+          donde t son las tareas activas. ¿Es continua en t = 4? ¿Qué implica en el sistema?
+        </div>
+        <ul class="steps">
+          <li>
+            <span class="sn">1</span>
+            <span class="st">
+              <strong>C1 — L(4) existe:</strong> para t ≥ 4, L(4) = 2(4) + 6 = 14 ms. ✓
+            </span>
+          </li>
+          <li>
+            <span class="sn">2</span>
+            <span class="st">
+              <strong>C2 — ¿Existe el límite cuando t → 4?</strong><br>
+              lím izq (t → 4⁻): L(t) = 3t + 2 → 3(4) + 2 = <strong>14</strong><br>
+              lím der (t → 4⁺): L(t) = 2t + 6 → 2(4) + 6 = <strong>14</strong><br>
+              Ambos lados convergen a 14. El límite existe y vale 14. ✓
+            </span>
+          </li>
+          <li>
+            <span class="sn">3</span>
+            <span class="st">
+              <strong>C3 — L(4) = lím:</strong> L(4) = 14 = lím = 14. ✓
+            </span>
+          </li>
+        </ul>
+        <div class="result">L(t) es CONTINUA en t = 4 — la transición entre modos de carga no produce un salto en la latencia</div>
+        <div class="graph-wrap" style="margin-top:.9rem;">
+          <svg viewBox="0 0 420 152" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <line x1="30" y1="128" x2="390" y2="128" stroke="#CCCCCC" stroke-width="1"/>
+            <line x1="30" y1="8"   x2="30"  y2="131" stroke="#CCCCCC" stroke-width="1"/>
+            <polygon points="390,124 397,128 390,132" fill="#CCCCCC"/>
+            <text x="392" y="132" font-family="Inter,sans-serif" font-size="11" fill="#999">t</text>
+            <text x="18"  y="7"   font-family="Inter,sans-serif" font-size="11" fill="#999">L</text>
+            <!-- 3t+2 para t<4: t=0→2(py=120), t=2→8(py=96), t=4→14(py=72) con punto hueco en fin -->
+            <!-- 2t+6 para t>=4: t=4→14(py=72) punto sólido, t=6→18(py=56), t=7→20(py=48) -->
+            <!-- px=30+t*46; py=128-t_y*4 donde t_y es y de la función -->
+            <!-- t=0 y=2  px=30  py=120 -->
+            <!-- t=2 y=8  px=122 py=96 -->
+            <!-- t=4 y=14 px=214 py=72 -->
+            <!-- t=6 y=18 px=306 py=56 -->
+            <!-- t=7 y=20 px=352 py=48 -->
+            <line x1="30"  y1="120" x2="206" y2="72"  stroke="#7B1034" stroke-width="2.2"/>
+            <circle cx="214" cy="72" r="5" fill="#7B1034" stroke="white" stroke-width="1.5"/>
+            <line x1="214" y1="72"  x2="352" y2="48"  stroke="#550B23" stroke-width="2.2" stroke-dasharray="5 2"/>
+            <!-- líneas guía -->
+            <line x1="30"  y1="72" x2="214" y2="72"  stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+            <line x1="214" y1="72" x2="214" y2="128" stroke="#8FBF8F" stroke-width="1" stroke-dasharray="3 2"/>
+            <text x="6"   y="76"  font-family="JetBrains Mono,monospace" font-size="9" fill="#2A5C2A">14</text>
+            <text x="210" y="141" font-family="JetBrains Mono,monospace" font-size="9" fill="#7B1034">4</text>
+            <text x="36"  y="32"  font-family="Inter,sans-serif" font-size="10" fill="#7B1034">L(t) = 3t+2 (t&lt;4)</text>
+            <text x="240" y="52"  font-family="Inter,sans-serif" font-size="10" fill="#550B23">L(t) = 2t+6 (t≥4)</text>
+            <text x="36"  y="46"  font-family="Inter,sans-serif" font-size="10" fill="#2A5C2A">Continua en t=4 ✓ — sin salto</text>
+          </svg>
+          <p class="graph-caption">Figura 7. Aunque la fórmula cambia en t = 4, ambos tramos se encuentran exactamente en (4, 14 ms). El sistema transita entre modos de carga sin salto de latencia.</p>
+        </div>
+        <div class="desmos-row">
+          <span class="desmos-lbl">Ver en Desmos:</span>
+          <a class="desmos-btn" href="https://www.desmos.com/calculator?lang=es" target="_blank" rel="noopener"
+             onclick="this.href='https://www.desmos.com/calculator?lang=es#'+btoa(unescape(encodeURIComponent(JSON.stringify({version:9,graph:{viewport:{xmin:-1,ymin:-1,xmax:8,ymax:25}},expressions:{list:[{id:'1',type:'expression',latex:'y=3x+2\\left\\{x<4\\right\\}',color:'#7B1034',label:'L(t)=3t+2 (t<4)'},{id:'2',type:'expression',latex:'y=2x+6\\left\\{x\\ge4\\right\\}',color:'#550B23',label:'L(t)=2t+6 (t≥4)'},{id:'3',type:'expression',latex:'(4,14)',color:'#2A5C2A',showLabel:true,label:'(4, 14 ms) — continua'}]}}))))">Abrir gráfica</a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BLOQUE 5: EJERCICIOS ══════════ -->
+  <section class="section">
+    <div class="bloque-header">
+      <span class="bloque-num">5</span>
+      <h2>Ejercicios para resolver en clase</h2>
+    </div>
+
+    <p>
+      Para cada función verifica las tres condiciones en el punto indicado.
+      Escribe el resultado de cada condición y concluye si la función es continua o
+      qué tipo de discontinuidad tiene.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>N.°</th>
+          <th>Función</th>
+          <th>Punto a verificar</th>
+          <th>Pista</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>f(x) = 3x² + 1</td>
+          <td>x = 2</td>
+          <td>Polinomio — sustitución directa funciona en C1, C2 y C3.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>f(x) = (x² − 9)/(x − 3)</td>
+          <td>x = 3</td>
+          <td>¿Qué pasa en C1? ¿Qué tipo de discontinuidad es?</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>f(x) = 1/(x + 1)</td>
+          <td>x = −1</td>
+          <td>¿Qué pasa en el denominador? ¿A qué tiende la función?</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>
+            f(x) = x + 1 si x &lt; 2<br>
+            f(x) = 4 &nbsp;&nbsp;&nbsp;&nbsp; si x = 2<br>
+            f(x) = x + 3 si x &gt; 2
+          </td>
+          <td>x = 2</td>
+          <td>Calcula lím izq y lím der por separado. ¿Coinciden?</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>
+            El consumo de un proceso: C(n) = 2n + 5 si n &lt; 3 y C(n) = n + 8 si n ≥ 3 MB.
+            ¿Es continuo en n = 3? ¿Qué significa para el sistema?
+          </td>
+          <td>n = 3</td>
+          <td>Aplica las tres condiciones. Interpreta el resultado en términos de recursos del proceso.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ CONCLUSIÓN ══════════ -->
+  <section class="section">
+    <span class="section-label">Cierre de la sesión</span>
+    <h2 class="section-title">Conclusión</h2>
+
+    <ul class="concl-list">
+      <li>
+        <strong>La continuidad se verifica con tres condiciones, no con una.</strong>
+        No basta que f(c) exista, ni que el límite exista: deben existir ambos
+        y coincidir. Si cualquiera de las tres falla, hay discontinuidad.
+      </li>
+      <li>
+        <strong>Los tres tipos de discontinuidad tienen causas y consecuencias distintas.</strong>
+        La removible se puede corregir algebraicamente o redefiniendo un punto.
+        La de salto indica un cambio brusco de régimen en el modelo.
+        La esencial señala un colapso estructural de la función: la asíntota vertical.
+      </li>
+      <li>
+        <strong>Las funciones polinomiales siempre son continuas.</strong>
+        Para cualquier polinomio y cualquier punto c, las tres condiciones se cumplen
+        automáticamente porque la sustitución directa siempre funciona.
+        Solo las funciones racionales, por partes o con raíces pueden tener discontinuidades.
+      </li>
+      <li>
+        <strong>Las funciones por partes requieren verificar los límites laterales.</strong>
+        El punto crítico es siempre el valor de empalme: hay que calcular por separado el
+        límite por la izquierda y por la derecha, y comparar ambos con el valor de la función.
+      </li>
+      <li>
+        <strong>En sistemas computacionales, la continuidad equivale a predecibilidad.</strong>
+        Un modelo continuo garantiza que pequeños cambios en la entrada producen pequeños
+        cambios en la salida. Una discontinuidad indica un punto donde el sistema puede
+        comportarse de forma impredecible, y esos puntos son los que el ingeniero debe
+        validar, manejar o proteger.
+      </li>
+    </ul>
+
+    <div class="callout mt-1">
+      <p>
+        <strong>Próxima clase:</strong> Unidad 2, Clase 4 — Límites al infinito y asíntotas
+        horizontales. Veremos qué ocurre con f(x) cuando x crece sin límite y cómo identificar
+        el comportamiento a largo plazo de una función, con aplicaciones en complejidad algorítmica.
+      </p>
+    </div>
+  </section>
+
+
+  <hr class="section-rule">
+
+
+  <!-- ══════════ BIBLIOGRAFÍA ══════════ -->
+  <section class="section">
+    <span class="section-label">Bibliografía</span>
+    <h2 class="section-title">Referencias bibliográficas</h2>
+    <p class="text-muted">Formato APA 7.ª edición — Unidad 2, Límites y Continuidad.</p>
+
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1rem 0 .75rem;">Básica</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2022</span>Martínez, R. (2022). <em>El rigor del límite: Perspectivas formales y pedagógicas en el cálculo diferencial.</em> Universidad de Buenos Aires (UBA).</li>
+      <li><span class="ry">2021</span>Ruiz, A. (2021). Estrategias para el cálculo de límites al infinito en ciencias computacionales. <em>Revista de Educación en Ingeniería, México.</em></li>
+      <li><span class="ry">2025</span>Castro, S. (2025). Estudio de asíntotas y comportamiento local de funciones racionales complejas. <em>Revista Colombiana de Matemáticas.</em></li>
+      <li><span class="ry">2023</span>López, F. (2023). <em>Análisis de continuidad y estabilidad en modelos dinámicos lineales y no lineales.</em> Universidad de Santiago de Chile.</li>
+    </ul>
+
+    <h4 style="color:var(--guinda);font-family:var(--font-ui);font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;margin:1.5rem 0 .75rem;">Complementaria</h4>
+    <ul class="ref-list">
+      <li><span class="ry">2016</span>Stewart, J. (2016). <em>Cálculo: Trascendentes tempranas</em> (8.ª ed.). Cengage Learning. Capítulo 2: Continuidad.</li>
+      <li><span class="ry">2017</span>Larson, R. y Edwards, B. (2017). <em>Cálculo</em> (10.ª ed.). McGraw-Hill Education.</li>
+      <li>Desmos. (s.f.). <em>Calculadora gráfica interactiva.</em> https://www.desmos.com/calculator</li>
+      <li>GeoGebra. (s.f.). <em>Applets de funciones con parámetros ajustables.</em> https://www.geogebra.org/</li>
+    </ul>
+  </section>
+
+</div><!-- /page-wrapper -->
+
+<footer class="site-footer">
+  <span><strong>Instituto de Educación Digital del Estado de Puebla</strong> &nbsp;·&nbsp; Licenciatura en Sistemas Computacionales</span>
+  <span>Cálculo Diferencial &nbsp;·&nbsp; Mtro. José Armando Vera Rodríguez</span>
+</footer>
+
+</body>
+</html>
