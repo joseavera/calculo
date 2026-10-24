@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integración por sustitución · Cálculo Integral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --guinda:#490b58; --guinda-dark:#37073f; --guinda-light:#F5E8EE; --rose:#C85070;
+  --white:#FFFFFF; --off:#FAFAFA; --surface:#F6F4F4; --border:#E2D8DA; --border-strong:#C8B4BA;
+  --ink:#1A1215; --ink2:#5C4850; --muted:#8C7880;
+  --ok:#1f7a4d; --ok-bg:#E8F5EE; --bad:#b3261e; --bad-bg:#FDECEA; --warn-bg:#FFF8E6; --warn-bd:#F0D9A0;
+  --blue:#1a5fa0; --blue-bg:#E8F1FA;
+  --font-display:'Cormorant Garamond',Georgia,serif; --font-body:'Source Serif 4',Georgia,serif;
+  --font-ui:'Inter','Segoe UI',system-ui,sans-serif; --font-mono:'JetBrains Mono','Courier New',monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--white);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.7}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0 0 .6rem;color:var(--ink)}
+h1{font-size:2.3rem;line-height:1.12;color:var(--guinda)}
+h2{font-size:1.65rem;color:var(--guinda);margin-top:2.6rem;display:flex;align-items:center;gap:.7rem;border-bottom:2px solid var(--guinda-light);padding-bottom:.35rem}
+h2 .num{font-family:var(--font-ui);font-size:.85rem;font-weight:700;background:var(--guinda);color:#fff;width:2rem;height:2rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+h3{font-size:1.2rem;color:var(--guinda-dark)}
+p{margin:.5rem 0 .9rem}
+.page{max-width:900px;margin:0 auto;padding:0 1.5rem 3rem}
+sup{font-size:.7em;line-height:0}
+
+/* header */
+.site-header{border-bottom:3px solid var(--guinda);padding:.9rem 1.5rem;display:flex;align-items:center;gap:.9rem}
+.site-header img{width:46px;height:46px;border-radius:50%;object-fit:cover}
+.site-header .inst{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--guinda);display:block;line-height:1.2}
+.site-header .sub{font-family:var(--font-ui);font-size:.8rem;color:var(--ink2)}
+.hero{display:flex;gap:1.2rem;align-items:center;justify-content:space-between;margin:1.8rem 0 1rem}
+.hero img.mascot{width:120px;height:auto;flex-shrink:0}
+.kicker{font-family:var(--font-ui);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:700}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.6rem;margin:1rem 0 1.4rem}
+.meta div{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem .8rem;font-family:var(--font-ui);font-size:.86rem}
+.meta b{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.1rem}
+.comp{background:var(--guinda-light);border-left:4px solid var(--guinda);border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:1rem 0}
+.comp ul{margin:.4rem 0 0;padding-left:1.2rem}
+
+/* agenda */
+.agenda{display:flex;border-radius:10px;overflow:hidden;margin:.8rem 0 .3rem;font-family:var(--font-ui);font-size:.74rem;color:#fff;font-weight:600}
+.agenda div{padding:.55rem .5rem;text-align:center;line-height:1.25}
+.agenda .a1{background:#490b58;flex:20}.agenda .a2{background:#6b2a7c;flex:30}.agenda .a3{background:#8c4a9a;flex:20}
+.agenda .a4{background:#C85070;flex:25}.agenda .a5{background:#a63d5a;flex:25}
+.agenda small{display:block;font-weight:400;opacity:.9}
+.agenda-note{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);margin-bottom:1rem}
+
+/* bloques */
+.callout{border-radius:10px;padding:.85rem 1.1rem;margin:1rem 0;font-size:.95rem;border:1px solid var(--warn-bd);background:var(--warn-bg)}
+.callout.ok{background:var(--ok-bg);border-color:#b9dfc9}
+.callout.bad{background:var(--bad-bg);border-color:#efbcb7}
+.callout.info{background:var(--blue-bg);border-color:#bcd5ee}
+.callout .t{display:block;font-family:var(--font-ui);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:.15rem;color:#8a6410}
+.callout.ok .t{color:var(--ok)}.callout.bad .t{color:var(--bad)}.callout.info .t{color:var(--blue)}
+.formula{background:var(--off);border:1px solid var(--border);border-left:4px solid var(--guinda);border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:1rem 0;text-align:center;font-size:1.35rem;overflow-x:auto}
+.formula.big{font-size:1.7rem;padding:1.3rem}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .15em;line-height:1.25}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .3em}
+.frac>span:last-child{padding:0 .3em}
+.hl-old{background:#F2D9E3;border-radius:4px;padding:0 .2em;color:var(--guinda-dark)}
+.hl-new{background:#D5EEDF;border-radius:4px;padding:0 .2em;color:var(--ok)}
+.hl-c{background:#DCE9F7;border-radius:4px;padding:0 .2em;color:var(--blue)}
+.var{font-style:italic}
+
+/* tarjetas de pasos */
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;margin:1rem 0}
+.step3{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;position:relative;font-size:.93rem}
+.step3 .b{position:absolute;top:-.8rem;left:.9rem;width:1.7rem;height:1.7rem;border-radius:50%;color:#fff;font-family:var(--font-ui);font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.step3 strong{display:block;margin-top:.5rem;font-family:var(--font-ui);font-size:.88rem}
+.step3.s1 .b{background:var(--rose)}.step3.s2 .b{background:var(--ok)}.step3.s3 .b{background:var(--blue)}
+.step3.s1{border-top:3px solid var(--rose)}.step3.s2{border-top:3px solid var(--ok)}.step3.s3{border-top:3px solid var(--blue)}
+
+/* ejercicios resueltos */
+.exc{background:var(--white);border:1px solid var(--border);border-radius:14px;margin:1.2rem 0;overflow:hidden;box-shadow:0 2px 8px rgba(73,11,88,.05)}
+.exc-head{background:var(--guinda);color:#fff;padding:.7rem 1.1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.exc-head .n{font-family:var(--font-ui);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.exc-head .q{font-size:1.35rem;flex:1;min-width:200px}
+.exc-body{padding:.4rem 1.1rem 1rem}
+.line{display:grid;grid-template-columns:7.2rem 1fr;gap:.7rem;align-items:center;padding:.65rem 0;border-bottom:1px dashed var(--border)}
+.line:last-child{border-bottom:none}
+.line .lbl{font-family:var(--font-ui);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.line .math{font-size:1.18rem;overflow-x:auto}
+.line .why{display:block;font-family:var(--font-ui);font-size:.8rem;color:var(--ink2);margin-top:.15rem}
+.final{background:var(--ok-bg);border:1.5px solid #9fd4b6;border-radius:8px;padding:.5rem .8rem;display:inline-block;font-size:1.2rem}
+.check{background:var(--blue-bg);border:1px solid #bcd5ee;border-radius:8px;padding:.4rem .8rem;display:inline-block;font-size:1.02rem}
+
+/* tablas */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.93rem;font-family:var(--font-ui)}
+th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--border);vertical-align:middle}
+th{background:var(--guinda);color:#fff;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}
+td.math{font-family:var(--font-body);font-size:1.08rem;white-space:nowrap}
+tr.exception td{background:var(--bad-bg)}
+
+/* figuras */
+figure{margin:1.2rem 0;text-align:center}
+figcaption{font-family:var(--font-ui);font-size:.8rem;color:var(--muted);margin-top:.3rem}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.panel{background:var(--off);border:1px solid var(--border);border-radius:12px;padding:.8rem;text-align:center}
+.panel h4{margin:0 0 .3rem;font-family:var(--font-ui);font-size:.85rem;color:var(--guinda)}
+
+/* errores */
+.errors{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.8rem}
+.err{border:1px solid #efbcb7;background:var(--bad-bg);border-radius:10px;padding:.75rem .9rem;font-size:.92rem}
+.err b{font-family:var(--font-ui);color:var(--bad);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;display:block}
+
+/* semáforo */
+.traffic{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem;margin:1rem 0}
+.light{border-radius:12px;padding:.9rem 1rem;border:2px solid;display:flex;gap:.8rem;align-items:flex-start}
+.light .dot{width:1.5rem;height:1.5rem;border-radius:50%;flex-shrink:0;margin-top:.2rem}
+.light.go{border-color:#9fd4b6;background:var(--ok-bg)}.light.go .dot{background:var(--ok)}
+.light.stop{border-color:#efbcb7;background:var(--bad-bg)}.light.stop .dot{background:var(--bad)}
+
+/* calculadora */
+.calc{background:var(--surface);border:1.5px solid var(--border-strong);border-radius:14px;padding:1.2rem;margin:1rem 0}
+.calc .row{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:1rem}
+.calc label{display:block;font-family:var(--font-ui);font-size:.78rem;font-weight:600;color:var(--guinda);margin-bottom:.25rem}
+.calc input{font-family:var(--font-mono);font-size:1rem;padding:.55rem .7rem;width:8rem;border:1px solid var(--border-strong);border-radius:6px}
+.calc button{font-family:var(--font-ui);font-weight:600;background:var(--guinda);color:#fff;border:none;border-radius:8px;padding:.65rem 1.2rem;cursor:pointer;font-size:.9rem}
+.calc button:hover{background:var(--guinda-dark)}
+.calc .out{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;min-height:5rem;font-size:1.05rem}
+.calc .out .ln{margin:.25rem 0}
+.calc .hint{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);margin-top:.5rem}
+
+/* práctica */
+.ex{background:var(--white);border:1px solid var(--border);border-radius:10px;margin:.7rem 0;overflow:hidden}
+.ex .q{padding:.8rem 1rem;font-size:1.1rem}
+.ex .q .n{font-family:var(--font-ui);color:var(--guinda);font-weight:700;margin-right:.5rem;font-size:.9rem}
+.ex .q small{display:block;font-family:var(--font-ui);font-size:.78rem;color:var(--muted)}
+details{border-top:1px solid var(--border);background:var(--surface)}
+summary{cursor:pointer;padding:.55rem 1rem;font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--guinda)}
+details .sol{padding:.2rem 1rem .9rem;font-size:1rem}
+.res{display:inline-block;margin-top:.3rem;background:var(--guinda);color:#fff;border-radius:6px;padding:.2rem .7rem;font-size:1.05rem}
+.lvl{display:inline-block;font-family:var(--font-ui);font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:.1rem .55rem;margin-left:.4rem;vertical-align:middle}
+.lvl.l1{background:var(--ok-bg);color:var(--ok)}.lvl.l2{background:var(--warn-bg);color:#8a6410}.lvl.l3{background:var(--bad-bg);color:var(--bad)}
+
+ol.checklist{padding-left:1.2rem}
+.refs{font-size:.9rem}.refs li{margin-bottom:.4rem}
+.site-footer{background:var(--guinda);color:rgba(255,255,255,.85);padding:1.3rem 1.5rem;font-family:var(--font-ui);font-size:.8rem;text-align:center}
+.site-footer img{width:56px;height:auto;display:block;margin:0 auto .5rem}
+@media(max-width:560px){.line{grid-template-columns:1fr;gap:.2rem}.hero img.mascot{display:none}h1{font-size:1.9rem}}
+@media print{details{display:block}details>summary{display:none}.calc{display:none}}
+
+
+/* ===== extras de esta clase ===== */
+.agenda .a6{background:#7a2f45;flex:10}
+.flow{display:flex;gap:.4rem;flex-wrap:wrap;align-items:stretch;margin:1.2rem 0}
+.flow .st{flex:1;min-width:130px;background:var(--white);border:1px solid var(--border);border-top:4px solid var(--guinda);border-radius:10px;padding:.7rem .7rem;font-size:.86rem;font-family:var(--font-ui);position:relative}
+.flow .st b{display:block;color:var(--guinda);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.15rem}
+.flow .st .m{font-family:var(--font-body);font-size:1rem;margin-top:.25rem}
+.flow .st:nth-child(2){border-top-color:#6b2a7c}.flow .st:nth-child(3){border-top-color:#8c4a9a}
+.flow .st:nth-child(4){border-top-color:var(--rose)}.flow .st:nth-child(5){border-top-color:var(--ok)}
+.code{background:#1f1722;color:#f2e8f5;border-radius:10px;padding:.9rem 1.1rem;font-family:var(--font-mono);font-size:.86rem;line-height:1.6;overflow-x:auto;margin:1rem 0;white-space:pre}
+.code .c{color:#a58cb0}.code .k{color:#ff9ec0}.code .n{color:#9fe3b8}
+.quiz .qb{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;margin:.8rem 0}
+.quiz .qb .qt{font-size:1.05rem;margin-bottom:.6rem}
+.quiz .qb .qt .qn{font-family:var(--font-ui);font-size:.75rem;font-weight:700;color:var(--guinda);text-transform:uppercase;letter-spacing:.08em;margin-right:.4rem}
+.opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt{font-family:var(--font-body);font-size:1rem;background:var(--off);border:1.5px solid var(--border-strong);border-radius:8px;padding:.45rem .9rem;cursor:pointer;color:var(--ink)}
+.opt:hover{border-color:var(--guinda);background:var(--guinda-light)}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.no{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{font-family:var(--font-ui);font-size:.85rem;margin-top:.6rem;display:none;padding:.5rem .7rem;border-radius:8px}
+.fb.show{display:block}.fb.good{background:var(--ok-bg);color:var(--ok)}.fb.bad{background:var(--bad-bg);color:var(--bad)}
+.score{font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--guinda);margin-top:.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0 1rem}
+.chip{font-family:var(--font-body);font-size:1rem;background:var(--white);border:1.5px solid var(--border-strong);border-radius:999px;padding:.4rem 1rem;cursor:pointer}
+.chip:hover{border-color:var(--guinda)}
+.chip.on{background:var(--guinda);color:#fff;border-color:var(--guinda)}
+.lab{background:var(--surface);border:1.5px solid var(--border-strong);border-radius:14px;padding:1.1rem;margin:1rem 0}
+.lab .head{font-size:1.5rem;text-align:center;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.7rem;margin-bottom:.8rem}
+.lab .row{display:grid;grid-template-columns:7rem 1fr;gap:.7rem;align-items:center;padding:.5rem .2rem;border-bottom:1px dashed var(--border-strong);animation:fadein .35s}
+.lab .row .lb{font-family:var(--font-ui);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.lab .row .mm{font-size:1.15rem;overflow-x:auto}
+.lab .row.fin .mm{font-size:1.25rem}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.btn{font-family:var(--font-ui);font-weight:600;font-size:.88rem;background:var(--guinda);color:#fff;border:none;border-radius:8px;padding:.6rem 1.1rem;cursor:pointer;margin:.4rem .4rem 0 0}
+.btn:hover{background:var(--guinda-dark)}
+.btn.sec{background:var(--white);color:var(--guinda);border:1.5px solid var(--guinda)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.sim{background:var(--surface);border:1.5px solid var(--border-strong);border-radius:14px;padding:1rem;margin:1rem 0}
+.sim input[type=range]{width:100%;accent-color:#490b58}
+.sim .read{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0}
+.sim .read div{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.5rem .8rem;font-family:var(--font-ui);font-size:.82rem}
+.sim .read b{display:block;font-size:1.15rem;color:var(--guinda);font-family:var(--font-body)}
+.pistas td:first-child{font-family:var(--font-ui);font-weight:600}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem;margin:1rem 0}
+.cmp .box{border-radius:12px;padding:.9rem 1rem;border:1.5px solid var(--border-strong);background:var(--white)}
+.cmp .box h4{margin:0 0 .3rem;font-family:var(--font-ui);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--guinda)}
+@media(max-width:560px){.lab .row{grid-template-columns:1fr;gap:.1rem}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="imagen1.png" alt="Logotipo Mixtle" onerror="this.style.display='none'">
+  <div>
+    <span class="inst">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="sub">Material de clase · Cálculo Integral</span>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div>
+      <span class="kicker">Unidad 1 · Integral indefinida</span>
+      <h1>Integración por sustitución</h1>
+      <p style="margin:.3rem 0 0;color:var(--ink2)">Aprenderás a "empacar" una expresión complicada en una variable auxiliar <em>u</em> para convertirla en una integral que ya sabes resolver con la tabla de fórmulas.</p>
+    </div>
+    <img class="mascot" src="imagen2.png" alt="Mascota Mixtle" onerror="this.style.display='none'">
+  </section>
+
+  <div class="meta">
+    <div><b>Programa educativo</b>Licenciatura en Sistemas Computacionales</div>
+    <div><b>Asignatura</b>Cálculo Integral</div>
+    <div><b>Unidad</b>1 · Integral indefinida</div>
+    <div><b>Tema</b>1.3 Integración por sustitución (cambio de variable)</div>
+    <div><b>Fecha</b>24 de octubre de 2026</div>
+    <div><b>Docente</b>Mtro. José Armando Vera Rodríguez</div>
+  </div>
+
+  <div class="comp">
+    <strong>Competencias a desarrollar</strong>
+    <ul>
+      <li>Identificar cuándo una integral se puede simplificar con un cambio de variable y elegir correctamente la variable auxiliar <em>u</em>.</li>
+      <li>Aplicar el método de sustitución en cinco pasos a integrales básicas (argumentos lineales y expresiones del tipo 2x·(x²+1)ⁿ).</li>
+      <li>Verificar el resultado de una integral derivando o evaluándolo numéricamente.</li>
+      <li>Resolver problemas sencillos de Sistemas Computacionales (descarga de datos, sensores y solicitudes a servidores) usando sustitución y condiciones iniciales.</li>
+    </ul>
+  </div>
+
+  <strong style="font-family:var(--font-ui);font-size:.85rem">Ruta de la sesión (2 horas)</strong>
+  <div class="agenda">
+    <div class="a1">1. Repaso<small>15 min</small></div>
+    <div class="a2">2. La idea<small>20 min</small></div>
+    <div class="a3">3. Método<small>25 min</small></div>
+    <div class="a4">4. Laboratorio<small>30 min</small></div>
+    <div class="a5">5. Aplicación<small>20 min</small></div>
+    <div class="a6">6. Práctica<small>10 min</small></div>
+  </div>
+  <div class="agenda-note">La sesión del 17 de octubre no se impartió, por lo que este tema se recorrió una semana. Los tiempos son una guía.</div>
+
+  <!-- ============ 1. REPASO ============ -->
+  <h2><span class="num">1</span>Calentamiento: ¿recuerdas la clase del 10 de octubre?</h2>
+  <p>Como pasaron dos semanas, empezamos con tres preguntas rápidas. Toca la respuesta que creas correcta.</p>
+  <div class="quiz" id="quiz-repaso"></div>
+  <div class="score" id="score-repaso"></div>
+
+  <!-- ============ 2. LA IDEA ============ -->
+  <h2><span class="num">2</span>La idea: una variable auxiliar para simplificar</h2>
+  <p>Mira esta integral: <strong>&int; (3x + 2)<sup>4</sup> dx</strong>. La tabla sabe resolver &int; u<sup>4</sup> du, pero aquí la base no es "x" sino "3x + 2". ¿Qué hacemos? <strong>Le ponemos un nombre más simple</strong>.</p>
+
+  <div class="callout info"><span class="t">Analogía de programación</span>Es igual que cuando refactorizas código: en lugar de repetir una expresión larga, la guardas en una variable auxiliar y trabajas con ella. Después del cálculo, "deshaces" el cambio y vuelves a tus variables originales.</div>
+
+<div class="code"><span class="c"># Idea de sustitución, escrita como código</span>
+x = <span class="n">1</span>
+u = <span class="n">3</span>*x + <span class="n">2</span>          <span class="c"># variable auxiliar: u = 3x + 2</span>
+resultado = u**<span class="n">5</span> / <span class="n">15</span>  <span class="c"># integral ya simple, en términos de u</span>
+<span class="c"># al final se escribe en términos de x: (3x + 2)^5 / 15</span></div>
+
+  <h3>¿De dónde sale? La regla de la cadena al revés</h3>
+  <p>Derivar un paréntesis elevado a una potencia deja la derivada de "lo de adentro" multiplicando afuera. La sustitución hace el camino contrario: reconoce esa pieza que sobra y la absorbe en <em>du</em>.</p>
+  <div class="cmp">
+    <div class="box"><h4>Derivar (cadena)</h4>
+      <div style="font-size:1.1rem">d/dx [ (x<sup>2</sup>+1)<sup>4</sup> ] = 4(x<sup>2</sup>+1)<sup>3</sup> &middot; <span class="hl-old">2x</span></div>
+      <p style="font-size:.88rem;margin:.4rem 0 0">Aparece <span class="hl-old">2x</span>: la derivada de lo de adentro.</p></div>
+    <div class="box"><h4>Integrar (sustitución)</h4>
+      <div style="font-size:1.1rem">&int; (x<sup>2</sup>+1)<sup>3</sup> &middot; <span class="hl-old">2x</span> dx = <span class="frac"><span>(x<sup>2</sup>+1)<sup>4</sup></span><span>4</span></span> + C</div>
+      <p style="font-size:.88rem;margin:.4rem 0 0">Si ves <span class="hl-old">2x</span> junto al paréntesis, es la señal de que u = x<sup>2</sup>+1.</p></div>
+  </div>
+
+  <!-- ============ 3. MÉTODO ============ -->
+  <h2><span class="num">3</span>El método en cinco pasos</h2>
+  <div class="flow">
+    <div class="st"><b>Paso 1</b>Elige u<div class="m">u = lo de adentro</div></div>
+    <div class="st"><b>Paso 2</b>Calcula du<div class="m">du = u' dx</div></div>
+    <div class="st"><b>Paso 3</b>Sustituye<div class="m">todo en u y du</div></div>
+    <div class="st"><b>Paso 4</b>Integra<div class="m">con la tabla</div></div>
+    <div class="st"><b>Paso 5</b>Regresa a x<div class="m">u = expresión original</div></div>
+  </div>
+
+  <h3>Ejemplo guiado: &int; (3x + 2)<sup>4</sup> dx</h3>
+  <div class="exc">
+    <div class="exc-body">
+      <div class="line"><span class="lbl">Paso 1</span><div class="math">Elegimos <span class="hl-old">u = 3x + 2</span><span class="why">Es lo que está dentro del paréntesis elevado a la potencia.</span></div></div>
+      <div class="line"><span class="lbl">Paso 2</span><div class="math">du = 3 dx &nbsp;&rArr;&nbsp; dx = <span class="frac"><span>du</span><span>3</span></span><span class="why">Derivamos u y despejamos dx para poder reemplazarlo.</span></div></div>
+      <div class="line"><span class="lbl">Paso 3</span><div class="math">&int; u<sup>4</sup> &middot; <span class="frac"><span>du</span><span>3</span></span> = <span class="frac"><span>1</span><span>3</span></span> &int; u<sup>4</sup> du<span class="why">El 1/3 es una constante: puede salir de la integral.</span></div></div>
+      <div class="line"><span class="lbl">Paso 4</span><div class="math"><span class="frac"><span>1</span><span>3</span></span> &middot; <span class="frac"><span>u<sup>5</sup></span><span>5</span></span> = <span class="frac"><span>u<sup>5</sup></span><span>15</span></span><span class="why">Regla de la potencia que ya conoces.</span></div></div>
+      <div class="line"><span class="lbl">Paso 5</span><div class="math"><span class="final"><span class="frac"><span>(3x + 2)<sup>5</sup></span><span>15</span></span> + C</span><span class="why">Se sustituye u = 3x + 2 de regreso. Siempre se contesta en la variable original.</span></div></div>
+      <div class="line"><span class="lbl">Verificar</span><div class="math"><span class="check">d/dx = <span class="frac"><span>5(3x+2)<sup>4</sup> &middot; 3</span><span>15</span></span> = (3x+2)<sup>4</sup></span> &#10003;</div></div>
+    </div>
+  </div>
+
+  <h3>Pistas para elegir u</h3>
+  <div class="table-wrap">
+  <table class="pistas">
+    <tr><th>Si ves...</th><th>Entonces u =</th><th>Ejemplo</th></tr>
+    <tr><td>Un paréntesis elevado a una potencia</td><td class="math">lo del paréntesis</td><td class="math">(3x+2)<sup>4</sup> &rarr; u = 3x+2</td></tr>
+    <tr><td>Algo dentro de sen, cos o e<sup>(...)</sup></td><td class="math">el argumento</td><td class="math">cos(5x) &rarr; u = 5x</td></tr>
+    <tr><td>Una fracción 1/(...)</td><td class="math">el denominador</td><td class="math">1/(2x+3) &rarr; u = 2x+3</td></tr>
+    <tr><td>Una expresión y, multiplicando, su derivada</td><td class="math">la expresión</td><td class="math">2x(x<sup>2</sup>+1)<sup>3</sup> &rarr; u = x<sup>2</sup>+1</td></tr>
+  </table>
+  </div>
+  <div class="callout"><span class="t">Regla de oro</span>Después de elegir u, todo lo que quede en la integral debe poder escribirse con u y du. Si sobra una "x" que no desaparece, probablemente elegiste otra u.</div>
+
+  <h3>Entrenador rápido: ¿cuánto vale du?</h3>
+  <p>Antes del laboratorio, practica el paso 2: derivar u y escribir du.</p>
+  <div class="quiz" id="quiz-du"></div>
+  <div class="score" id="score-du"></div>
+
+  <!-- ============ 4. LABORATORIO ============ -->
+  <h2><span class="num">4</span>Laboratorio de sustitución</h2>
+  <p>Elige una integral, decide <strong>tú</strong> qué debe ser u y avanza paso a paso. El último paso comprueba el resultado con una derivada numérica, como lo haría un programa.</p>
+  <div class="chips" id="lab-chips"></div>
+  <div class="lab" id="lab">
+    <div class="head" id="lab-head">Selecciona una integral para comenzar</div>
+    <div id="lab-body"></div>
+  </div>
+
+  <!-- ============ 5. APLICACIÓN ============ -->
+  <h2><span class="num">5</span>Aplicaciones en Sistemas Computacionales</h2>
+  <p>La sustitución aparece cada vez que una tasa depende de una expresión como <em>0.2t</em> o <em>2t + 1</em>. Revisemos tres escenarios.</p>
+
+  <div class="exc">
+    <div class="exc-head"><span class="n">Caso 1 · Redes</span><span class="q">Descarga que acelera con el tiempo</span></div>
+    <div class="exc-body">
+      <div class="line"><span class="lbl">Situación</span><div class="math" style="font-size:1rem">La velocidad de descarga de un archivo crece como <span class="var">v</span>(<span class="var">t</span>) = e<sup>0.2<span class="var">t</span></sup> MB/s, con <span class="var">t</span> en segundos. Si al inicio hay 0 MB descargados, ¿cuántos MB habrá en <span class="var">t</span> = 10 s?</div></div>
+      <div class="line"><span class="lbl">Paso 1 y 2</span><div class="math">u = 0.2<span class="var">t</span> &nbsp;&rArr;&nbsp; du = 0.2 d<span class="var">t</span> &nbsp;&rArr;&nbsp; d<span class="var">t</span> = 5 du</div></div>
+      <div class="line"><span class="lbl">Paso 3 y 4</span><div class="math">&int; e<sup>u</sup> &middot; 5 du = 5e<sup>u</sup></div></div>
+      <div class="line"><span class="lbl">Paso 5</span><div class="math"><span class="var">D</span>(<span class="var">t</span>) = 5e<sup>0.2<span class="var">t</span></sup> + C</div></div>
+      <div class="line"><span class="lbl">Constante</span><div class="math" style="font-size:1rem"><span class="var">D</span>(0) = 0 &rArr; 5 + C = 0 &rArr; <strong>C = &minus;5</strong></div></div>
+      <div class="line"><span class="lbl">Resultado</span><div class="math"><span class="final"><span class="var">D</span>(10) = 5(e<sup>2</sup> &minus; 1) &asymp; 31.95 MB</span></div></div>
+    </div>
+  </div>
+
+  <h3>Simulador: D(t) = 5(e<sup>0.2t</sup> &minus; 1)</h3>
+  <div class="sim">
+    <label for="sim-t" style="font-family:var(--font-ui);font-size:.82rem;font-weight:600;color:var(--guinda)">Mueve el control para cambiar el tiempo t (segundos)</label>
+    <input type="range" id="sim-t" min="0" max="20" step="0.5" value="10">
+    <div class="read">
+      <div>Tiempo<b id="o-t">10 s</b></div>
+      <div>Velocidad v(t)<b id="o-v">7.39 MB/s</b></div>
+      <div>Descargado D(t)<b id="o-d">31.95 MB</b></div>
+    </div>
+    <svg viewBox="0 0 340 200" width="100%" style="max-width:520px;display:block;margin:0 auto" role="img" aria-label="Curva de datos descargados">
+      <line x1="40" y1="170" x2="320" y2="170" stroke="#8C7880" stroke-width="1.5"/>
+      <line x1="40" y1="170" x2="40" y2="14" stroke="#8C7880" stroke-width="1.5"/>
+      <path id="sim-curve" fill="none" stroke="#1f7a4d" stroke-width="3"/>
+      <line id="sim-vline" y1="170" stroke="#C85070" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <circle id="sim-pt" r="6" fill="#C85070"/>
+      <text x="40" y="188" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#5C4850">0</text>
+      <text x="320" y="188" text-anchor="end" font-family="Inter,sans-serif" font-size="11" fill="#5C4850">20 s</text>
+      <text x="14" y="22" font-family="Inter,sans-serif" font-size="11" fill="#5C4850">MB</text>
+    </svg>
+  </div>
+
+  <div class="exc">
+    <div class="exc-head"><span class="n">Caso 2 · IoT</span><span class="q">Acelerómetro de un dispositivo</span></div>
+    <div class="exc-body">
+      <div class="line"><span class="lbl">Situación</span><div class="math" style="font-size:1rem">Un acelerómetro mide <span class="var">a</span>(<span class="var">t</span>) = cos(4<span class="var">t</span>) m/s<sup>2</sup> (con <span class="var">t</span> en radianes). Si parte del reposo, ¿cuál es la velocidad en <span class="var">t</span> = &pi;/8?</div></div>
+      <div class="line"><span class="lbl">Sustitución</span><div class="math">u = 4<span class="var">t</span>, &nbsp; du = 4 d<span class="var">t</span> &nbsp;&rArr;&nbsp; d<span class="var">t</span> = <span class="frac"><span>du</span><span>4</span></span></div></div>
+      <div class="line"><span class="lbl">Integrar</span><div class="math">&int; cos u &middot; <span class="frac"><span>du</span><span>4</span></span> = <span class="frac"><span>sen u</span><span>4</span></span> &nbsp;&rArr;&nbsp; <span class="var">v</span>(<span class="var">t</span>) = <span class="frac"><span>sen(4<span class="var">t</span>)</span><span>4</span></span> + C</div></div>
+      <div class="line"><span class="lbl">Constante</span><div class="math" style="font-size:1rem"><span class="var">v</span>(0) = 0 &rArr; sen(0)/4 + C = 0 &rArr; <strong>C = 0</strong></div></div>
+      <div class="line"><span class="lbl">Resultado</span><div class="math"><span class="final"><span class="var">v</span>(&pi;/8) = <span class="frac"><span>sen(&pi;/2)</span><span>4</span></span> = 0.25 m/s</span></div></div>
+    </div>
+  </div>
+
+  <div class="exc">
+    <div class="exc-head"><span class="n">Caso 3 · Servidores</span><span class="q">Solicitudes acumuladas</span></div>
+    <div class="exc-body">
+      <div class="line"><span class="lbl">Situación</span><div class="math" style="font-size:1rem">Un servidor recibe solicitudes a una tasa <span class="var">r</span>(<span class="var">t</span>) = (2<span class="var">t</span> + 1)<sup>2</sup> solicitudes por minuto. Si en <span class="var">t</span> = 0 ya había 100 acumuladas, ¿cuántas habrá en <span class="var">t</span> = 3 min?</div></div>
+      <div class="line"><span class="lbl">Sustitución</span><div class="math">u = 2<span class="var">t</span> + 1, &nbsp; du = 2 d<span class="var">t</span> &nbsp;&rArr;&nbsp; d<span class="var">t</span> = <span class="frac"><span>du</span><span>2</span></span></div></div>
+      <div class="line"><span class="lbl">Integrar</span><div class="math"><span class="frac"><span>1</span><span>2</span></span>&int; u<sup>2</sup> du = <span class="frac"><span>u<sup>3</sup></span><span>6</span></span> &nbsp;&rArr;&nbsp; <span class="var">N</span>(<span class="var">t</span>) = <span class="frac"><span>(2<span class="var">t</span>+1)<sup>3</sup></span><span>6</span></span> + C</div></div>
+      <div class="line"><span class="lbl">Constante</span><div class="math" style="font-size:1rem"><span class="var">N</span>(0) = 100 &rArr; 1/6 + C = 100 &rArr; <strong>C = 100 &minus; 1/6</strong></div></div>
+      <div class="line"><span class="lbl">Resultado</span><div class="math"><span class="final"><span class="var">N</span>(3) = <span class="frac"><span>343</span><span>6</span></span> + 100 &minus; <span class="frac"><span>1</span><span>6</span></span> = 57 + 100 = 157</span><span class="why">Son 157 solicitudes acumuladas a los 3 minutos.</span></div></div>
+    </div>
+  </div>
+
+  <!-- ============ 6. PRÁCTICA ============ -->
+  <h2><span class="num">6</span>Práctica en clase</h2>
+  <p>Resuelve en tu cuaderno con los cinco pasos y verifica derivando. Abre la solución solo para comparar.</p>
+
+  <div class="ex"><div class="q"><span class="n">P1</span>&int; (2x + 1)<sup>3</sup> dx <span class="lvl l1">Básico</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = 2x + 1, du = 2 dx, dx = du/2. &int; u<sup>3</sup> &middot; du/2 = (1/2)(u<sup>4</sup>/4) = u<sup>4</sup>/8.<br><span class="res">(2x + 1)<sup>4</sup>/8 + C</span></div></details></div>
+
+  <div class="ex"><div class="q"><span class="n">P2</span>&int; sen(3x) dx <span class="lvl l1">Básico</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = 3x, du = 3 dx. (1/3)&int; sen u du = (1/3)(&minus;cos u).<br><span class="res">&minus;cos(3x)/3 + C</span></div></details></div>
+
+  <div class="ex"><div class="q"><span class="n">P3</span>&int; e<sup>5x</sup> dx <span class="lvl l1">Básico</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = 5x, du = 5 dx. (1/5)&int; e<sup>u</sup> du = e<sup>u</sup>/5.<br><span class="res">e<sup>5x</sup>/5 + C</span></div></details></div>
+
+  <div class="ex"><div class="q"><span class="n">P4</span>&int; 1/(4x &minus; 1) dx <span class="lvl l2">Intermedio</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = 4x &minus; 1, du = 4 dx. (1/4)&int; (1/u) du = (1/4) ln|u|.<br><span class="res">(1/4) ln|4x &minus; 1| + C</span></div></details></div>
+
+  <div class="ex"><div class="q"><span class="n">P5</span>&int; 2x(x<sup>2</sup> + 4)<sup>2</sup> dx <span class="lvl l2">Intermedio</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = x<sup>2</sup> + 4, du = 2x dx; la expresión 2x dx ya es du. &int; u<sup>2</sup> du = u<sup>3</sup>/3.<br><span class="res">(x<sup>2</sup> + 4)<sup>3</sup>/3 + C</span></div></details></div>
+
+  <div class="ex"><div class="q"><span class="n">P6</span>Una transferencia tiene velocidad v(t) = (3t + 2)<sup>2</sup> MB/s y parte de 0 MB. Encuentra D(t) y calcula D(2). <span class="lvl l3">Aplicación</span></div>
+    <details><summary>Ver solución</summary><div class="sol">u = 3t + 2, du = 3 dt. D(t) = (1/3)(u<sup>3</sup>/3) + C = (3t+2)<sup>3</sup>/9 + C. Con D(0) = 0: 8/9 + C = 0, C = &minus;8/9.<br><span class="res">D(t) = [(3t+2)<sup>3</sup> &minus; 8]/9</span><br>D(2) = (512 &minus; 8)/9 = 504/9 = <strong>56 MB</strong>.</div></details></div>
+
+  <h3>Errores frecuentes</h3>
+  <div class="errors">
+    <div class="err"><b>Olvidar dx &rarr; du</b>No basta con reemplazar la expresión por u; también debes convertir dx.</div>
+    <div class="err"><b>Dejar la respuesta en u</b>El resultado final debe escribirse con la variable original (x o t).</div>
+    <div class="err"><b>Ignorar el factor constante</b>En &int;cos(5x)dx falta dividir entre 5; si lo olvidas, la derivada no regresa al integrando.</div>
+    <div class="err"><b>Sacar una variable de la integral</b>Solo las constantes pueden salir; una "x" no.</div>
+  </div>
+
+  <h2>Conclusión</h2>
+  <p>La integración por sustitución es la regla de la cadena aplicada al revés: se elige una variable auxiliar u, se convierte dx en du, se integra con la tabla de fórmulas y se regresa a la variable original. Con las pistas para elegir u y la verificación por derivada, puedes resolver integrales como (3x+2)<sup>4</sup>, cos(5x) o 2x(x<sup>2</sup>+1)<sup>3</sup> y aplicarlas a descargas, sensores y servidores, donde la constante de integración representa el estado inicial del sistema.</p>
+
+  <h2>Referencias bibliográficas</h2>
+  <ul class="refs">
+    <li>Dawkins, P. (2022). <em>Paul's Online Math Notes: Calculus I</em>. Lamar University. https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx</li>
+    <li>OpenStax. (2016). <em>Calculus Volume 2</em>. Rice University. https://openstax.org/details/books/calculus-volume-2</li>
+    <li>OpenStax. (2016). <em>Calculus Volume 1</em>. Rice University. https://openstax.org/details/books/calculus-volume-1</li>
+    <li>MIT OpenCourseWare. (2010). <em>Single Variable Calculus (18.01SC)</em>. Massachusetts Institute of Technology. https://ocw.mit.edu</li>
+    <li>Khan Academy. (s. f.). <em>Cálculo integral</em>. https://es.khanacademy.org/math/integral-calculus</li>
+  </ul>
+
+</main>
+
+<footer class="site-footer">
+  <img src="imagen2.png" alt="Mascota Mixtle" onerror="this.style.display='none'">
+  Instituto de Educación Digital del Estado de Puebla · Cálculo Integral · Mtro. José Armando Vera Rodríguez
+</footer>
+
+<script>
+(function(){
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function fr(a,b){return '<span class="frac"><span>'+a+'</span><span>'+b+'</span></span>';}
+
+  /* ---------- Cuestionarios con retroalimentación ---------- */
+  function buildQuiz(boxId, scoreId, data){
+    var box=document.getElementById(boxId), sc=document.getElementById(scoreId);
+    var hits=0, done=0;
+    data.forEach(function(q,qi){
+      var qb=document.createElement('div'); qb.className='qb';
+      qb.innerHTML='<div class="qt"><span class="qn">Pregunta '+(qi+1)+'</span>'+q.q+'</div>';
+      var opts=document.createElement('div'); opts.className='opts';
+      var fb=document.createElement('div'); fb.className='fb';
+      shuffle(q.o).forEach(function(o){
+        var b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML=o.t;
+        b.addEventListener('click',function(){
+          var all=opts.querySelectorAll('.opt'); for(var i=0;i<all.length;i++){all[i].disabled=true;}
+          done++;
+          if(o.ok){b.classList.add('ok');hits++;fb.className='fb show good';fb.innerHTML='&#10003; Correcto. '+q.e;}
+          else{b.classList.add('no');
+            for(var i=0;i<all.length;i++){ if(all[i].getAttribute('data-ok')==='1'){all[i].classList.add('ok');} }
+            fb.className='fb show bad';fb.innerHTML='&#10007; No es esa. '+q.e;}
+          sc.textContent='Aciertos: '+hits+' de '+data.length+(done===data.length?' (completado)':'');
+        });
+        if(o.ok){b.setAttribute('data-ok','1');}
+        opts.appendChild(b);
+      });
+      qb.appendChild(opts); qb.appendChild(fb); box.appendChild(qb);
+    });
+    sc.textContent='Aciertos: 0 de '+data.length;
+  }
+
+  buildQuiz('quiz-repaso','score-repaso',[
+    {q:'&int; x<sup>5</sup> dx = ?', o:[{t:'x<sup>6</sup>/6 + C',ok:true},{t:'x<sup>6</sup> + C'},{t:'5x<sup>4</sup> + C'}], e:'Se sube el exponente (5+1 = 6) y se divide entre 6.'},
+    {q:'&int; (1/x) dx = ?', o:[{t:'ln|x| + C',ok:true},{t:'x<sup>0</sup>/0 + C'},{t:'e<sup>x</sup> + C'}], e:'Es la excepción n = &minus;1 de la regla de la potencia: su integral es el logaritmo natural.'},
+    {q:'¿Cómo compruebas que una integral quedó bien?', o:[{t:'Derivando el resultado',ok:true},{t:'Integrando otra vez'},{t:'Quitando la constante C'}], e:'Al derivar la antiderivada debes regresar exactamente al integrando.'}
+  ]);
+
+  buildQuiz('quiz-du','score-du',[
+    {q:'Si u = 5x, entonces...', o:[{t:'du = 5 dx',ok:true},{t:'du = 5x dx'},{t:'du = dx'}], e:'La derivada de 5x es 5, por lo tanto du = 5 dx.'},
+    {q:'Si u = x<sup>2</sup> + 1, entonces...', o:[{t:'du = 2x dx',ok:true},{t:'du = x dx'},{t:'du = 2 dx'}], e:'La derivada de x<sup>2</sup> + 1 es 2x.'},
+    {q:'Si u = 4x &minus; 1, entonces...', o:[{t:'du = 4 dx',ok:true},{t:'du = &minus;1 dx'},{t:'du = 4x dx'}], e:'La derivada de 4x &minus; 1 es 4; el &minus;1 desaparece al derivar.'},
+    {q:'Si u = &minus;2x, entonces...', o:[{t:'du = &minus;2 dx',ok:true},{t:'du = 2 dx'},{t:'du = &minus;2x dx'}], e:'El signo se conserva: la derivada de &minus;2x es &minus;2.'}
+  ]);
+
+  /* ---------- Laboratorio ---------- */
+  var LAB=[
+    {n:'(3x + 2)<sup>4</sup>', head:'&int; (3x + 2)<sup>4</sup> dx', u:'3x + 2', w:['x','3x'],
+     du:'du = 3 dx', desp:'dx = '+fr('du',3), sust:fr(1,3)+' &int; u<sup>4</sup> du', integ:fr(1,3)+' &middot; '+fr('u<sup>5</sup>',5)+' = '+fr('u<sup>5</sup>',15),
+     fin:fr('(3x + 2)<sup>5</sup>',15)+' + C', f:function(x){return Math.pow(3*x+2,4);}, F:function(x){return Math.pow(3*x+2,5)/15;}},
+    {n:'cos(5x)', head:'&int; cos(5x) dx', u:'5x', w:['cos(5x)','x'],
+     du:'du = 5 dx', desp:'dx = '+fr('du',5), sust:fr(1,5)+' &int; cos u du', integ:fr(1,5)+' sen u',
+     fin:fr('sen(5x)',5)+' + C', f:function(x){return Math.cos(5*x);}, F:function(x){return Math.sin(5*x)/5;}},
+    {n:'e<sup>2x</sup>', head:'&int; e<sup>2x</sup> dx', u:'2x', w:['e<sup>2x</sup>','2'],
+     du:'du = 2 dx', desp:'dx = '+fr('du',2), sust:fr(1,2)+' &int; e<sup>u</sup> du', integ:fr(1,2)+' e<sup>u</sup>',
+     fin:fr('e<sup>2x</sup>',2)+' + C', f:function(x){return Math.exp(2*x);}, F:function(x){return Math.exp(2*x)/2;}},
+    {n:'2x(x<sup>2</sup> + 1)<sup>3</sup>', head:'&int; 2x(x<sup>2</sup> + 1)<sup>3</sup> dx', u:'x<sup>2</sup> + 1', w:['2x','(x<sup>2</sup> + 1)<sup>3</sup>'],
+     du:'du = 2x dx', desp:'2x dx = du (ya aparece completo en la integral)', sust:'&int; u<sup>3</sup> du', integ:fr('u<sup>4</sup>',4),
+     fin:fr('(x<sup>2</sup> + 1)<sup>4</sup>',4)+' + C', f:function(x){return 2*x*Math.pow(x*x+1,3);}, F:function(x){return Math.pow(x*x+1,4)/4;}},
+    {n:'x cos(x<sup>2</sup>)', head:'&int; x cos(x<sup>2</sup>) dx', u:'x<sup>2</sup>', w:['cos(x<sup>2</sup>)','x'],
+     du:'du = 2x dx', desp:'x dx = '+fr('du',2), sust:fr(1,2)+' &int; cos u du', integ:fr(1,2)+' sen u',
+     fin:fr('sen(x<sup>2</sup>)',2)+' + C', f:function(x){return x*Math.cos(x*x);}, F:function(x){return Math.sin(x*x)/2;}},
+    {n:'1/(2x + 3)', head:'&int; '+fr(1,'2x + 3')+' dx', u:'2x + 3', w:[fr(1,'2x + 3'),'2x'],
+     du:'du = 2 dx', desp:'dx = '+fr('du',2), sust:fr(1,2)+' &int; '+fr(1,'u')+' du', integ:fr(1,2)+' ln|u|',
+     fin:fr(1,2)+' ln|2x + 3| + C', f:function(x){return 1/(2*x+3);}, F:function(x){return Math.log(Math.abs(2*x+3))/2;}}
+  ];
+  var chips=document.getElementById('lab-chips'), head=document.getElementById('lab-head'), body=document.getElementById('lab-body');
+  var cur=null, stepIdx=0, btnNext=null;
+
+  LAB.forEach(function(it,i){
+    var c=document.createElement('button'); c.type='button'; c.className='chip'; c.innerHTML=it.n;
+    c.addEventListener('click',function(){
+      var all=chips.querySelectorAll('.chip'); for(var k=0;k<all.length;k++){all[k].classList.remove('on');}
+      c.classList.add('on'); startLab(i);
+    });
+    chips.appendChild(c);
+  });
+
+  function row(lbl,html,cls){
+    var r=document.createElement('div'); r.className='row'+(cls?' '+cls:'');
+    r.innerHTML='<span class="lb">'+lbl+'</span><div class="mm">'+html+'</div>';
+    body.appendChild(r); return r;
+  }
+  function startLab(i){
+    cur=LAB[i]; stepIdx=0; body.innerHTML=''; head.innerHTML=cur.head;
+    var box=document.createElement('div'); box.id='lab-choose';
+    box.innerHTML='<div style="font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--guinda);margin-bottom:.5rem">Paso 1. ¿Qué eliges como u?</div>';
+    var opts=document.createElement('div'); opts.className='opts';
+    var fb=document.createElement('div'); fb.className='fb';
+    var choices=shuffle([{t:cur.u,ok:true}].concat(cur.w.map(function(w){return {t:w};})));
+    choices.forEach(function(o){
+      var b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML='u = '+o.t;
+      b.addEventListener('click',function(){
+        if(o.ok){
+          var all=opts.querySelectorAll('.opt'); for(var k=0;k<all.length;k++){all[k].disabled=true;}
+          b.classList.add('ok'); fb.className='fb show good'; fb.innerHTML='&#10003; Buena elección. Continúa con los siguientes pasos.';
+          setTimeout(function(){ box.remove(); row('Paso 1','u = '+cur.u); addNext(); },650);
+        }else{
+          b.classList.add('no'); b.disabled=true; fb.className='fb show bad';
+          fb.innerHTML='&#10007; Esa no simplifica la integral. Recuerda: u suele ser lo que está "adentro" (paréntesis, argumento o denominador), y su derivada debe aparecer en la integral.';
+        }
+      });
+      opts.appendChild(b);
+    });
+    box.appendChild(opts); box.appendChild(fb); body.appendChild(box);
+  }
+  function addNext(){
+    btnNext=document.createElement('button'); btnNext.type='button'; btnNext.className='btn'; btnNext.textContent='Siguiente paso';
+    btnNext.addEventListener('click',nextStep);
+    var rs=document.createElement('button'); rs.type='button'; rs.className='btn sec'; rs.textContent='Reiniciar';
+    rs.addEventListener('click',function(){ var idx=LAB.indexOf(cur); startLab(idx); });
+    var wrap=document.createElement('div'); wrap.id='lab-btns'; wrap.appendChild(btnNext); wrap.appendChild(rs); body.appendChild(wrap);
+  }
+  function numCheck(){
+    var x0=1, h=1e-5, d=(cur.F(x0+h)-cur.F(x0-h))/(2*h), v=cur.f(x0);
+    var ok=Math.abs(d-v)<1e-4;
+    return 'Con x = 1: f(1) = '+v.toFixed(4)+' &nbsp;y&nbsp; F\'(1) &asymp; '+d.toFixed(4)+' &nbsp;'+(ok?'<strong style="color:var(--ok)">&#10003; coinciden</strong>':'<strong style="color:var(--bad)">no coinciden</strong>');
+  }
+  function nextStep(){
+    var wrap=document.getElementById('lab-btns'); if(wrap){wrap.remove();}
+    var steps=[
+      ['Paso 2',cur.du+(cur.desp?' &nbsp;&rArr;&nbsp; '+cur.desp:'')],
+      ['Paso 3','Sustituir: '+cur.sust],
+      ['Paso 4','Integrar con la tabla: '+cur.integ],
+      ['Paso 5','Regresar a x: <span class="final">'+cur.fin+'</span>','fin'],
+      ['Verificar',numCheck()+'<span class="why" style="display:block;font-family:var(--font-ui);font-size:.8rem;color:var(--ink2);margin-top:.15rem">Se compara f(x) con la derivada numérica de F(x), calculada como [F(x+h) &minus; F(x&minus;h)] / 2h.</span>']
+    ];
+    var s=steps[stepIdx]; row(s[0],s[1],s[2]); stepIdx++;
+    if(stepIdx<steps.length){ body.appendChild(wrap); }
+    else{
+      var d=document.createElement('div'); d.className='callout ok'; d.innerHTML='<span class="t">Integral completada</span>Elige otra integral en la parte superior para seguir practicando.';
+      body.appendChild(d);
+    }
+  }
+
+  /* ---------- Simulador de descarga ---------- */
+  var sl=document.getElementById('sim-t'), curve=document.getElementById('sim-curve'), pt=document.getElementById('sim-pt'), vl=document.getElementById('sim-vline');
+  function D(t){return 5*(Math.exp(0.2*t)-1);}
+  function px(t){return 40+(320-40)*t/20;}
+  function py(v){return 170-(170-20)*v/D(20);}
+  var d='';
+  for(var t=0;t<=20.001;t+=0.5){d+=(t===0?'M':'L')+px(t).toFixed(1)+' '+py(D(t)).toFixed(1)+' ';}
+  curve.setAttribute('d',d);
+  function upd(){
+    var t=parseFloat(sl.value);
+    document.getElementById('o-t').textContent=t+' s';
+    document.getElementById('o-v').textContent=Math.exp(0.2*t).toFixed(2)+' MB/s';
+    document.getElementById('o-d').textContent=D(t).toFixed(2)+' MB';
+    pt.setAttribute('cx',px(t)); pt.setAttribute('cy',py(D(t)));
+    vl.setAttribute('x1',px(t)); vl.setAttribute('x2',px(t)); vl.setAttribute('y2',py(D(t)));
+  }
+  sl.addEventListener('input',upd); upd();
+})();
+</script>
+</body>
+</html>
