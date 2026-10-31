@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación: Integración aplicada a Sistemas Computacionales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --guinda:#490b58; --guinda-dark:#37073f; --guinda-light:#F5E8EE; --rose:#C85070;
+  --white:#FFFFFF; --off:#FAFAFA; --surface:#F6F4F4; --border:#E2D8DA; --border-strong:#C8B4BA;
+  --ink:#1A1215; --ink2:#5C4850; --muted:#8C7880; --ok:#1f7a4d; --bad:#b3261e;
+  --font-display:'Cormorant Garamond',Georgia,serif; --font-body:'Source Serif 4',Georgia,serif;
+  --font-ui:'Inter','Segoe UI',system-ui,sans-serif; --font-mono:'JetBrains Mono','Courier New',monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--white);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.7;-webkit-user-select:none;user-select:none}
+input[type="text"],textarea{-webkit-user-select:text;user-select:text}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;color:var(--ink);margin:0 0 .6rem}
+h1{font-size:2rem;line-height:1.15;color:var(--guinda)}
+sup{font-size:.7em;line-height:0}
+.page{max-width:800px;margin:0 auto;padding:0 1.5rem 4rem;position:relative}
+.site-header{border-bottom:3px solid var(--guinda);padding:.9rem 1.5rem;display:flex;align-items:center;gap:.9rem}
+.site-header img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.site-header .inst{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--guinda);display:block;line-height:1.2}
+.site-header .sub{font-family:var(--font-ui);font-size:.8rem;color:var(--ink2)}
+.status{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;background:var(--guinda-light);border:1px solid #D8A8BA;border-radius:8px;padding:.6rem 1rem;margin:1.2rem 0;font-family:var(--font-ui);font-size:.82rem;color:var(--guinda-dark)}
+.pill{background:var(--white);border:1px solid #D8A8BA;border-radius:999px;padding:.25rem .75rem;font-weight:600}
+.pill.warn{background:#FFF3F0;border-color:#E6A89C;color:var(--bad)}
+.card{background:var(--off);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.6rem;margin:1.25rem 0}
+.card p{margin:0 0 .9rem}
+label.fl{display:block;font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--guinda);margin-bottom:.4rem}
+input#nombre{width:100%;padding:.7rem .9rem;font-size:1rem;font-family:var(--font-body);border:1px solid var(--border-strong);border-radius:6px;margin-bottom:1.1rem}
+ul.rules{padding-left:1.3rem;margin:0 0 1.2rem;font-size:.92rem;color:var(--ink2)}
+ul.rules li{margin-bottom:.4rem}
+button{font-family:var(--font-ui);font-weight:600;font-size:.95rem;background:var(--guinda);color:#fff;border:none;border-radius:8px;padding:.75rem 1.5rem;cursor:pointer}
+button:hover{background:var(--guinda-dark)}
+button.sec{background:var(--white);color:var(--guinda);border:1.5px solid var(--guinda)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.nav{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+.nav .dot{width:2rem;height:2rem;border-radius:50%;padding:0;font-size:.78rem;background:var(--white);color:var(--guinda);border:1.5px solid var(--border-strong)}
+.nav .dot.done{background:var(--guinda-light);border-color:var(--guinda)}
+.nav .dot.cur{background:var(--guinda);color:#fff;border-color:var(--guinda)}
+.prog{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.ctx{background:var(--surface);border-left:3px solid var(--rose);padding:.9rem 1.1rem;border-radius:0 8px 8px 0;font-size:.97rem;margin-bottom:1rem;color:var(--ink2)}
+.qtext{font-weight:600;font-size:1.05rem;margin-bottom:1rem}
+.opt{display:flex;gap:.7rem;align-items:flex-start;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:.7rem .9rem;margin-bottom:.6rem;cursor:pointer;font-size:1rem}
+.opt:hover{border-color:var(--rose)}
+.opt.sel{border-color:var(--guinda);background:var(--guinda-light)}
+.opt .l{font-family:var(--font-ui);font-weight:700;color:var(--guinda);min-width:1.2rem}
+.row-nav{display:flex;justify-content:space-between;gap:.6rem;margin-top:1.2rem;flex-wrap:wrap}
+details.form{background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:1rem;font-size:.9rem}
+details.form summary{cursor:pointer;padding:.5rem .9rem;font-family:var(--font-ui);font-weight:600;color:var(--guinda);font-size:.82rem}
+details.form .fb{padding:.2rem 1rem .8rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.3rem 1.2rem}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1em;line-height:1.2}
+.frac>span:first-child{border-bottom:1.3px solid currentColor;padding:0 .25em}
+.frac>span:last-child{padding:0 .25em}
+textarea{width:100%;min-height:150px;padding:.8rem .9rem;font-family:var(--font-body);font-size:1rem;border:1px solid var(--border-strong);border-radius:8px;resize:vertical;line-height:1.55}
+.wc{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);margin:.25rem 0 1rem}
+.wc.ok{color:var(--ok)}
+.msg{font-family:var(--font-ui);font-size:.85rem;background:#FFF3F0;border:1px solid #E6A89C;color:var(--bad);border-radius:8px;padding:.6rem .9rem;margin-top:.8rem}
+.score{font-family:var(--font-display);font-size:2.6rem;color:var(--guinda);font-weight:700;margin:.2rem 0}
+table.res{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem}
+table.res th,table.res td{text-align:left;padding:.5rem .7rem;border-bottom:1px solid var(--border);vertical-align:top}
+table.res th{font-family:var(--font-ui);font-size:.74rem;text-transform:uppercase;color:var(--muted)}
+.t-ok{color:var(--ok);font-weight:700}.t-bad{color:var(--bad);font-weight:700}.t-na{color:var(--muted);font-weight:700}
+.meta2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin:1rem 0}
+.meta2 div{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;font-family:var(--font-ui);font-size:.85rem}
+.meta2 b{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.resp{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-size:.95rem;white-space:pre-wrap;margin:.3rem 0 1rem}
+.why{background:var(--guinda-light);border-left:4px solid var(--guinda);border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin-top:1.2rem}
+.why ul{margin:.4rem 0 0;padding-left:1.2rem;font-size:.95rem}
+.footer{background:var(--guinda);color:rgba(255,255,255,.8);padding:1.2rem 1.5rem;font-family:var(--font-ui);font-size:.78rem;margin-top:3rem;text-align:center}
+#wm{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;display:none}
+#wm .r{display:flex;white-space:nowrap;transform:rotate(-28deg);position:absolute;left:-20%}
+#wm .i{font-family:var(--font-ui);font-weight:700;font-size:1.3rem;color:var(--guinda);opacity:.09;margin:0 2.2rem;letter-spacing:.04em}
+[hidden]{display:none!important}
+@media print{
+  .site-header,.status,#s-inicio,#s-examen,.noprint{display:none!important}
+  #wm{display:block!important}#wm .i{opacity:.12}
+  body{font-size:13px}.card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="wm"></div>
+
+<header class="site-header">
+  <img src="imagen1.png" alt="Logotipo Mixtle" onerror="this.style.display='none'">
+  <div>
+    <span class="inst">Instituto de Educación Digital del Estado de Puebla</span>
+    <span class="sub">Evaluación · Cálculo Integral · Fórmulas básicas de integración</span>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ===== INICIO ===== -->
+  <section id="s-inicio">
+    <div class="card">
+      <h1>Integración aplicada a Sistemas Computacionales</h1>
+      <p>Esta evaluación te invita a pensar cómo se usa lo que hemos visto en situaciones reales de tu carrera: servidores, bases de datos, sensores y servicios en la nube. Lee con calma cada escenario; aquí lo importante es que veas para qué sirve lo que estás aprendiendo.</p>
+      <label class="fl" for="nombre">Nombre completo del alumno</label>
+      <input id="nombre" type="text" autocomplete="off" placeholder="Escribe tu nombre y apellidos">
+      <button id="btn-iniciar" type="button">Comenzar evaluación</button>
+      <div class="msg" id="msg-ini" hidden></div>
+    </div>
+  </section>
+
+  <!-- ===== EXAMEN ===== -->
+  <section id="s-examen" hidden>
+    <div class="status">
+      <span class="pill" id="p-alumno"></span>
+      <span class="pill" id="p-intento">Intento 1</span>
+      <span class="pill" id="p-inf">Infracciones: 0</span>
+    </div>
+    <div class="nav" id="nav"></div>
+    <div class="card" id="qcard"></div>
+  </section>
+
+  <!-- ===== RESULTADOS ===== -->
+  <section id="s-result" hidden>
+    <div class="card" id="rcard"></div>
+    <div class="row-nav noprint"><button type="button" id="btn-pdf">Exportar resultado a PDF</button></div>
+  </section>
+
+</main>
+
+<div class="footer">Instituto de Educación Digital del Estado de Puebla · Cálculo Integral · Mtro. José Armando Vera Rodríguez</div>
+
+<script>
+(function(){
+  /* ===== Configuración ===== */
+  var MOSTRAR_FORMULARIO = true;        // cambiar a false para ocultar el formulario de apoyo
+  var MIN_PALABRAS_B1 = 20;
+  var KEY_INT = 'iedep_calc_integral_eval_formulas_intentos';
+
+  function fr(a,b){return '<span class="frac"><span>'+a+'</span><span>'+b+'</span></span>';}
+
+  var BANCO = [
+    {id:1, tema:'Acumulación a partir de una tasa',
+     ctx:'En una empresa de tecnología, un servidor descarga actualizaciones a una velocidad constante de 5 MB por segundo. Su descarga total se calcula con la integral &int; 5 d<em>t</em> = 5<em>t</em> (partiendo de 0 MB).',
+     q:'¿Cuántos MB habrá descargado a los 10 segundos?',
+     o:[{t:'50 MB',ok:true},{t:'5 MB'},{t:'15 MB'},{t:'500 MB'}]},
+    {id:2, tema:'Significado de la constante C',
+     ctx:'Un servicio de respaldos guarda archivos a razón de 3 GB por hora. El total almacenado se expresa como <em>S</em>(<em>t</em>) = 3<em>t</em> + <em>C</em>. Antes de empezar a medir, el servidor ya contenía 200 GB.',
+     q:'¿Qué representa la constante <em>C</em> en este caso?',
+     o:[{t:'Lo que ya existía al inicio: los 200 GB',ok:true},{t:'La rapidez con la que se guardan los archivos'},{t:'Un error que puede ignorarse'},{t:'El tiempo que dura el respaldo'}]},
+    {id:3, tema:'Del costo por GB al costo total',
+     ctx:'Una startup paga por almacenamiento en la nube: cada GB cuesta $3, y además hay un cargo fijo de $50. El costo total se obtiene integrando el costo por GB y sumando el cargo fijo: <em>C</em>(<em>x</em>) = 3<em>x</em> + 50.',
+     q:'¿Cuánto pagará por almacenar 10 GB?',
+     o:[{t:'$80',ok:true},{t:'$30'},{t:'$53'},{t:'$150'}]},
+    {id:4, tema:'Revisión de código y verificación',
+     ctx:'En una revisión de código, un compañero escribió en la documentación de un módulo que &int; x<sup>4</sup> dx = x<sup>5</sup> + C.',
+     q:'¿Cuál es el error y cómo puedes comprobarlo?',
+     o:[{t:'Faltó dividir entre 5: lo correcto es x<sup>5</sup>/5 + C, y se comprueba derivando el resultado',ok:true},{t:'No hay error: así se integra cualquier potencia'},{t:'Debió restar 1 al exponente, igual que al derivar'},{t:'Debió quitar la constante C'}]},
+    {id:5, tema:'Caso especial: 1/x',
+     ctx:'El tamaño de una base de datos crece a una tasa de <em>g</em>(<em>t</em>) = 10/<em>t</em> GB por mes. Para estimar su tamaño necesitas una función <em>G</em>(<em>t</em>) cuya derivada sea <em>g</em>(<em>t</em>).',
+     q:'¿Cuál es <em>G</em>(<em>t</em>)?',
+     o:[{t:'10 ln|<em>t</em>| + C',ok:true},{t:'10e<sup><em>t</em></sup> + C'},{t:'5<em>t</em><sup>2</sup> + C'},{t:'&minus;10/<em>t</em><sup>2</sup> + C'}]},
+    {id:6, tema:'Función exponencial',
+     ctx:'Un modelo sencillo indica que los usuarios nuevos de una aplicación por mes aumentan según <em>u</em>\'(<em>t</em>) = 3e<sup><em>t</em></sup> (en miles de usuarios por mes).',
+     q:'Sin considerar la constante, ¿qué función describe el total de usuarios acumulados?',
+     o:[{t:'3e<sup><em>t</em></sup>',ok:true},{t:'3 ln|<em>t</em>|'},{t:'e<sup><em>t</em></sup>/3'},{t:'3<em>t</em>e<sup><em>t</em></sup>'}]},
+    {id:7, tema:'Función trigonométrica',
+     ctx:'Un sensor de un servidor registra una aceleración <em>a</em>(<em>t</em>) = cos <em>t</em>. Para obtener la velocidad se integra la aceleración.',
+     q:'Sin considerar la constante, ¿cuál es la velocidad <em>v</em>(<em>t</em>)?',
+     o:[{t:'sen <em>t</em>',ok:true},{t:'&minus;sen <em>t</em>'},{t:'cos <em>t</em>'},{t:'&minus;cos <em>t</em>'}]},
+    {id:8, tema:'Derivar o integrar: elegir la operación',
+     ctx:'Eres analista de datos en una plataforma de streaming. Tienes (I) la rapidez con que cambia el número de usuarios conectados, y (II) el número total de usuarios conectados en cada instante.',
+     q:'Para pasar de (I) a (II), y de (II) a (I), ¿qué operaciones aplicarías?',
+     o:[{t:'De (I) a (II): integrar. De (II) a (I): derivar',ok:true},{t:'De (I) a (II): derivar. De (II) a (I): integrar'},{t:'En ambos casos: integrar'},{t:'En ambos casos: derivar'}]}
+  ];
+
+  var FORMULAS =
+    '<div>&int; k dx = kx + C</div>'+
+    '<div>&int; x<sup>n</sup> dx = '+fr('x<sup>n+1</sup>','n+1')+' + C &nbsp;(n &ne; &minus;1)</div>'+
+    '<div>&int; '+fr(1,'x')+' dx = ln|x| + C</div>'+
+    '<div>&int; e<sup>x</sup> dx = e<sup>x</sup> + C</div>'+
+    '<div>&int; sen x dx = &minus;cos x + C</div>'+
+    '<div>&int; cos x dx = sen x + C</div>'+
+    '<div>&int; [f(x) &plusmn; g(x)] dx = &int;f(x)dx &plusmn; &int;g(x)dx</div>'+
+    '<div>&int; k&middot;f(x) dx = k&middot;&int;f(x)dx</div>';
+
+  /* ===== Utilidades ===== */
+  function $(id){return document.getElementById(id);}
+  function barajar(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function palabras(s){return (s||'').trim().split(/\s+/).filter(Boolean).length;}
+  function pad(n){return (n<10?'0':'')+n;}
+  function show(id){['s-inicio','s-examen','s-result'].forEach(function(s){$(s).hidden=(s!==id);});window.scrollTo(0,0);}
+
+  /* ===== Estado ===== */
+  var preguntas=[], resp=[], idx=0, nombre='', activo=false, inf=0, intento=1, inicioTs=0, ultimaInf=0;
+  var b1='', b2='', avisoSinResp=false;
+  var formAbierto=false;
+  var TOTAL_PASOS=BANCO.length+1;
+
+  /* ===== Intentos por recarga ===== */
+  try{
+    var prev=parseInt(localStorage.getItem(KEY_INT)||'0',10)||0;
+    intento=prev+1; localStorage.setItem(KEY_INT,String(intento));
+  }catch(e){intento=1;}
+  $('p-intento').textContent='Intento '+intento;
+
+  /* ===== Anti copiar / pegar ===== */
+  ['copy','cut','paste','contextmenu','dragstart','selectstart'].forEach(function(evt){
+    document.addEventListener(evt,function(e){
+      var t=e.target, tag=(t&&t.tagName)||'';
+      if(evt==='selectstart' && (tag==='INPUT'||tag==='TEXTAREA')) return;
+      if(evt==='paste' && tag==='INPUT' && t.id==='nombre') return;
+      e.preventDefault();
+    },true);
+  });
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&(k==='c'||k==='x'||k==='v'||k==='a'||k==='u'||k==='s')){
+      var tag=(e.target&&e.target.tagName)||'';
+      if(k==='a'&&(tag==='INPUT'||tag==='TEXTAREA')) return;
+      if(k==='v'&&tag==='INPUT'&&e.target.id==='nombre') return;
+      e.preventDefault();
+    }
+  });
+
+  /* ===== Infracciones ===== */
+  function registrar(){
+    if(!activo) return;
+    var now=Date.now(); if(now-ultimaInf<1200) return; ultimaInf=now;
+    inf++; var p=$('p-inf'); p.textContent='Infracciones: '+inf; p.classList.add('warn');
+  }
+  document.addEventListener('visibilitychange',function(){if(document.hidden)registrar();});
+  window.addEventListener('blur',registrar);
+  window.addEventListener('beforeunload',function(e){if(activo){e.preventDefault();e.returnValue='';}});
+
+  /* ===== Marca de agua ===== */
+  function marcaAgua(n){
+    var w=$('wm'); w.innerHTML='';
+    for(var r=0;r<14;r++){
+      var row=document.createElement('div'); row.className='r'; row.style.top=(r*8-6)+'%';
+      for(var c=0;c<6;c++){var s=document.createElement('span'); s.className='i'; s.textContent=n; row.appendChild(s);}
+      w.appendChild(row);
+    }
+    w.style.display='block';
+  }
+
+  /* ===== Inicio ===== */
+  $('btn-iniciar').addEventListener('click',function(){
+    var n=$('nombre').value.trim();
+    if(palabras(n)<2){var m=$('msg-ini');m.hidden=false;m.textContent='Escribe tu nombre completo (nombre y apellido) para comenzar.';return;}
+    nombre=n;
+    preguntas=barajar(BANCO).map(function(p){return {id:p.id,tema:p.tema,ctx:p.ctx,q:p.q,o:barajar(p.o)};});
+    resp=preguntas.map(function(){return -1;});
+    idx=0; inf=0; inicioTs=Date.now(); activo=true; avisoSinResp=false; b1=''; b2='';
+    $('p-alumno').textContent=nombre; $('p-inf').textContent='Infracciones: 0'; $('p-inf').classList.remove('warn');
+    marcaAgua(nombre); show('s-examen'); pintar();
+  });
+
+  /* ===== Pintado del examen ===== */
+  function pintarNav(){
+    var nav=$('nav'); nav.innerHTML='';
+    for(var i=0;i<TOTAL_PASOS;i++){
+      (function(i){
+        var b=document.createElement('button'); b.type='button'; b.className='dot'+(i===idx?' cur':'');
+        var hecho=(i<preguntas.length)?(resp[i]>=0):(palabras(b1)>0);
+        if(hecho&&i!==idx) b.classList.add('done');
+        b.textContent=(i<preguntas.length)?(i+1):'B';
+        b.title=(i<preguntas.length)?'Escenario '+(i+1):'Parte B';
+        b.addEventListener('click',function(){guardarB();idx=i;pintar();});
+        nav.appendChild(b);
+      })(i);
+    }
+  }
+  function guardarB(){var t1=$('tb1'),t2=$('tb2'); if(t1) b1=t1.value; if(t2) b2=t2.value;}
+
+  function pintar(){
+    pintarNav();
+    var c=$('qcard'); c.innerHTML='';
+    if(idx<preguntas.length){
+      var p=preguntas[idx];
+      var h='<div class="prog">Parte A · Escenario '+(idx+1)+' de '+preguntas.length+'</div>';
+      if(MOSTRAR_FORMULARIO){h+='<details class="form"'+(formAbierto?' open':'')+'><summary>Formulario de apoyo</summary><div class="fb">'+FORMULAS+'</div></details>';}
+      h+='<div class="ctx">'+p.ctx+'</div><div class="qtext">'+p.q+'</div><div id="ops"></div>';
+      h+='<div class="row-nav"><button type="button" class="sec" id="b-prev"'+(idx===0?' disabled':'')+'>Anterior</button><button type="button" id="b-next">Siguiente</button></div>';
+      c.innerHTML=h;
+      var det=c.querySelector('details.form'); if(det){det.addEventListener('toggle',function(){formAbierto=det.open;});}
+      var ops=$('ops'), L=['A','B','C','D'];
+      p.o.forEach(function(o,k){
+        var d=document.createElement('div'); d.className='opt'+(resp[idx]===k?' sel':'');
+        d.innerHTML='<span class="l">'+L[k]+'</span><span>'+o.t+'</span>';
+        d.addEventListener('click',function(){resp[idx]=k;pintar();});
+        ops.appendChild(d);
+      });
+      $('b-prev').addEventListener('click',function(){idx--;pintar();});
+      $('b-next').addEventListener('click',function(){idx++;pintar();});
+    }else{
+      var h2='<div class="prog">Parte B · Reflexión profesional</div>';
+      h2+='<div class="ctx">Esta parte no tiene una única respuesta correcta: lo que importa es que relaciones lo aprendido con tu carrera. Escribe con tus propias palabras.</div>';
+      h2+='<div class="qtext">1. Piensa en una aplicación, videojuego, red o base de datos que uses. (a) ¿Qué cosa cambia con el tiempo? (b) ¿Qué total le interesaría conocer a un ingeniero? (c) ¿Para qué le serviría saberlo?</div>';
+      h2+='<textarea id="tb1" placeholder="Escribe tu respuesta aquí..."></textarea><div class="wc" id="wc1"></div>';
+      h2+='<div class="qtext">2. En una o dos frases: ¿qué parte de lo visto en clase te pareció más útil para tu carrera y qué duda te gustaría resolver? <span style="font-weight:400;color:var(--muted)">(opcional)</span></div>';
+      h2+='<textarea id="tb2" style="min-height:90px" placeholder="Escribe tu respuesta aquí..."></textarea>';
+      h2+='<div class="row-nav"><button type="button" class="sec" id="b-prev">Anterior</button><button type="button" id="b-fin">Finalizar evaluación</button></div><div class="msg" id="msg-fin" hidden></div>';
+      c.innerHTML=h2;
+      $('tb1').value=b1; $('tb2').value=b2;
+      function wc(){var n=palabras($('tb1').value);var e=$('wc1');e.textContent=n+' palabras (mínimo '+MIN_PALABRAS_B1+')';e.className='wc'+(n>=MIN_PALABRAS_B1?' ok':'');}
+      $('tb1').addEventListener('input',function(){b1=$('tb1').value;wc();});
+      $('tb2').addEventListener('input',function(){b2=$('tb2').value;});
+      wc();
+      $('b-prev').addEventListener('click',function(){guardarB();idx--;pintar();});
+      $('b-fin').addEventListener('click',function(){
+        guardarB();
+        var m=$('msg-fin'), sin=resp.filter(function(r){return r<0;}).length;
+        if(palabras(b1)<MIN_PALABRAS_B1){m.hidden=false;m.textContent='La pregunta 1 de la Parte B requiere al menos '+MIN_PALABRAS_B1+' palabras. Llevas '+palabras(b1)+'.';return;}
+        if(sin>0&&!avisoSinResp){avisoSinResp=true;m.hidden=false;m.textContent='Tienes '+sin+' escenario(s) de la Parte A sin responder. Si deseas finalizar de todos modos, presiona de nuevo el botón.';return;}
+        finalizar(false);
+      });
+    }
+  }
+
+  /* ===== Resultados ===== */
+  function finalizar(porTiempo){
+    if(!activo) return;
+    guardarB(); activo=false;
+    var aciertos=0, filas='';
+    preguntas.forEach(function(p,i){
+      var r=resp[i], est, cls;
+      if(r<0){est='Sin responder';cls='t-na';}
+      else if(p.o[r].ok){est='Correcta';cls='t-ok';aciertos++;}
+      else{est='Incorrecta';cls='t-bad';}
+      filas+='<tr><td>'+(i+1)+'</td><td>'+p.tema+'</td><td class="'+cls+'">'+est+'</td></tr>';
+    });
+    var pct=Math.round(aciertos/preguntas.length*100);
+    var f=new Date();
+    var fecha=pad(f.getDate())+'/'+pad(f.getMonth()+1)+'/'+f.getFullYear()+' '+pad(f.getHours())+':'+pad(f.getMinutes());
+    var usado=Math.round((Date.now()-inicioTs)/1000);
+    var h='<h1>Resultado de la evaluación</h1>';
+    h+='<div class="meta2"><div><b>Alumno</b><span id="r-nombre"></span></div><div><b>Fecha</b>'+fecha+'</div><div><b>Intentos (recargas)</b>'+intento+'</div><div><b>Infracciones</b>'+inf+'</div><div><b>Tiempo utilizado</b>'+pad(Math.floor(usado/60))+':'+pad(usado%60)+'</div></div>';
+    h+='<div style="font-family:var(--font-ui);font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Parte A · Calificación automática</div>';
+    h+='<div class="score">'+aciertos+' / '+preguntas.length+' <span style="font-size:1.4rem;color:var(--ink2)">('+pct+'%)</span></div>';
+    h+='<table class="res"><tr><th>#</th><th>Tema del escenario</th><th>Resultado</th></tr>'+filas+'</table>';
+    h+='<div style="font-family:var(--font-ui);font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Parte B · Reflexión (revisión docente)</div>';
+    h+='<p style="margin:.4rem 0 .2rem;font-weight:600">1. Aplicación en un sistema real</p><div class="resp" id="r-b1"></div>';
+    h+='<p style="margin:.4rem 0 .2rem;font-weight:600">2. Utilidad percibida y dudas</p><div class="resp" id="r-b2"></div>';
+    h+='<div class="why"><strong>¿Por qué importa el Cálculo Integral en tu carrera?</strong><ul>'+
+       '<li><strong>Gráficos y simulación 3D:</strong> áreas, volúmenes e iluminación se calculan acumulando pequeñas contribuciones.</li>'+
+       '<li><strong>Redes y servicios en la nube:</strong> si conoces la tasa de tráfico, consumo o solicitudes, la integral te da el total para planear capacidad y costos.</li>'+
+       '<li><strong>Análisis de algoritmos:</strong> el crecimiento del costo de un algoritmo se estima y se compara con funciones y sumas continuas.</li>'+
+       '<li><strong>Inteligencia artificial y datos:</strong> probabilidades, promedios y funciones de pérdida se expresan como áreas bajo una curva.</li>'+
+       '</ul></div>';
+    $('rcard').innerHTML=h;
+    $('r-nombre').textContent=nombre;
+    $('r-b1').textContent=b1.trim()||'(sin respuesta)';
+    $('r-b2').textContent=b2.trim()||'(sin respuesta)';
+    show('s-result');
+  }
+  $('btn-pdf').addEventListener('click',function(){window.print();});
+})();
+</script>
+</body>
+</html>
